@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -196,3 +198,16 @@ REST_FRAMEWORK = {
     # 异常处理
     'EXCEPTION_HANDLER': 'ykblog.utils.exceptions.exception_handler',
 }
+
+
+# CORS
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    '127.0.0.1:8081',
+    '127.0.0.1:8082',
+    'localhost:8080',
+    'localhost:8081',
+    'localhost:8082',
+
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie

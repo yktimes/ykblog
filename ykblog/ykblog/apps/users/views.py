@@ -1,107 +1,11 @@
-from django.shortcuts import render
-from django.urls import reverse
-# Create your views here.
-"""
 
 
-@bp.route('/users', methods=['POST'])
-def create_user():
-    '''注册一个新用户'''
-    pass
-
-
-@bp.route('/users', methods=['GET'])
-def get_users():
-    '''返回所有用户的集合'''
-    pass
-
-
-@bp.route('/users/<int:id>', methods=['GET'])
-def get_user(id):
-    '''返回一个用户'''
-    pass
-
-
-@bp.route('/users/<int:id>', methods=['PUT'])
-def update_user(id):
-    '''修改一个用户'''
-    pass
-
-
-@bp.route('/users/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    '''删除一个用户'''
-    pass
-"""
 from .serializers import UserSerializer,UserUpdateSerializer
-from rest_framework.views import APIView
-from . models import User
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework  import status
-from rest_framework.mixins import ListModelMixin
 
-#
-#
-#
-# class UserViewSet(viewsets.ViewSet):
-#
-#     # queryset = User.objects.all()
-#     # serializer_class = UserSerializer
-#
-#     def list(self, request):
-#         pass
-#
-#     def create(self, request):
-#         # user = User.objects.all()
-#         serializer = UserSerializer(data=request.data)
-#         if serializer.is_valid():
-#
-#             user=User.objects.create_user(**serializer.data)
-#
-#             # '_links': {
-#             #     'self': reverse("user-retrieve", id=self.id)
-#             # }
-#             #
-#             return Response({'status': 'ok','id':user.pk,'username':user.username})
-#
-#         else:
-#             return Response(serializer.errors,
-#                             status=status.HTTP_400_BAD_REQUEST)
-#
-#
-#
-#     def retrieve(self, request, pk=None):
-#         """返回一个用户"""
-#         try:
-#             user = User.objects.get(id=pk)
-#         except User.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-#         # serializer = UserSerializer(user)
-#         return Response({'id':user.pk,'username':user.username},status=status.HTTP_200_OK)
-#
-#     def update(self, request, pk=None):
-#         pass
-#
-#     def partial_update(self, request, pk=None):
-#         try:
-#             user = User.objects.get(id=pk)
-#         except User.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-#
-#         else:
-#             serializer = UserUpdateSerializer(**request.data)
-#             if serializer.is_valid():
-#                 user.save(**serializer.data)
-#
-#                 return Response({'status': 'ok', 'id': user.pk, 'username': user.username})
-#
-#             else:
-#                 return Response(serializer.errors,
-#                                 status=status.HTTP_400_BAD_REQUEST)
-#
-#     def destroy(self, request, pk=None):
-#         pass
+from . models import User
+
+from rest_framework  import status
+from rest_framework.views import APIView
 
 from rest_framework.mixins import (
     ListModelMixin,
@@ -113,7 +17,7 @@ from rest_framework.mixins import (
 from rest_framework.generics import GenericAPIView
 
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+
 
 class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
 
@@ -134,7 +38,7 @@ class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
             #     'self': reverse("user-retrieve", id=self.id)
             # }
             #
-            return Response({'status': 'ok', 'id': user.pk, 'username': user.username,'token':user.token})
+            return Response({'status': 'ok', 'id': user.pk, 'username': user.username})
 
         else:
             return Response(serializer.errors,
@@ -191,3 +95,13 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
         # TODO 危险 需要判断
         return self.destroy(request, *args, **kwargs)
 
+
+
+
+
+class TokenView(APIView):
+
+    def post(self,request):
+        print(request.data)
+
+        return Response({"aa":11})

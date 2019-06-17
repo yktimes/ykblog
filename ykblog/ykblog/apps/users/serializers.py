@@ -9,11 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
     """
     创建用户序列化器
     """
-    token = serializers.CharField(label='登录状态token', read_only=True)  # 增加token字段
+    # token = serializers.CharField(label='登录状态token', read_only=True)  # 增加token字段
     # _linkes = serializers.HyperlinkedIdentityField(read_only=True,view_name='user-retrieve')
     class Meta:
         model = User
-        fields = ("username","email","password","token")
+        fields = ("username","email","password")
 
         # read_only_fields = ('_linkes',)
 
@@ -33,12 +33,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        # 补充生成记录登录状态的token
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-        payload = jwt_payload_handler(user)
-        token = jwt_encode_handler(payload)
-        user.token = token
+        # # 补充生成记录登录状态的token
+        # jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        # jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+        # payload = jwt_payload_handler(user)
+        # token = jwt_encode_handler(payload)
+        # user.token = token
 
         return user
 

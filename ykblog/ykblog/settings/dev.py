@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -193,10 +194,25 @@ LOGGING = {
     }
 }
 
+import datetime
+
+
+
 
 REST_FRAMEWORK = {
+
     # 异常处理
     'EXCEPTION_HANDLER': 'ykblog.utils.exceptions.exception_handler',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=10),
 }
 
 
@@ -211,3 +227,6 @@ CORS_ORIGIN_WHITELIST = (
 
 )
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+
+AUTH_USER_MODEL = 'users.User'

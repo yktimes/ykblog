@@ -5,6 +5,9 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Profile from '@/components/Profile'
 import Ping from '@/components/Ping'
+import EditProfile from '@/components/EditProfile'
+
+import store from '../store'
 
 Vue.use(Router)
 
@@ -29,13 +32,22 @@ const router = new Router({
       component: Register
     },
     {
-  path: '/user/:id',
-  name: 'Profile',
-  component: Profile,
-  meta: {
-    requiresAuth: true
-  }
-},
+      path: '/user/:id',
+      name: 'Profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      // 用户修改自己的个人信息
+      path: '/edit-profile',
+      name: 'EditProfile',
+      component: EditProfile,
+      meta: {
+        requiresAuth: true
+      }
+    },
     {
       path: '/ping',
       name: 'Ping',
@@ -56,6 +68,19 @@ router.beforeEach((to, from, next) => {
     next({
       path: from.fullPath
     })
+  } else if (to.matched.length === 0) {  // 要前往的路由不存在时
+    console.log('here')
+    console.log(to.matched)
+    Vue.toasted.error('404: NOT FOUND', { icon: 'fingerprint' });
+    if (from.name) {
+      next({
+        name: from.name
+      })
+    } else {
+      next({
+        path: '/'
+      })
+    }
   } else {
     next()
   }

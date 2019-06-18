@@ -104,6 +104,8 @@ export default {
       ).then((response) => {
           // handle success
           window.localStorage.setItem('madblog-token', response.data.token)
+          window.localStorage.setItem('user_id', response.data.id)
+        
           console.log(111111111111,response.data)
           store.resetNotNewAction()
           store.loginAction()

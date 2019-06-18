@@ -3,7 +3,12 @@ from .models import User
 import re
 
 from rest_framework_jwt.settings import api_settings
+from hashlib import md5
 
+def generate_avatar(email, size):
+    '''头像'''
+    digest = md5(email.lower().encode('utf-8')).hexdigest()
+    return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -28,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         """
 
         user = super().create(validated_data)
-
+        user.avatar=generate_avatar(user.email,128)
         # 调用django的认证系统加密密码
         user.set_password(validated_data['password'])
         user.save()
@@ -42,6 +47,14 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
+class Mysite(serializers.ModelSerializer):
+
+
+
+    class Meta:
+        model = User
+        fields = ('username', 'email','name','location','about_me',"date_joined","avatar")
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """
@@ -84,3 +97,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             return value
 
 
+class UserUpdatev2Serializer(serializers.ModelSerializer):
+    """
+    用户修改信息序列化器
+    """
+    class Meta:
+        model = User
+        fields = ('name', 'location','about_me')
+
+        extra_kwargs = {
+            'name': {'required': False},
+            'location': {'required': False},
+            'about':{'required': False},
+        }

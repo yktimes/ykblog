@@ -51,16 +51,16 @@ Vue.use(VueSweetalert2)
 // 使用 highlight.js 高亮代码。 vue-router 从 Home 页路由到 Post 页后，会重新渲染并且会移除事件
 // 注册自定义指令，后续在组件中使用 v-highlight
 import hljs from 'highlight.js'
-
-
 // 样式文件，浅色：default, atelier-dune-light  深色：atom-one-dark, atom-one-dark-reasonable, monokai
 import 'highlight.js/styles/atom-one-dark-reasonable.css'
+// todo 重要 Array.prototype.forEach.call(blocks, hljs.highlightBlock); 才正确
 Vue.directive('highlight',function (el) {
   let blocks = el.querySelectorAll('pre code');
-  blocks.forEach((block)=>{
-    hljs.highlightBlock(block)
-  })
+  Array.prototype.forEach.call(blocks, hljs.highlightBlock);
 })
+
+
+
 
 
 Vue.config.productionTip = false

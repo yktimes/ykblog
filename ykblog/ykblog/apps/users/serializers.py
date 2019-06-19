@@ -54,7 +54,7 @@ class Mysite(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email','name','location','about_me',"date_joined","avatar")
+        fields = ('id','username', 'email','name','location','about_me',"date_joined","avatar")
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """

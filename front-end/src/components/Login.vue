@@ -35,7 +35,7 @@
 <script>
 import axios from 'axios'
 import Alert from './Alert'
-import store from '../store.js'
+import store from '../store'
 
 export default {
   name: 'Login',  //this is the name of the component
@@ -80,7 +80,7 @@ export default {
         // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
         return false
       }
-
+      // todo 线上修改
       const path = 'http://localhost:8000/api/tokens/'
       // axios 实现Basic Auth需要在config中设置 auth 这个属性即可
       axios.post(path, {

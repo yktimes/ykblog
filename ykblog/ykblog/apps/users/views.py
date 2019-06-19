@@ -97,12 +97,15 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            return Response(11)
-
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, *args, **kwargs):
         # TODO 危险 需要判断
-        return self.destroy(request, *args, **kwargs)
+        print(request)
+        if int(request.user.pk) == int(self.kwargs["pk"]):
+            return self.destroy(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 

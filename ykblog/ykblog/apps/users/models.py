@@ -20,9 +20,6 @@ class User(AbstractUser):
 
 
 
-        # return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
-
-
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'

@@ -1,4 +1,10 @@
 <template>
+
+
+
+
+
+
   <div class="container">
     <!-- Modal: Edit Post -->
     <div class="modal fade" id="updatePostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -73,6 +79,9 @@
             <hr class="g-brd-gray-light-v4 g-my-15">
           </header>
 
+
+
+
           <div id="postBody" class="g-font-size-16 g-line-height-1_8 g-mb-30">
             
             <!-- vue-markdown 开始解析markdown，它是子组件，通过 props 给它传值即可
@@ -85,7 +94,8 @@
               :toc-last-level="3"
               v-on:toc-rendered="tocAllRight"
               toc-id="toc"
-              class="markdown-body">
+              class="markdown-body"
+             >
             </vue-markdown>
             
           </div>
@@ -113,10 +123,20 @@
 </template>
 
 <script>
+
+
+  // vue-router 从 Home 页路由到 Post 页后，会重新渲染并且会移除事件，自定义的指令 v-highlight 也不生效了
+// 所以，这个页面，在 mounted() 和 updated() 方法中调用 highlightCode() 可以解决代码不高亮问题
+import hljs from 'highlight.js'
+const highlightCode = () => {
+  let blocks = document.querySelectorAll('pre code');
+  console.log(blocks)
+  Array.prototype.forEach.call(blocks, hljs.highlightBlock);
+}
+
 import store from '../store'
 
-// 样式文件，浅色：default, atelier-dune-light  深色：atom-one-dark, atom-one-dark-reasonable, monokai
-import 'highlight.js/styles/atom-one-dark-reasonable.css'
+
 // 导入 vue-markdown 组件解析 markdown 原文为　HTML
 import VueMarkdown from 'vue-markdown'
 
@@ -124,20 +144,20 @@ import VueMarkdown from 'vue-markdown'
 
 
 
-// vue-router 从 Home 页路由到 Post 页后，会重新渲染并且会移除事件，自定义的指令 v-highlight 也不生效了
-// 所以，这个页面，在 mounted() 和 updated() 方法中调用 highlightCode() 可以解决代码不高亮问题
-import hljs from 'highlight.js'
-const highlightCode = () => {
-  let blocks = document.querySelectorAll('markdown-body pre code');
-  // todo 代码高亮有问题
-  console.log(blocks,typeof blocks)
-  blocks.forEach((block)=>{
-    console.log(111,block)
-    hljs.highlightBlock(block)
-  })
-}
 
-
+// import hljs from 'highlight.js'
+//
+//
+// // 样式文件，浅色：default, atelier-dune-light  深色：atom-one-dark, atom-one-dark-reasonable, monokai
+// import 'highlight.js/styles/atom-one-dark-reasonable.css'
+// Vue.directive('highlight',function (el) {
+//     let blocks = el.querySelectorAll('pre code');
+//     setTimeout(() =>{
+//         blocks.forEach((block)=>{
+//         hljs.highlightBlock(block)
+//         })
+//     }, 200)
+// })
 
 // 固定 TOC
 import '../assets/jquery.sticky'

@@ -4,21 +4,21 @@
     <div class="row">
       <div class="col-md-4">
         <form @submit.prevent="onSubmit">
-          <div class="form-group">
+          <div class="form-group"  v-bind:class="{'u-has-error-v1': registerForm.usernameError}" >
             <label for="username">Username</label>
-            <input type="text" v-model="registerForm.username" class="form-control" v-bind:class="{'is-invalid': registerForm.usernameError}" id="username" placeholder="">
-            <div v-show="registerForm.usernameError" class="invalid-feedback">{{ registerForm.usernameError }}</div>
+            <input type="text" v-model="registerForm.username" class="form-control" id="username" placeholder="">
+            <small class="form-control-feedback" v-show="registerForm.usernameError">{{ registerForm.usernameError }}</small>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-bind:class="{'u-has-error-v1': registerForm.emailError}" >
             <label for="email">Email address</label>
-            <input type="email" v-model="registerForm.email" class="form-control" v-bind:class="{'is-invalid': registerForm.emailError}" id="email" aria-describedby="emailHelp" placeholder="">
+            <input type="email" v-model="registerForm.email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="">
             <small v-if="!registerForm.emailError" id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            <div v-show="registerForm.emailError" class="invalid-feedback">{{ registerForm.emailError }}</div>
+            <small class="form-control-feedback" v-show="registerForm.emailError">{{ registerForm.emailError }}</small>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-bind:class="{'u-has-error-v1': registerForm.passwordError}" >
             <label for="password">Password</label>
-            <input type="password" v-model="registerForm.password" class="form-control" v-bind:class="{'is-invalid': registerForm.passwordError}" id="password" placeholder="">
-            <div v-show="registerForm.passwordError" class="invalid-feedback">{{ registerForm.passwordError }}</div>
+            <input type="password" v-model="registerForm.password" class="form-control" id="password" placeholder="">
+            <small class="form-control-feedback" v-show="registerForm.passwordError">{{ registerForm.passwordError }}</small>
           </div>
           <button type="submit" class="btn btn-primary">Register</button>
         </form>
@@ -28,9 +28,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import store from '../store.js'
-
 export default {
   name: 'Register', //this is the name of the component
   data () {
@@ -39,7 +36,6 @@ export default {
         username: '',
         email: '',
         password: '',
-        submitted: false,  // 是否点击了 submit 按钮
         errors: 0,  // 表单是否在前端验证通过，0 表示没有错误，验证通过
         usernameError: null,
         emailError: null,
@@ -49,8 +45,7 @@ export default {
   },
   methods: {
     onSubmit (e) {
-      this.registerForm.submitted = true  // 先更新状态
-      this.registerForm.errors = 0
+      this.registerForm.errors = 0  // 重置
 
       if (!this.registerForm.username) {
         this.registerForm.errors++
@@ -81,16 +76,16 @@ export default {
         return false
       }
 
-      const path = 'http://localhost:8000/api/users/'
+      const path = '/api/users/'
       const payload = {
         username: this.registerForm.username,
         email: this.registerForm.email,
         password: this.registerForm.password
       }
-      axios.post(path, payload)
+      this.$axios.post(path, payload)
         .then((response) => {
           // handle success
-          store.setNewAction()
+          this.$toasted.success('Congratulations, you are now a registered user !', { icon: 'fingerprint' })
           this.$router.push('/login')
         })
         .catch((error) => {

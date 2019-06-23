@@ -17,5 +17,5 @@ class Post(models.Model):
         db_table = 'tb_posts'
         verbose_name = '博客'
         verbose_name_plural = verbose_name
-
+        ordering = ['-timestamp']
 

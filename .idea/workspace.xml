@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="af7ce6c5-8f7f-4841-90bf-77993790837b" name="Default Changelist" comment="4.个人主页与用户头像">
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/css/bootstrap-markdown.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/css/custom.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/js/bootstrap-markdown.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/js/bootstrap-markdown.zh.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/js/marked.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/css/font-awesome.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/css/font-awesome.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/css/font-awesome.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/FontAwesome.otf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/fontawesome-webfont.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/fontawesome-webfont.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/fontawesome-webfont.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/fontawesome-webfont.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/icon-awesome/fonts/fontawesome-webfont.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/jquery.sticky.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/assets/markdown-styles/github-markdown.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-end/src/components/Post.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py" afterDir="false" />
+    <list default="true" id="af7ce6c5-8f7f-4841-90bf-77993790837b" name="Default Changelist" comment="5.1修复代码高亮bug&#10; Array.prototype.forEach.call(blocks, hljs.highlightBlock);">
+      <change afterPath="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/css/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/Base/Member.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/Base/Pagination.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/Base/Post.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/Post/UserFollowedsPostsList.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/Post/UserPostsList.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Auth/Login.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Followers.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Following.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Overview.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Settings/Account.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Settings/Email.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Settings/Notification.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Settings/Profile.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/Settings/Settings.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/User/User.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front-end/src/components/pagination.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/assets/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/assets/custom.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/EditProfile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/EditProfile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Alert.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Base/Alert.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/components/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Home.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Login1.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Navbar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Base/Navbar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Ping.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Ping.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Post.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/PostDetail.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/components/Profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Profile.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/components/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/Register.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/http.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/http.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/components/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/components/User/Auth/Register.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front-end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/posts/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/users/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/users/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/settings/dev.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/settings/dev.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py" beforeDir="false" afterPath="$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,7 +49,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ykblog$manage.coverage" NAME="manage Coverage Results" MODIFIED="1560930845020" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ykblog" />
+    <SUITE FILE_PATH="coverage/ykblog$manage.coverage" NAME="manage Coverage Results" MODIFIED="1561285339065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ykblog" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -89,89 +84,104 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/src/components/EditProfile.vue">
+        <entry file="file://$PROJECT_DIR$/front-end/src/components/Post/UserFollowedsPostsList.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="466">
-              <caret line="56" column="24" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="24" />
+            <state relative-caret-position="704">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/src/components/Login.vue">
+        <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Member.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1420">
-              <caret line="82" column="18" selection-start-line="82" selection-start-column="18" selection-end-line="82" selection-end-column="18" />
-              <folding>
-                <element signature="e#1369#1394#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="242">
+              <caret line="11" column="156" selection-start-line="11" selection-start-column="156" selection-end-line="11" selection-end-column="156" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/front-end/src/components/Post.vue">
+        <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/atom-one-dark-reasonable.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-560" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/kimbie.light.css">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/monokai.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-326" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/src/router/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="598">
-              <caret line="89" column="21" selection-start-line="89" selection-start-column="21" selection-end-line="89" selection-end-column="21" />
+            <state relative-caret-position="4598">
+              <caret line="287" column="56" selection-start-line="287" selection-start-column="56" selection-end-line="287" selection-end-column="56" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#2#28#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/src/main.js">
+        <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1302">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state>
               <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#140#161#0" expanded="true" />
-                <element signature="e#364#409#0" expanded="true" />
-                <element signature="e#437#490#0" expanded="true" />
-                <element signature="e#574#641#0" expanded="true" />
+                <element signature="e#0#28#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/front-end/src/http.js">
+        <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/datetime.pyi">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+            <state relative-caret-position="223">
+              <caret line="242" column="8" selection-start-line="242" selection-start-column="8" selection-end-line="242" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Followers.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="770">
+              <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/django/views/generic/base.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="78" column="8" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="462">
+              <caret line="21" column="59" lean-forward="true" selection-start-line="21" selection-start-column="59" selection-end-line="21" selection-end-column="59" />
+              <folding>
+                <element signature="e#1#33#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="215">
+              <caret line="50" column="6" selection-start-line="50" selection-start-column="6" selection-end-line="50" selection-end-column="6" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -183,8 +193,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
-        <option value="Vue Single File Component" />
         <option value="Python Script" />
+        <option value="CSS File" />
+        <option value="Vue Single File Component" />
       </list>
     </option>
   </component>
@@ -202,6 +213,9 @@
       <find>this.posts._meta.page</find>
       <find>.markdown-body pre</find>
       <find>.md-editor .btn-default</find>
+      <find>post.author.name</find>
+      <find>follow</find>
+      <find>front-end/src/components</find>
     </findStrings>
     <replaceStrings>
       <replace>localhost:8000</replace>
@@ -210,9 +224,11 @@
       <replace>posts.page</replace>
       <replace>count</replace>
       <replace>this.page</replace>
+      <replace />
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/front-end</dir>
+      <dir>$PROJECT_DIR$/front-end/src/components/User</dir>
       <dir>$PROJECT_DIR$/front-end/src/components</dir>
     </dirStrings>
   </component>
@@ -222,61 +238,72 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ykblog/manage.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/__init__.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/utils/exceptions.py" />
-        <option value="$PROJECT_DIR$/ykblog/docs/requirements.txt" />
-        <option value="$PROJECT_DIR$/front-end/src/components/Ping.vue" />
-        <option value="$PROJECT_DIR$/front-end/src/App.vue" />
-        <option value="$PROJECT_DIR$/front-end/src/components/Alert.vue" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/utils.py" />
         <option value="$PROJECT_DIR$/front-end/src/components/Navbar.vue" />
         <option value="$PROJECT_DIR$/front-end/src/http.ts" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py" />
         <option value="$PROJECT_DIR$/front-end/src/store.js" />
         <option value="$PROJECT_DIR$/front-end/src/components/EditProfile" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/post/urls.py" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/.datagrid/cell" />
         <option value="$PROJECT_DIR$/front-end/build/webpack.dev.conf.js" />
         <option value="$PROJECT_DIR$/front-end/build/webpack.prod.conf.js" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/post/serializers.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/post/views.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/post/models.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/apps.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/settings/dev.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/urls.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py" />
-        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py" />
         <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/views.py" />
-        <option value="$PROJECT_DIR$/front-end/src/components/Home.vue" />
-        <option value="$PROJECT_DIR$/front-end/src/assets/markdown-styles/github-markdown.css" />
         <option value="$PROJECT_DIR$/front-end/src/assets/custom.css" />
         <option value="$PROJECT_DIR$/front-end/src/components/EditProfile.vue" />
-        <option value="$PROJECT_DIR$/front-end/src/components/Login.vue" />
-        <option value="$PROJECT_DIR$/front-end/src/components/Profile.vue" />
         <option value="$PROJECT_DIR$/front-end/src/components/Register.vue" />
         <option value="$PROJECT_DIR$/front-end/src/http.js" />
-        <option value="$PROJECT_DIR$/front-end/src/router/index.js" />
+        <option value="$PROJECT_DIR$/front-end/src/assets/markdown-styles/github-markdown.css" />
         <option value="$PROJECT_DIR$/front-end/src/main.js" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py" />
+        <option value="$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/css/main.css" />
+        <option value="$PROJECT_DIR$/front-end/src/components/pagination.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Base/Post.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Ping.vue" />
         <option value="$PROJECT_DIR$/front-end/src/components/Post.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/PostDetail.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Base/Alert.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/App.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/router/index.js" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Login.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/Auth/Login.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/Settings/Profile.vue" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/urls.py" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/posts/urls.py" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Base/Navbar.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/Overview.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Profile.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Home.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/User.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/Following.vue" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Post/UserFollowedsPostsList.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/User/Followers.vue" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Post/UserPostsList.vue" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py" />
+        <option value="$PROJECT_DIR$/front-end/src/components/Base/Member.vue" />
+        <option value="$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="550" />
-    <option name="y" value="176" />
-    <option name="width" value="1207" />
-    <option name="height" value="681" />
+    <option name="x" value="64" />
+    <option name="y" value="-11" />
+    <option name="width" value="1857" />
+    <option name="height" value="1212" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -307,14 +334,6 @@
               <item name="ykblog" type="462c0819:PsiDirectoryNode" />
               <item name="front-end" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
-              <item name="markdown-styles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
-              <item name="front-end" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -322,7 +341,39 @@
               <item name="ykblog" type="462c0819:PsiDirectoryNode" />
               <item name="front-end" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="User" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="front-end" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="User" type="462c0819:PsiDirectoryNode" />
+              <item name="Auth" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="front-end" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="User" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="front-end" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="router" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="front-end" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
@@ -361,6 +412,14 @@
               <item name="ykblog" type="462c0819:PsiDirectoryNode" />
               <item name="ykblog" type="462c0819:PsiDirectoryNode" />
               <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="users" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ykblog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
+              <item name="ykblog" type="462c0819:PsiDirectoryNode" />
               <item name="settings" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -374,7 +433,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -383,6 +441,7 @@
     <property name="database.console.LAST_STATE" value="false" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -390,12 +449,17 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/front-end/src/components/User/Settings" />
+      <recent name="$PROJECT_DIR$/front-end/src/components/User/Auth" />
+      <recent name="$PROJECT_DIR$/front-end/src/components/Base" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/front-end/src/assets/markdown-styles" />
       <recent name="$PROJECT_DIR$/front-end/src/components" />
+      <recent name="$PROJECT_DIR$/front-end/src/components/Base" />
+      <recent name="$PROJECT_DIR$/front-end/src/assets/markdown-styles" />
       <recent name="$PROJECT_DIR$/front-end/src/assets" />
       <recent name="$PROJECT_DIR$/ykblog/ykblog/apps/post" />
-      <recent name="$PROJECT_DIR$/front-end" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -454,7 +518,12 @@
       <workItem from="1560754027799" duration="21702000" />
       <workItem from="1560826535918" duration="31568000" />
       <workItem from="1560865941792" duration="182000" />
-      <workItem from="1560925982504" duration="22185000" />
+      <workItem from="1560925982504" duration="22381000" />
+      <workItem from="1560954311036" duration="5727000" />
+      <workItem from="1561099194680" duration="21237000" />
+      <workItem from="1561131276758" duration="1345000" />
+      <workItem from="1561174786019" duration="19792000" />
+      <workItem from="1561255668715" duration="19550000" />
     </task>
     <task id="LOCAL-00001" summary="2.构建Vue通过axios.跨域设置">
       <created>1560697051234</created>
@@ -484,11 +553,25 @@
       <option name="project" value="LOCAL" />
       <updated>1560835182838</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="5.博客增删改查(代码高亮bug)">
+      <created>1560948641345</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1560948641345</updated>
+    </task>
+    <task id="LOCAL-00006" summary="5.1修复代码高亮bug&#10; Array.prototype.forEach.call(blocks, hljs.highlightBlock);">
+      <created>1560958046207</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1560958046207</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85820000" />
+    <option name="totallyTimeSpent" value="153667000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -501,13 +584,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14886552" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15716657" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32921028" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3282588" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33682206" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -516,7 +600,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32921028" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.32921028" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.23501427" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.2226451" />
       <window_info anchor="bottom" id="Database Console" order="12" weight="0.32921028" />
       <window_info anchor="bottom" id="TypeScript" order="13" />
       <window_info anchor="bottom" id="Python Console" order="14" weight="0.32921028" />
@@ -524,7 +608,7 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
-      <window_info anchor="right" id="Database" order="4" weight="0.23021583" />
+      <window_info anchor="right" id="Database" order="4" visible="true" weight="0.15661317" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -535,150 +619,173 @@
     <MESSAGE value="3.用户相关API+token" />
     <MESSAGE value="3.1修该用户相关API+token bug" />
     <MESSAGE value="4.个人主页与用户头像" />
-    <option name="LAST_COMMIT_MESSAGE" value="4.个人主页与用户头像" />
+    <MESSAGE value="5.博客增删改查(代码高亮bug)" />
+    <MESSAGE value="5.1修复代码高亮bug&#10; Array.prototype.forEach.call(blocks, hljs.highlightBlock);" />
+    <option name="LAST_COMMIT_MESSAGE" value="5.1修复代码高亮bug&#10; Array.prototype.forEach.call(blocks, hljs.highlightBlock);" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/pagination.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Alert.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="155" column="6" selection-start-line="155" selection-start-column="6" selection-end-line="155" selection-end-column="6" />
+        <state relative-caret-position="176">
+          <caret line="8" column="53" selection-start-line="8" selection-start-column="53" selection-end-line="8" selection-end-column="53" />
         </state>
       </provider>
     </entry>
-    <entry file="das://926505f6-cc82-41b3-aa36-18039b81ecbd/schema/ykblog/table/posts" />
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/front-end/src/assets/logo.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/post/serializers.py" />
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/post/models.py" />
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/post/views.py" />
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/settings/dev.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Auth/Register.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="43" column="21" selection-start-line="43" selection-start-column="21" selection-end-line="43" selection-end-column="21" />
+        <state relative-caret-position="1188">
+          <caret line="54" column="7" selection-start-line="54" selection-start-column="7" selection-end-line="54" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/EditProfile.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1232">
+          <caret line="56" column="17" selection-end-line="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="836">
+          <caret line="47" column="23" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
           <folding>
-            <element signature="e#311#320#0" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#140#161#0" expanded="true" />
+            <element signature="e#364#409#0" expanded="true" />
+            <element signature="e#437#490#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/admin.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/migrations/0001_initial.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/migrations/0001_initial.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/router/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+        <state relative-caret-position="2706">
+          <caret line="134" column="21" selection-start-line="134" selection-start-column="21" selection-end-line="134" selection-end-column="21" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#111#165#0" expanded="true" />
+            <element signature="e#225#266#0" expanded="true" />
+            <element signature="e#569#627#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Login1.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2376">
+          <caret line="110" column="52" selection-start-line="107" selection-start-column="9" selection-end-line="110" selection-end-column="52" />
+          <folding>
+            <element signature="e#1369#1394#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Auth/Login.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="78" column="33" selection-start-line="78" selection-start-column="33" selection-end-line="78" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Pagination.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="13" column="39" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Settings/Notification.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Settings/Email.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Settings/Profile.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1364">
+          <caret line="62" column="63" selection-start-line="62" selection-start-column="63" selection-end-line="62" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Settings/Account.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="28" column="43" lean-forward="true" selection-start-line="28" selection-start-column="43" selection-end-line="28" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/serializers.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Navbar.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="170" column="8" selection-start-line="170" selection-start-column="8" selection-end-line="170" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/apps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+        <state relative-caret-position="355">
+          <caret line="59" column="6" selection-start-line="59" selection-start-column="6" selection-end-line="59" selection-end-column="6" />
           <folding>
-            <element signature="e#1#33#0" expanded="true" />
+            <element signature="n#style#0;n#nav#0;n#div#0;n#section#0;n#template#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/urls.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/store.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
+        <state relative-caret-position="132">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Overview.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="29" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
+        <state relative-caret-position="153">
+          <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Home.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="726">
-          <caret line="57" lean-forward="true" selection-start-line="50" selection-end-line="57" />
+        <state relative-caret-position="550">
+          <caret line="55" column="130" selection-start-line="55" selection-start-column="100" selection-end-line="55" selection-end-column="130" />
           <folding>
-            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#567#574#1" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/User.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="880">
+          <caret line="143" selection-start-line="143" selection-end-line="143" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Settings/Settings.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="35" column="17" selection-start-line="35" selection-start-column="17" selection-end-line="35" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="286">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="e#1#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="102" column="22" lean-forward="true" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
-          <folding>
-            <element signature="e#2#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/generics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="76" column="8" selection-start-line="76" selection-start-column="8" selection-end-line="76" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/mixins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="90" column="8" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        <state relative-caret-position="86">
+          <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
@@ -692,180 +799,203 @@
         </state>
       </provider>
     </entry>
+    <entry file="das://926505f6-cc82-41b3-aa36-18039b81ecbd/schema/ykblog/table/tb_users">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://926505f6-cc82-41b3-aa36-18039b81ecbd/schema/ykblog/table/tb_users_groups">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://926505f6-cc82-41b3-aa36-18039b81ecbd/schema/ykblog/table/tb_users_user_permissions">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1452">
-          <caret line="66" column="54" lean-forward="true" selection-start-line="66" selection-start-column="54" selection-end-line="66" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="352">
+          <caret line="16" selection-start-line="16" selection-end-line="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/vue-markdown/dist/vue-markdown.common.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/webpack-merge/lib/types.js">
+    <entry file="file://$PROJECT_DIR$/front-end/src/App.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/Home.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="159" column="50" selection-start-line="159" selection-start-column="50" selection-end-line="159" selection-end-column="50" />
-          <folding>
-            <element signature="e#567#574#1" expanded="true" />
-            <element signature="e#9658#9720#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/assets/markdown-styles/github-markdown.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="657" column="23" lean-forward="true" selection-start-line="657" selection-start-column="23" selection-end-line="657" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/config/dev.env.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/build/webpack.dev.conf.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/package.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/assets/custom.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="23" selection-start-line="6" selection-end-line="6" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/assets/bootstrap-markdown/js/bootstrap-markdown.zh.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/Profile.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="93" column="5" lean-forward="true" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/Register.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1716">
-          <caret line="78" column="31" selection-start-line="78" selection-start-column="31" selection-end-line="78" selection-end-column="31" />
+        <state relative-caret-position="176">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/front-end/src/http.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+        <state>
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/lib/index.js">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/PostDetail.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="23" column="38" lean-forward="true" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Following.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Post.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="53" column="2" selection-start-line="53" selection-start-column="2" selection-end-line="53" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Profile.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="5" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/utils/pagination.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/lib/highlight.js">
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Post/UserPostsList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="682" column="11" selection-start-line="682" selection-start-column="11" selection-end-line="682" selection-end-column="11" />
+        <state relative-caret-position="840">
+          <caret line="53" column="26" lean-forward="true" selection-start-line="53" selection-start-column="26" selection-end-line="53" selection-end-column="26" />
+          <folding>
+            <element signature="n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/EditProfile.vue">
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/mixins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="56" column="24" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="24" />
+        <state relative-caret-position="263">
+          <caret line="34" column="6" selection-start-line="34" selection-start-column="6" selection-end-line="34" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/monokai.css">
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/rest_framework/generics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-326" />
+        <state relative-caret-position="263">
+          <caret line="194" column="32" selection-start-line="194" selection-start-column="32" selection-end-line="194" selection-end-column="32" />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/kimbie.light.css">
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/vue/types/vue.d.ts">
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="98" column="2" selection-start-line="98" selection-start-column="2" selection-end-line="98" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/Login.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1420">
-          <caret line="82" column="18" selection-start-line="82" selection-start-column="18" selection-end-line="82" selection-end-column="18" />
+        <state relative-caret-position="462">
+          <caret line="21" column="59" lean-forward="true" selection-start-line="21" selection-start-column="59" selection-end-line="21" selection-end-column="59" />
           <folding>
-            <element signature="e#1369#1394#0" expanded="true" />
+            <element signature="e#1#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="10474" column="4" selection-start-line="10474" selection-start-column="4" selection-end-line="10474" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/node_modules/highlight.js/styles/atom-one-dark-reasonable.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-560" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/router/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="598">
-          <caret line="89" column="21" selection-start-line="89" selection-start-column="21" selection-end-line="89" selection-end-column="21" />
+        <state relative-caret-position="215">
+          <caret line="50" column="6" selection-start-line="50" selection-start-column="6" selection-end-line="50" selection-end-column="6" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/main.js">
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/datetime.pyi">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1302">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="223">
+          <caret line="242" column="8" selection-start-line="242" selection-start-column="8" selection-end-line="242" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Post/UserFollowedsPostsList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/User/Followers.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="770">
+          <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front-end/src/components/Base/Member.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="156" selection-start-line="11" selection-start-column="156" selection-end-line="11" selection-end-column="156" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://926505f6-cc82-41b3-aa36-18039b81ecbd/schema/ykblog/table/users_friendship">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/django/views/generic/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="78" column="8" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#140#161#0" expanded="true" />
-            <element signature="e#364#409#0" expanded="true" />
-            <element signature="e#437#490#0" expanded="true" />
-            <element signature="e#574#641#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front-end/src/components/Post.vue">
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/posts/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
+        <state>
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ykblog/ykblog/apps/users/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4598">
+          <caret line="287" column="56" selection-start-line="287" selection-start-column="56" selection-end-line="287" selection-end-column="56" />
+          <folding>
+            <element signature="e#2#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

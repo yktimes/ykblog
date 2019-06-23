@@ -1,61 +1,12 @@
 <template>
-  <div class="container">
-
-    <!-- Modal: Edit Post -->
-    <div class="modal fade" id="updatePostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updatePostModalTitle">Update Post</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-            <form @submit.prevent="onSubmitUpdate" @reset.prevent="onResetUpdate">
-              <div class="form-group" v-bind:class="{'u-has-error-v1': editForm.titleError}">
-                <input type="text" v-model="editForm.title" class="form-control" id="editform_title" placeholder="标题">
-                <small class="form-control-feedback" v-show="editForm.titleError">{{ editForm.titleError }}</small>
-              </div>
-              <div class="form-group">
-                <input type="text" v-model="editForm.summary" class="form-control" id="editform_summary" placeholder="摘要">
-              </div>
-              <div class="form-group">
-                <textarea v-model="editForm.body" class="form-control" id="editform_body" rows="5" placeholder=" 内容"></textarea>
-                <small class="form-control-feedback" v-show="editForm.bodyError">{{ editForm.bodyError }}</small>
-              </div>
-              <button type="reset" class="btn btn-secondary">Cancel</button>
-              <button type="submit" class="btn btn-primary">Update</button>
-            </form>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <form v-if="sharedState.is_authenticated" @submit.prevent="onSubmitAdd" class="g-mb-40">
-      <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
-        <input type="text" v-model="postForm.title" class="form-control" id="post_title" placeholder="标题">
-        <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>
-      </div>
-      <div class="form-group">
-        <input type="text" v-model="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">
-      </div>
-      <div class="form-group">
-        <textarea v-model="postForm.body" class="form-control" id="post_body" rows="5" placeholder=" 内容"></textarea>
-        <small class="form-control-feedback" v-show="postForm.bodyError">{{ postForm.bodyError }}</small>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
+  <!-- 用户的文章列表 -->
+  <div>
     <div class="card border-0 g-mb-15">
       <!-- Panel Header -->
       <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
         <h3 class="h6 mb-0">
-          <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> All Posts <small v-if="datalist">(共 {{ count }} 篇, {{page_total}}页)</small>
+          <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> Posts of {{ user.name || user.username }} 's followeds <small v-if="datalist">(共 {{ count }} 篇, {{ page_total }} 页)</small>
         </h3>
-
         <div class="dropdown g-mb-10 g-mb-0--md">
           <span class="d-block g-color-primary--hover g-cursor-pointer g-mr-minus-5 g-pa-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="icon-options-vertical g-pos-rel g-top-1"></i>
@@ -74,7 +25,7 @@
             <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
               <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 篇
             </router-link>
-
+            
           </div>
         </div>
       </div>
@@ -92,9 +43,9 @@
       </div>
       <!-- End Panel Body -->
     </div>
-
+  
     <!-- Pagination #04 -->
-    <div v-if="datalist">
+   <div v-if="datalist">
       <pagination
         v-bind:cur-page="page"
         v-bind:per-page="per_page"
@@ -102,43 +53,37 @@
       </pagination>
     </div>
     <!-- End Pagination #04 -->
-
   </div>
 </template>
 
 <script>
-import store from '../store'
-import Post from './Base/Post'
-import Pagination from './Base/Pagination'
+import Post from '../Base/Post'
+import Pagination from '../Base/Pagination'
 // bootstrap-markdown 编辑器依赖的 JS 文件，初始化编辑器在组件的 created() 方法中，同时它需要 JQuery 支持哦
-import '../assets/bootstrap-markdown/js/bootstrap-markdown.js'
-import '../assets/bootstrap-markdown/js/bootstrap-markdown.zh.js'
-import '../assets/bootstrap-markdown/js/marked.js'
+import '../../assets/bootstrap-markdown/js/bootstrap-markdown.js'
+import '../../assets/bootstrap-markdown/js/bootstrap-markdown.zh.js'
+import '../../assets/bootstrap-markdown/js/marked.js'
 
 
 export default {
-  name: 'Home',  //this is the name of the component
+  name: 'UserFollowedsPostsList',  // this is the name of the component
   components: {
     Post,
     Pagination
   },
   data () {
     return {
-      page :1,
+
+       page :1,
       per_page: 5,
-      sharedState: store.state,
+
       count:0,
       page_total:0,
-      posts: '',
+
       datalist:[],
-      postForm: {
-        title: '',
-        summary: '',
-        body: '',
-        errors: 0,  // 表单是否在前端验证通过，0 表示没有错误，验证通过
-        titleError: null,
-        bodyError: null
-      },
+
+      user: '',
+      posts: '',
       editForm: {
         title: '',
         summary: '',
@@ -150,8 +95,19 @@ export default {
     }
   },
   methods: {
-    getPosts () {
-
+    getUser (id) {
+      const path = `/api/users/${id}/`
+      this.$axios.get(path)
+        .then((response) => {
+          // handle success
+          this.user = response.data
+        })
+        .catch((error) => {
+          // handle error
+          console.error(error)
+        })
+    },
+    getUserFollowedsPosts (id) {
       if (typeof this.$route.query.page != 'undefined') {
         this.page = this.$route.query.page
       }
@@ -159,64 +115,20 @@ export default {
       if (typeof this.$route.query.per_page != 'undefined') {
         this.per_page = this.$route.query.per_page
       }
-      const path = '/api/posts/?page='+this.page+'&per_page='+this.per_page
+      const path = '/api/users/'+id+'/followeds-posts/?page='+this.page+'&per_page='+this.per_page
+      
+
       this.$axios.get(path)
         .then((response) => {
           // handle success
-          this.datalist = response.data.results
+            this.datalist = response.data.results
           this.posts = response.data.data
           this.count=response.data.count
           this.page_total = Math.ceil(this.count/this.per_page)
-          console.log(this.page_total)
         })
         .catch((error) => {
           // handle error
-          console.log(error.response.data)
-        })
-    },
-    onSubmitAdd (e) {
-      this.postForm.errors = 0  // 重置
-
-      if (!this.postForm.title) {
-        this.postForm.errors++
-        this.postForm.titleError = 'Title is required.'
-      } else {
-        this.postForm.titleError = null
-      }
-
-      if (!this.postForm.body) {
-        this.postForm.errors++
-        this.postForm.bodyError = 'Body is required.'
-        // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_body 上
-        $('.md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-      } else {
-        this.postForm.bodyError = null
-        $('.md-editor').closest('.form-group').removeClass('u-has-error-v1')
-      }
-
-      if (this.postForm.errors > 0) {
-        // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
-        return false
-      }
-
-      const path = '/api/posts/'
-      const payload = {
-        title: this.postForm.title,
-        summary: this.postForm.summary,
-        body: this.postForm.body
-      }
-      this.$axios.post(path, payload)
-        .then((response) => {
-          // handle success
-          this.getPosts()
-          this.$toasted.success('Successed add a new post.', { icon: 'fingerprint' })
-          this.postForm.title = '',
-          this.postForm.summary = '',
-          this.postForm.body = ''
-        })
-        .catch((error) => {
-          // handle error
-          console.log(error.response.data)
+          console.error(error)
         })
     },
     onEditPost (post) {
@@ -228,8 +140,8 @@ export default {
     onSubmitUpdate () {
       this.editForm.errors = 0  // 重置
       // 每次提交前先移除错误，不然错误就会累加
-      $('.form-control-feedback').remove()
-      $('.form-group.u-has-error-v1').removeClass('u-has-error-v1')
+      $('#editForm .form-control-feedback').remove()
+      $('#editForm .form-group.u-has-error-v1').removeClass('u-has-error-v1')
 
       if (!this.editForm.title) {
         this.editForm.errors++
@@ -246,8 +158,8 @@ export default {
         this.editForm.bodyError = 'Body is required.'
         // boostrap4 modal依赖jQuery，不兼容 vue.js 的双向绑定。所以要手动添加警示样式和错误提示
         // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_body 上
-        $('.md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-        $('.md-editor').after('<small class="form-control-feedback">' + this.editForm.bodyError + '</small>')
+        $('#editForm .md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
+        $('#editForm .md-editor').after('<small class="form-control-feedback">' + this.editForm.bodyError + '</small>')
       } else {
         this.editForm.bodyError = null
       }
@@ -269,7 +181,7 @@ export default {
       this.$axios.put(path, payload)
         .then((response) => {
           // handle success
-          this.getPosts()
+          this.getUserPosts(this.$route.params.id)
           this.$toasted.success('Successed update the post.', { icon: 'fingerprint' })
           this.editForm.title = '',
           this.editForm.summary = '',
@@ -282,11 +194,11 @@ export default {
     },
     onResetUpdate () {
       // 先移除错误
-      $('.form-control-feedback').remove()
-      $('.form-group.u-has-error-v1').removeClass('u-has-error-v1')
+      $('#editForm .form-control-feedback').remove()
+      $('#editForm .form-group.u-has-error-v1').removeClass('u-has-error-v1')
       // 再隐藏 Modal
       $('#updatePostModal').modal('hide')
-      // this.getPosts()
+      // this.getUserPosts(this.$route.params.id)
       this.$toasted.info('Cancelled, the post is not update.', { icon: 'fingerprint' })
     },
     onDeletePost (post) {
@@ -306,8 +218,7 @@ export default {
             .then((response) => {
               // handle success
               this.$swal('Deleted', 'You successfully deleted this post', 'success')
-              // this.$toasted.success('Successed delete the post.', { icon: 'fingerprint' })
-              this.getPosts()
+              this.getUserPosts(this.$route.params.id)
             })
             .catch((error) => {
               // handle error
@@ -320,10 +231,12 @@ export default {
     }
   },
   created () {
-    this.getPosts()
+    const user_id = this.$route.params.id
+    this.getUser(user_id)
+    this.getUserFollowedsPosts(user_id)
     // 初始化 bootstrap-markdown 插件
     $(document).ready(function() {
-      $("#post_body, #editform_body").markdown({
+      $("#editform_body").markdown({
         autofocus:false,
         savable:false,
         iconlibrary: 'fa',  // 使用Font Awesome图标
@@ -331,11 +244,20 @@ export default {
       })
     })
   },
-  // 当查询参数 page 或 per_page 变化后重新加载数据
+  // 当 id 变化后重新加载数据
   beforeRouteUpdate (to, from, next) {
-    // 注意：要先执行 next() 不然 this.$route.query 还是之前的
     next()
-    this.getPosts()
+    this.getUser(to.params.id)
+    this.getUserFollowedsPosts(to.params.id)
+    // 初始化 bootstrap-markdown 插件
+    $(document).ready(function() {
+      $("#editform_body").markdown({
+        autofocus:false,
+        savable:false,
+        iconlibrary: 'fa',  // 使用Font Awesome图标
+        language: 'zh'
+      })
+    })
   }
 }
 </script>

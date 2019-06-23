@@ -1,10 +1,5 @@
 <template>
 
-
-
-
-
-
   <div class="container">
     <!-- Modal: Edit Post -->
     <div class="modal fade" id="updatePostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -59,7 +54,7 @@
                 <span class="btn btn-xs u-btn-outline-aqua g-mr-10">评论</span>
               </li>
               <li v-if="post.author" class="list-inline-item">
-                <router-link v-bind:to="{ name: 'Profile', params: { id: post.author.id }}" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-text-underline--none--hover"><span v-if="post.author.name">{{ post.author.name }}</span><span v-else>{{ post.author.username }}</span></router-link>
+              <router-link v-bind:to="{ path: `/user/${post.author.id}/` }" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-text-underline--none--hover"><span v-if="post.author.name">{{ post.author.name }}</span><span v-else>{{ post.author.username }}</span></router-link>
               </li>
               <li class="list-inline-item g-mx-10">/</li>
               <li class="list-inline-item">
@@ -143,21 +138,6 @@ import VueMarkdown from 'vue-markdown'
 
 
 
-
-
-// import hljs from 'highlight.js'
-//
-//
-// // 样式文件，浅色：default, atelier-dune-light  深色：atom-one-dark, atom-one-dark-reasonable, monokai
-// import 'highlight.js/styles/atom-one-dark-reasonable.css'
-// Vue.directive('highlight',function (el) {
-//     let blocks = el.querySelectorAll('pre code');
-//     setTimeout(() =>{
-//         blocks.forEach((block)=>{
-//         hljs.highlightBlock(block)
-//         })
-//     }, 200)
-// })
 
 // 固定 TOC
 import '../assets/jquery.sticky'

@@ -13,6 +13,7 @@ import 'bootstrap'
 // 字体图标
 import './assets/icon-line/css/simple-line-icons.css'
 import './assets/icon-material/material-icons.css'
+import './assets/icon-line-pro/style.css'
 // bootstrap-markdown 编辑器需要的样式A
 import './assets/bootstrap-markdown/css/bootstrap-markdown.min.css'
 import './assets/bootstrap-markdown/css/custom.css'

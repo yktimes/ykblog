@@ -77,6 +77,7 @@ export default {
   name: 'Profile',  //this is the name of the component
   data () {
     return {
+
       sharedState: store.state,
       user: {
         username: '',

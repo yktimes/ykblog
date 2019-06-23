@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User,FriendShip
 import re
 
 from rest_framework_jwt.settings import api_settings
@@ -47,6 +47,17 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
+class MySerializer(serializers.Serializer):
+    """图书数据序列化器"""
+    id = serializers.IntegerField(label='ID', read_only=True)
+    username = serializers.CharField(label='注册名称',max_length=30, required=False)
+    name = serializers.CharField(label='名称', max_length=30,required=False)
+    avatar = serializers.CharField(label='发布日期',max_length=255, required=False)
+    followeds_count = serializers.IntegerField(label='关注', required=False)
+    followers_count = serializers.IntegerField(label='粉丝', required=False)
+    is_following = serializers.BooleanField(label='是否关注', required=False)
+    date=serializers.DateTimeField(required=False)
 
 class Mysite(serializers.ModelSerializer):
 
@@ -110,3 +121,18 @@ class UserUpdatev2Serializer(serializers.ModelSerializer):
             'location': {'required': False},
             'about':{'required': False},
         }
+
+class FollowerSerializers(serializers.ModelSerializer):
+    follower = Mysite(read_only=True)
+    class Meta:
+        model = FriendShip
+
+        fields = ('follower',  'date')
+
+
+class FollowedSerializers(serializers.ModelSerializer):
+    followed = Mysite(read_only=True)
+    class Meta:
+        model = FriendShip
+
+        fields = ('followed',  'date')

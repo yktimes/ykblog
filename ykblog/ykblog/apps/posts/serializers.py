@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Post
+from .models import Post,Comment
 from users.models import User
 
 
@@ -23,6 +23,19 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'author')
 
 
+class PostAuthorSerializer(serializers.ModelSerializer):
+    """
+    创建博客用户序列化器
+    """
+    # author = UserPostInfo(read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ("id",  'author')
+
+        read_only_fields = ('id', 'author')
+
+
 class PostListSerializer(serializers.ModelSerializer):
     """
 
@@ -36,3 +49,29 @@ class PostListSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "body", 'summary', 'author')
 
         read_only_fields = ('id',)
+
+class CreateWallCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('post', 'body', 'parent_id')
+
+        extra_kwargs = {
+            'parent_id': {'required': False, },
+        }
+
+    # def validate_post(self, attrs):
+
+    def validate_body(self, value):
+        """评论内容，不能为空"""
+        if not value.strip():
+            raise serializers.ValidationError('评论不能为空')
+
+        return value
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserPostInfo()
+    post = PostAuthorSerializer()
+    class Meta:
+        model = Comment
+        fields = ('id','body','timestamp','mark_read','disabled','author','parent','post')
+

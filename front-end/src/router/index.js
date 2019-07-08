@@ -12,6 +12,8 @@ import Followers from '@/components/User/Followers'
 import Following from '@/components/User/Following'
 import UserPostsList from '@/components/Post/UserPostsList'
 import UserFollowedsPostsList from '@/components/Post/UserFollowedsPostsList'
+import UserCommentsList from '@/components/Comment/UserCommentsList'
+
 // 用户个人设置
 import Settings from '@/components/User/Settings/Settings'
 import Profile from '@/components/User/Settings/Profile'
@@ -19,7 +21,7 @@ import Account from '@/components/User/Settings/Account'
 import Email from '@/components/User/Settings/Email'
 import Notification from '@/components/User/Settings/Notification'
 // 博客详情页
-import PostDetail from '@/components/PostDetail'
+import PostDetail from '@/components/Post/PostDetail'
 // 测试与后端连通性
 import Ping from '@/components/Ping'
 
@@ -74,7 +76,9 @@ const router = new Router({
 
         // UserFollowedsPostsList will be rendered inside User's <router-view>
         // when /user/:id/followeds-posts is matched
-        { path: 'followeds-posts', name: 'UserFollowedsPostsList', component: UserFollowedsPostsList }
+        { path: 'followeds-posts', name: 'UserFollowedsPostsList', component: UserFollowedsPostsList },
+
+         { path: 'comments', name: 'UserCommentsList', component: UserCommentsList }
       ],
       meta: {
         requiresAuth: true

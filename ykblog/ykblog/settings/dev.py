@@ -129,7 +129,7 @@ DATABASES = {
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'mysql',  # 数据库用户密码
-        'NAME': 'ykblog'  # 数据库名字
+        'NAME': 'ykblogs'  # 数据库名字
     }
 }
 
@@ -211,6 +211,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 
+    # #分页
+    # "PAGE_SIZE":2,   #每页显示多少个
+
     # 分页
     'DEFAULT_PAGINATION_CLASS': 'ykblog.utils.pagination.StandardResultPagination',
 }
@@ -222,16 +225,36 @@ JWT_AUTH = {
 
 APPEND_SLASH=False
 # CORS
+#跨域增加忽略
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:8080',
-    '127.0.0.1:8081',
-    '127.0.0.1:8082',
-    'localhost:8080',
-    'localhost:8081',
-    'localhost:8082',
-
+    '*'
 )
-CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+)
 
 
 AUTH_USER_MODEL = 'users.User'

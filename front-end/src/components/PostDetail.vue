@@ -129,7 +129,7 @@ const highlightCode = () => {
   Array.prototype.forEach.call(blocks, hljs.highlightBlock);
 }
 
-import store from '../store'
+import store from '../../store'
 
 
 // 导入 vue-markdown 组件解析 markdown 原文为　HTML
@@ -140,7 +140,7 @@ import VueMarkdown from 'vue-markdown'
 
 
 // 固定 TOC
-import '../assets/jquery.sticky'
+import '../../assets/jquery.sticky'
 
 
 export default {

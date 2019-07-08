@@ -35,7 +35,9 @@
             <router-link v-bind:to="{ name: 'PostDetail', params: { id: post.id }}" class="btn btn-xs u-btn-outline-primary">阅读全文</router-link>
           </li>
           <li v-if="post.author.id == sharedState.user_id" class="list-inline-item g-mr-5">
-            <button v-on:click="$emit('edit-post')" class="btn btn-xs u-btn-outline-purple" data-toggle="modal" data-target="#updatePostModal">编辑</button>
+            <!--<button v-on:click="$emit('edit-post')" class="btn btn-xs u-btn-outline-purple" data-toggle="modal" data-target="#updatePostModal">编辑</button>-->
+
+            <button v-on:click="$emit('edit-post')" class="btn btn-xs u-btn-outline-purple" data-toggle="modal" data-target="#editPostModal">编辑</button>
           </li>
           <li v-if="post.author.id == sharedState.user_id" class="list-inline-item">
             <button v-on:click="$emit('delete-post')" class="btn btn-xs u-btn-outline-red">删除</button>

@@ -18,9 +18,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author')
+        fields = ("id", "title", "body", 'summary', 'author','views')
 
-        read_only_fields = ('id', 'author')
+        read_only_fields = ('id', 'author','views')
 
 
 class PostAuthorSerializer(serializers.ModelSerializer):
@@ -68,10 +68,13 @@ class CreateWallCommentSerializer(serializers.ModelSerializer):
 
         return value
 
+
+
 class CommentSerializer(serializers.ModelSerializer):
     author = UserPostInfo()
     post = PostAuthorSerializer()
+
     class Meta:
         model = Comment
-        fields = ('id','body','timestamp','mark_read','disabled','author','parent','post')
+        fields = ('id','body','timestamp','mark_read','disabled','author','parent','post','liked')
 

@@ -17,6 +17,7 @@ from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListAPIView
+from django.db.models import F
 
 from ykblog.utils.pagination import StandardResultPagination
 
@@ -62,6 +63,11 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
+
+        instance = self.get_object()
+
+        instance.views=F("views") + 1
+        instance.save()
 
         return self.retrieve(request, *args, **kwargs)
 
@@ -258,3 +264,23 @@ class PostCommentView(APIView):
             s = pg.get_paginated_response(data=ret)
 
             return s
+
+class LikeView(APIView):
+    """点赞"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request,pk):
+        """点赞功能"""
+
+        try:
+            comment = Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+
+            # 取消或添加赞
+            comment.switch_like(request.user)
+            # news.update(up_count=F("up_count") + 1)
+
+            # return Response({"likes": news.count_likers()})
+            return Response({'status': 'success'},status=status.HTTP_200_OK)

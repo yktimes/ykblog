@@ -14,6 +14,8 @@ urlpatterns = [
 
 
     url('^comments/$', views.CommentsView.as_view()),
-    url('^comments/(?P<pk>\d+)/', views.CommentsViewSetView.as_view()),
+    url('^comments/(?P<pk>\d+)/$', views.CommentsViewSetView.as_view()),
+
+    url('^comments/(?P<pk>\d+)/like/$', views.LikeView.as_view()),
 
 ]

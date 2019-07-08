@@ -37,6 +37,8 @@ class Comment(models.Model):
     parent = models.ForeignKey("self",related_name='child',
                                null=True, blank=True,on_delete=models.CASCADE)  # blank=True 在django admin里面可以不填
 
+    liked = models.ManyToManyField('users.User', related_name='liked_comments', verbose_name='点赞用户')
+
     class Meta:
         db_table = 'posts_comment'
         verbose_name = '评论'
@@ -64,3 +66,25 @@ class Comment(models.Model):
         descendants(self)
 
         return data
+
+    def switch_like(self, user):
+        """点赞或取消赞"""
+
+        # 如果用户已经赞过，则取消赞
+        if user in self.liked.all():
+            self.liked.remove(user)
+
+        else:
+            self.liked.add(user)
+
+            # 添加赞的时候通知楼主　　# 这个ｋｅｙ可也不写
+            # TODO　 动态点赞提醒
+            # notification_handler(user,self.Cuser,'L',self,id_value=str(self.pk),key="social_update")
+
+    def count_likers(self):
+        """点赞数"""
+        return self.liked.count()
+
+    def get_likers(self):
+        """获取所有点赞用户"""
+        return self.liked.all()

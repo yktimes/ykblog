@@ -93,7 +93,7 @@
               <li class="list-inline-item g-mx-10">/</li>
               <li class="list-inline-item g-mr-10">
                 <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-text-underline--none--hover" href="#comment-list-wrap">
-                  <i class="icon-bubble"></i> 0
+                  <i class="icon-bubble"></i> {{comments.count}}
                 </a>
               </li>
               <li class="list-inline-item ml-auto">
@@ -213,11 +213,11 @@
 
                   <ul class="list-inline d-sm-flex my-0">
                     <li v-if="!comment.disabled" class="list-inline-item g-mr-20">
-                      <!--<a v-on:click="onLikeOrUnlike(comment)" class="u-link-v5 g-color-gray-dark-v4 g-color-primary&#45;&#45;hover" href="javascript:;">-->
-                        <!--<i v-bind:class="{ 'g-color-red': comment.likers_id.indexOf(sharedState.user_id) != -1 }" class="icon-like g-pos-rel g-top-1 g-mr-3"></i>-->
-                        <!--<span v-if="comment.likers_id.length > 0"> {{ comment.likers_id.length }} 人赞</span>-->
-                        <!--<span v-else>赞</span>-->
-                      <!--</a>-->
+                      <a v-on:click="onLikeOrUnlike(comment)" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="javascript:;">
+                        <i v-bind:class="{ 'g-color-red': comment.liked.indexOf(parseInt(sharedState.user_id)) != -1 }" class="icon-like g-pos-rel g-top-1 g-mr-3"></i>
+                        <span v-if="comment.liked.length > 0"> {{ comment.liked.length }} 人赞</span>
+                        <span v-else>赞</span>
+                      </a>
                     </li>
                     <li v-if="!comment.disabled" class="list-inline-item g-mr-20">
                       <a v-on:click="onClickReply(comment)" class="comment-reply-link u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="javascript:;">
@@ -272,11 +272,13 @@
 
                   <ul class="list-inline d-sm-flex my-0">
                     <li v-if="!child.disabled" class="list-inline-item g-mr-20">
-                      <!--<a v-on:click="onLikeOrUnlike(child)" class="u-link-v5 g-color-gray-dark-v4 g-color-primary&#45;&#45;hover" href="javascript:;">-->
-                        <!--<i v-bind:class="{ 'g-color-red': child.likers_id.indexOf(sharedState.user_id) != -1 }" class="icon-like g-pos-rel g-top-1 g-mr-3"></i>-->
-                        <!--<span v-if="child.likers_id.length > 0"> {{ child.likers_id.length }} 人赞</span>-->
-                        <!--<span v-else>赞</span>-->
-                      <!--</a>-->
+                      <a v-on:click="onLikeOrUnlike(child)" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="javascript:;">
+                        <i v-bind:class="{ 'g-color-red': child.liked.indexOf(parseInt(sharedState.user_id)) != -1 }" class="icon-like g-pos-rel g-top-1 g-mr-3"></i>
+
+
+                        <span v-if="child.liked.length > 0"> {{ child.liked.length }} 人赞</span>
+                        <span v-else>赞</span>
+                      </a>
                     </li>
                     <li v-if="!child.disabled" class="list-inline-item g-mr-20">
                       <a v-on:click="onClickReply(child)" class="comment-reply-link u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="javascript:;">
@@ -561,22 +563,22 @@ export default {
       }
 
       let path = ''
-      if (comment.likers_id.indexOf(this.sharedState.user_id) != -1) {
+      if (comment.liked.indexOf(this.sharedState.user_id) != -1) {
         // 当前登录用户已点过赞，再次点击则取消赞
-        path = `/api/comments/${comment.id}/unlike`
+        path = `/api/comments/${comment.id}/like/`
       } else {
-        path = `/api/comments/${comment.id}/like`
+        path = `/api/comments/${comment.id}/like/`
       }
       this.$axios.get(path)
         .then((response) => {
           // handle success
           this.getPostComments(this.$route.params.id)
-          this.$toasted.success(response.data.message, { icon: 'fingerprint' })
+          // this.$toasted.success(response.data.message, { icon: 'fingerprint' })
         })
         .catch((error) => {
           // handle error
           console.log(error.response.data)
-          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
+          // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
     onClickReply (comment) {

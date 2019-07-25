@@ -21,6 +21,9 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/posts/$', views.MyDynamicVIew.as_view()),
     url('^users/(?P<pk>\d+)/followeds-posts/$', views.FollowedsPostsVIew.as_view()),
 
+
+url('^users/(?P<pk>\d+)/comments/$', views.UserReceivedCommentsVIew.as_view()),
+
     url('^tokens/$', obtain_jwt_token)
 
 ]

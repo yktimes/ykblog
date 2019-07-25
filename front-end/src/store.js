@@ -9,7 +9,11 @@ export default {
     user_name: window.localStorage.getItem('user_name') ? window.localStorage.getItem('user_name') : '',
     // 用户登录后，就算刷新页面也能再次计算出 user_avatar
     // 后端传 URL 必须先用 base64 编码，所以这里还要多进行一次 atob 解码 base64 字符串
-    user_avatar: window.localStorage.getItem('user_avatar') ?window.localStorage.getItem('user_avatar') : ''
+    user_avatar: window.localStorage.getItem('user_avatar') ?window.localStorage.getItem('user_avatar') : '',
+
+      // 用户未读消息计数
+
+    new_messages_count: window.localStorage.getItem('new_messages_count') ? window.localStorage.getItem('new_messages_count'): 0
   },
   loginAction () {
     if (this.debug) { console.log('loginAction triggered') }
@@ -18,6 +22,7 @@ export default {
     this.state.user_id =  window.localStorage.getItem('user_id')
     this.state.user_name = window.localStorage.getItem('user_name')
     this.state.user_avatar = window.localStorage.getItem('user_avatar')
+     this.state.new_messages_count = payload.new_messages_count
   },
   logoutAction () {
     if (this.debug) console.log('logoutAction triggered')
@@ -26,5 +31,6 @@ export default {
     this.state.user_id = 0
     this.state.user_name = ''
     this.state.user_avatar = ''
+    this.state.new_messages_count = 0
   }
 }

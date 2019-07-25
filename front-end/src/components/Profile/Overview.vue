@@ -10,11 +10,11 @@
             </div>
             <!-- User Image -->
 
-            <!-- Actions -->
-            <router-link v-if="$route.params.id == sharedState.user_id" v-bind:to="{ name: 'EditProfile' }" class="btn btn-block u-btn-outline-primary g-rounded-50 g-py-12 g-mb-10">
-              <i class="icon-user-follow g-pos-rel g-top-1 g-mr-5"></i> Edit Profile
-            </router-link>
-            <!-- End Actions -->
+<!--             Actions-->
+<!--            <router-link v-if="$route.params.id == sharedState.user_id" v-bind:to="{ name: 'SettingProfile' }" class="btn btn-block u-btn-outline-primary g-rounded-50 g-py-12 g-mb-10">-->
+<!--              <i class="icon-user-follow g-pos-rel g-top-1 g-mr-5"></i> Edit Profile-->
+<!--            </router-link>-->
+<!--             End Actions -->
 
           </div>
 
@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import store from '../store'
+import store from '../../store'
 
 export default {
-  name: 'Profile',  //this is the name of the component
+  name: 'Overview',  //this is the name of the component
   data () {
     return {
 
@@ -99,7 +99,8 @@ export default {
       const path = `/api/users/${id}/`
       this.$axios.get(path)
         .then((response) => {
-          this.user = response.data
+          this.user = response.data.data
+          console.log(this.user)
         })
         .catch((error) => {
           // eslint-disable-next-line

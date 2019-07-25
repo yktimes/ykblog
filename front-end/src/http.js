@@ -31,7 +31,7 @@ axios.interceptors.response.use(function (response) {
   // Do something with response data
   return response
 }, function (error) {
-  // Do something with response error
+  // 匹配不同的响应码
   switch  (error.response.status) {
     case 401:
       // 清除 Token 及 已认证 等状态

@@ -123,6 +123,7 @@ export default {
       this.$axios.get(path)
         .then((response) => {
           // handle success
+           this.$toasted.success(response.data.message, { icon: 'fingerprint' })
           this.getUserFollowers(this.$route.params.id)
         })
         .catch((error) => {

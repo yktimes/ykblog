@@ -123,11 +123,16 @@ class CommentsView(ListModelMixin, GenericAPIView):
                 try:
                     parent = Comment.objects.get(id=int(parent))
                     Comment.objects.create(author=request.user, body=body, post=post, parent=parent)
+
+
                     print(parent, "成功")
                 except Comment.DoexNotExist:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
 
             else:
+                print("11111111111", post.comments_count)
+                post.comments_count = F("comments_count") + 1
+                post.save()
                 Comment.objects.create(author=request.user, body=body, post=post)
 
             return Response(status=status.HTTP_201_CREATED)

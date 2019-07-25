@@ -13,6 +13,8 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     views =models.IntegerField(default=0)
     author = models.ForeignKey(User,related_name='posts')
+    comments_count = models.IntegerField(default=0)
+
     class Meta:
         db_table = 'tb_posts'
         verbose_name = '博客'

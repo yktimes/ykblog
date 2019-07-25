@@ -15,9 +15,9 @@ from rest_framework.mixins import (
 from rest_framework.generics import GenericAPIView, ListAPIView
 
 from rest_framework.response import Response
-from posts.serializers import PostSerializer
+from posts.serializers import PostSerializer,MyCommentSerializer
 
-from posts.models import Post
+from posts.models import Post,Comment
 
 
 class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
@@ -151,7 +151,7 @@ class FollowView(APIView):
             return Response({'message': 'error', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            return Response({'message': 'ok'}, status=status.HTTP_200_OK)
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
 
 
 class FollowerView(ListAPIView):
@@ -246,3 +246,43 @@ class FollowedsPostsVIew(ListAPIView):
         user_list = FriendShip.user_followed(self.kwargs['pk'])
 
         return Post.objects.filter(author__in=user_list)
+
+
+from django.db.models import Q
+from ykblog.utils.pagination import StandardResultPagination
+
+class UserReceivedCommentsVIew(APIView):
+
+    def get(self,request,pk):
+        try:
+            real_user = User.objects.get(id=pk)
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
+            if user!=real_user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            else:
+
+                # 创建分页对象,继承
+                pg = StandardResultPagination()
+
+
+
+                # 用户发布的所有文章ID集合
+                user_posts_ids=[post.id for post in Post.objects.filter(author=user.pk).all()]
+                print("评论，",user_posts_ids)
+                # 评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
+
+                data = Comment.objects.filter(post__in=user_posts_ids,author=user).order_by('mark_read','-timestamp')
+                print("data",data)
+                res = MyCommentSerializer(instance=data, many=True)
+                res = res.data
+
+                ret = pg.paginate_queryset(queryset=res, request=request, view=self)
+
+                s = pg.get_paginated_response(data=ret)
+
+                return s

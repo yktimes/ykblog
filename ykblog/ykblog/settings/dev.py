@@ -128,7 +128,7 @@ DATABASES = {
         'HOST': '127.0.0.1',  # 数据库主机
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'mysql',  # 数据库用户密码
+        'PASSWORD': '123456',  # 数据库用户密码
         'NAME': 'ykblogs'  # 数据库名字
     }
 }
@@ -228,9 +228,9 @@ APPEND_SLASH=False
 #跨域增加忽略
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    '*'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     '*'
+# )
 
 CORS_ALLOW_METHODS = (
     'DELETE',

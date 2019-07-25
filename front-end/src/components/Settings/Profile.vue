@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import store from '../../../store'
+import store from '../../store'
 
 export default {
   name: 'Profile',  //this is the name of the component

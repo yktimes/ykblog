@@ -2,41 +2,28 @@
   <div class="container">
 
     <!-- Modal: Edit Post -->
-    <div class="modal fade" id="updatePostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <!--<h5 class="modal-title" id="updatePostModalTitle">Update Post</h5>-->
-            <h5 class="modal-title" id="editPostModalTitle">修改博客</h5>
+            <h5 class="modal-title" id="editPostModalTitle">Update Post</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
 
-            <!--<form @submit.prevent="onSubmitUpdate" @reset.prevent="onResetUpdate">-->
-              <!--<div class="form-group" v-bind:class="{'u-has-error-v1': editForm.titleError}">-->
-                <!--<input type="text" v-model="editForm.title" class="form-control" id="editform_title" placeholder="标题">-->
-                <!--<small class="form-control-feedback" v-show="editForm.titleError">{{ editForm.titleError }}</small>-->
-
-             <form id="editPostForm" @submit.prevent="onSubmitUpdatePost" @reset.prevent="onResetUpdatePost">
+            <form id="editPostForm" @submit.prevent="onSubmitUpdatePost" @reset.prevent="onResetUpdatePost">
               <div class="form-group" v-bind:class="{'u-has-error-v1': editPostForm.titleError}">
                 <input type="text" v-model="editPostForm.title" class="form-control" id="editPostFormTitle" placeholder="标题">
                 <small class="form-control-feedback" v-show="editPostForm.titleError">{{ editPostForm.titleError }}</small>
-
               </div>
               <div class="form-group">
-                <!--<input type="text" v-model="editForm.summary" class="form-control" id="editform_summary" placeholder="摘要">-->
-
                 <input type="text" v-model="editPostForm.summary" class="form-control" id="editPostFormSummary" placeholder="摘要">
               </div>
               <div class="form-group">
-                <!--<textarea v-model="editForm.body" class="form-control" id="editform_body" rows="5" placeholder=" 内容"></textarea>-->
-                <!--<small class="form-control-feedback" v-show="editForm.bodyError">{{ editForm.bodyError }}</small>-->
-
-                 <textarea v-model="editPostForm.body" class="form-control" id="editPostFormBody" rows="5" placeholder=" 内容"></textarea>
+                <textarea v-model="editPostForm.body" class="form-control" id="editPostFormBody" rows="5" placeholder=" 内容"></textarea>
                 <small class="form-control-feedback" v-show="editPostForm.bodyError">{{ editPostForm.bodyError }}</small>
-
               </div>
               <button type="reset" class="btn btn-secondary">Cancel</button>
               <button type="submit" class="btn btn-primary">Update</button>
@@ -47,20 +34,16 @@
       </div>
     </div>
 
-    <!--<form v-if="sharedState.is_authenticated" @submit.prevent="onSubmitAdd" class="g-mb-40">-->
-     <form id="addPostForm" v-if="sharedState.is_authenticated" @submit.prevent="onSubmitAddPost" class="g-mb-40">
+    <form id="addPostForm" v-if="sharedState.is_authenticated" @submit.prevent="onSubmitAddPost" class="g-mb-40">
       <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
-        <!--<input type="text" v-model="postForm.title" class="form-control" id="post_title" placeholder="标题">-->
         <input type="text" v-model="postForm.title" class="form-control" id="postFormTitle" placeholder="标题">
         <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>
       </div>
       <div class="form-group">
-        <!--<input type="text" v-model="postForm.summary" class="form-control" id="post_summary" placeholder="摘要">-->
-
         <input type="text" v-model="postForm.summary" class="form-control" id="postFormSummary" placeholder="摘要">
       </div>
       <div class="form-group">
-        <textarea v-model="postForm.body" class="form-control" id="post_body" rows="5" placeholder=" 内容"></textarea>
+        <textarea v-model="postForm.body" class="form-control" id="postFormBody" rows="5" placeholder=" 内容"></textarea>
         <small class="form-control-feedback" v-show="postForm.bodyError">{{ postForm.bodyError }}</small>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -68,7 +51,7 @@
 
     <div class="card border-0 g-mb-15">
       <!-- Panel Header -->
-      <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
+       <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
         <h3 class="h6 mb-0">
           <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> All Posts <small v-if="datalist">(共 {{ count }} 篇, {{page_total}}页)</small>
         </h3>
@@ -98,7 +81,8 @@
       <!-- End Panel Header -->
 
       <!-- Panel Body -->
-      <div v-if="datalist" class="card-block g-pa-0" >
+
+       <div v-if="datalist && count > 1" class="card-block g-pa-0" >
 
         <post v-for="(post, index) in datalist" v-bind:key="index"
           v-bind:post="post"
@@ -107,6 +91,8 @@
         </post>
 
       </div>
+
+      <
       <!-- End Panel Body -->
     </div>
 
@@ -189,6 +175,8 @@ export default {
         .catch((error) => {
           // handle error
           console.log(error.response.data)
+
+          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
     onSubmitAddPost (e) {
@@ -240,6 +228,7 @@ export default {
         .catch((error) => {
           // handle error
           console.log(error.response.data)
+          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
     onEditPost (post) {
@@ -305,7 +294,7 @@ export default {
        $('#editPostModal').modal('hide')
 
 
-       const path = `/api/posts/${this.editPostForm.id}`
+       const path = `/api/posts/${this.editPostForm.id}/`
       const payload = {
           title: this.editPostForm.title,
         summary: this.editPostForm.summary,
@@ -322,7 +311,8 @@ export default {
         })
         .catch((error) => {
           // handle error
-          console.log(error.response.data)
+          console.log(error)
+          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
      onResetUpdatePost () {

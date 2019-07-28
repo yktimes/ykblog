@@ -16,28 +16,25 @@
       <!-- Panel Header -->
       <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
         <h3 class="h6 mb-0">
-          <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> Recived Comments <small v-if="comments">(共 {{ comments._meta.total_items }} 条, {{ comments._meta.total_pages }} 页)</small>
+          <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> 收到的评论 <small v-if="comments">(共 {{ count }} 条, {{page_total }} 页)</small>
         </h3>
         <div class="dropdown g-mb-10 g-mb-0--md">
           <span class="d-block g-color-primary--hover g-cursor-pointer g-mr-minus-5 g-pa-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="icon-options-vertical g-pos-rel g-top-1"></i>
           </span>
           <div class="dropdown-menu dropdown-menu-right rounded-0 g-mt-10">
-            <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 1 }}" class="dropdown-item g-px-10">
-              <i class="icon-plus g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 1 条
-            </router-link>
-            <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 5 }}" class="dropdown-item g-px-10">
-              <i class="icon-layers g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 5 条
-            </router-link>
-            <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 10 }}" class="dropdown-item g-px-10">
-              <i class="icon-wallet g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 10 条
-            </router-link>
-            
-            <div class="dropdown-divider"></div>
-            
-            <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
-              <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 条
-            </router-link>
+           <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 5 }}" class="dropdown-item g-px-10">
+                  <i class="icon-layers g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 5 条顶层评论
+                </router-link>
+                <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 10 }}" class="dropdown-item g-px-10">
+                  <i class="icon-wallet g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 10 条顶层评论
+                </router-link>
+
+                <div class="dropdown-divider"></div>
+
+                <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
+                  <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 条顶层评论
+                </router-link>
             
           </div>
         </div>
@@ -48,12 +45,13 @@
       <div v-if="comments" class="card-block g-pa-0" >
         
         <div v-bind:id="'c' + comment.id" class="comment-item media g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-20"
-          v-for="(comment, index) in comments.items" v-bind:key="index">
+          v-for="(comment, index) in comments_list" v-bind:key="index">
           <router-link v-bind:to="{ path: `/user/${comment.author.id}` }">  
-            <span class="d-inline-block g-pos-rel">
-              <span class="u-badge-v2--sm u-badge--top-left g-bg-red g-mt-7 g-ml-7"></span>
+           <span v-if="!comment.mark_read" class="d-inline-block g-pos-rel">
+              <span class="u-badge-v2--xs u-badge--top-left g-bg-red g-mt-7 g-ml-7"></span>
               <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" v-bind:src="comment.author.avatar" v-bind:alt="comment.author.name || comment.author.username">
             </span>
+              <img v-else class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" v-bind:src="comment.author.avatar" v-bind:alt="comment.author.name || comment.author.username">
           </router-link>
           <div class="media-body">
             <div class="g-mb-15">
@@ -119,13 +117,15 @@
     </div>
   
     <!-- Pagination #04 -->
-    <div v-if="comments && comments._meta.total_pages > 1">
+
+     <div v-if="comments && page_total > 1">
       <pagination
-        v-bind:cur-page="comments._meta.page"
-        v-bind:per-page="comments._meta.per_page"
-        v-bind:total-pages="comments._meta.total_pages">
+        v-bind:cur-page="page"
+        v-bind:per-page="per_page"
+        v-bind:total-pages="page_total">
       </pagination>
     </div>
+
     <!-- End Pagination #04 -->
   </div>
 </template>
@@ -134,7 +134,6 @@
 import store from '../../store'
 // 导入 vue-markdown 组件解析 markdown 原文为　HTML
 import VueMarkdown from 'vue-markdown'
-import Comment from '../Base/Comment'
 import Pagination from '../Base/Pagination'
 // bootstrap-markdown 编辑器依赖的 JS 文件，初始化编辑器在组件的 created() 方法中，同时它需要 JQuery 支持哦
 import '../../assets/bootstrap-markdown/js/bootstrap-markdown.js'
@@ -149,8 +148,13 @@ export default {
   },
   data () {
     return {
+        page :1,
+      per_page: 5,
+      count:0,
+       page_total:0,
       sharedState: store.state,
       comments: '',
+      comments_list:[],
       replyCommentForm: {
         body: '',
         post_id: '',  // 被回复的评论来自哪篇博客
@@ -164,21 +168,26 @@ export default {
   },
   methods: {
     getUserRecivedComments (id) {
-      let page = 1
-      let per_page = 5
-      if (typeof this.$route.query.page != 'undefined') {
-        page = this.$route.query.page
+     if (typeof this.$route.query.page != 'undefined') {
+        this.page = this.$route.query.page
       }
 
       if (typeof this.$route.query.per_page != 'undefined') {
-        per_page = this.$route.query.per_page
+        this.per_page = this.$route.query.per_page
       }
       
-      const path = `/api/users/${id}/recived-comments/?page=${page}&per_page=${per_page}`
+      // const path = `/api/users/${id}/recived-comments/?page=${page}&per_page=${per_page}`
+      const path =`/api/users/${id}/recived-comments/?page=`+this.page+'&per_page='+this.per_page
       this.$axios.get(path)
         .then((response) => {
           // handle success
-          this.comments = response.data
+          // this.comments = response.data
+           this.comments = response.data.results
+          this.comments_list = response.data.results
+          console.log(this.comments)
+        this.count=response.data.count
+          console.log(this.count)
+          this.page_total = Math.ceil(this.count/this.per_page)
         })
         .catch((error) => {
           // handle error
@@ -212,7 +221,7 @@ export default {
       const path = '/api/comments/'
       const payload = {
         body: at_who + this.replyCommentForm.body,
-        post_id: this.replyCommentForm.post_id,
+        post: this.replyCommentForm.post_id,
         parent_id: this.replyCommentForm.parent_id
       }
       this.$axios.post(path, payload)
@@ -242,7 +251,7 @@ export default {
       const payload = {
         mark_read: true
       }
-      this.$axios.put(`/api/comments/${comment.id}`, payload)
+      this.$axios.put(`/api/comments/${comment.id}/`, payload)
         .then((response) => {
           // handle success
           // 前往查看
@@ -267,7 +276,7 @@ export default {
         cancelButtonText: 'No, cancel!'
       }).then((result) => {
         if(result.value) {
-          const path = `/api/comments/${comment.id}`
+          const path = `/api/comments/${comment.id}/`
           this.$axios.delete(path)
             .then((response) => {
               // handle success
@@ -285,7 +294,7 @@ export default {
       })
     },
     onDisabledComment (comment) {
-      const path = `/api/comments/${comment.id}`
+      const path = `/api/comments/${comment.id}/`
       this.$axios.put(path, { "disabled": true })
         .then((response) => {
           // handle success
@@ -299,7 +308,7 @@ export default {
         })
     },
     onEnabledComment (comment) {
-      const path = `/api/comments/${comment.id}`
+      const path = `/api/comments/${comment.id}/`
       this.$axios.put(path, { "disabled": false })
         .then((response) => {
           // handle success

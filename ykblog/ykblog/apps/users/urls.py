@@ -21,8 +21,10 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/posts/$', views.MyDynamicVIew.as_view()),
     url('^users/(?P<pk>\d+)/followeds-posts/$', views.FollowedsPostsVIew.as_view()),
 
+    # 通知列表里面的评论
+    url('^users/(?P<pk>\d+)/recived-comments/$', views.UserReceivedCommentsVIew.as_view()),
 
-url('^users/(?P<pk>\d+)/comments/$', views.UserReceivedCommentsVIew.as_view()),
+    url('^users/(?P<pk>\d+)/comments/$', views.UserCommentsVIew.as_view()),
 
     url('^tokens/$', obtain_jwt_token)
 

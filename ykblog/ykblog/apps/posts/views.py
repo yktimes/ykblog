@@ -135,6 +135,10 @@ class CommentsView(ListModelMixin, GenericAPIView):
                 post.save()
                 Comment.objects.create(author=request.user, body=body, post=post)
 
+            # 给文章作者发送新评论通知
+            post.author.add_notification('unread_recived_comments_count',
+                                         post.author.new_recived_comments())
+
             return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
@@ -155,7 +159,10 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
         instance = self.get_object()
 
 
-        flag = request.data['disabled']
+        flag = request.data.get('disabled')
+        mark_read=request.data.get('mark_read')
+        print("flag",flag,type(flag))
+        print("mark_read",mark_read,type(mark_read))
         # 如果请求用户是该评论用户或着它是该博客主人
         if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
 
@@ -164,8 +171,12 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
             except Comment.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
-                c.disabled = flag
-                c.save()
+                if mark_read is not None:
+                    c.mark_read=True
+                    c.save()
+                if flag is not None:
+                    c.disabled = flag
+                    c.save()
                 return Response(status=status.HTTP_200_OK)
 
     @permission_classes((IsAuthenticated,))
@@ -176,6 +187,9 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
             instance.delete()
+            # 给文章作者发送新评论通知(需要自动减1)
+            instance.post.author.add_notification('unread_recived_comments_count',
+                                         instance.post.author.new_recived_comments())
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         else:

@@ -2,11 +2,15 @@ from django.db import models
 
 # Create your models here.
 from  django.contrib.auth.models import AbstractUser
-
+import datetime
 
 # from posts.models import Post
+from posts.models import Comment
+from notification.models import Notification
 
+from django.db.models import Q
 
+import json
 
 class User(AbstractUser):
     """用户模型类"""
@@ -17,13 +21,46 @@ class User(AbstractUser):
     location = models.CharField(max_length=50,default='')
     about_me = models.CharField(max_length=255,default='')
     avatar=models.CharField(max_length=255,default='')
-
+    # 用户最后一次查看 收到的评论 页面的时间，用来判断哪些收到的评论是新的
+    last_recived_comments_read_time = models.DateTimeField(null=True,blank=True,auto_now_add=True)
 
 
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'
         verbose_name_plural = verbose_name
+
+    def new_recived_comments(self):
+        '''用户发布的文章下面收到的新评论计数'''
+        last_read_time = self.last_recived_comments_read_time or datetime.datetime(1900, 1, 1)
+        # 用户发布的所有文章 # 反向关联
+        user_posts_ids = [post.id for post in self.posts.all()]
+        # 用户收到的所有评论，即评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
+        recived_comments = Comment.objects.filter(Q(post__in=user_posts_ids)& Q(author = self)).order_by(
+            "mark_read","-timestamp").filter(timestamp__gt=  last_read_time).count()
+        # 新评论
+        print("sdfsf",recived_comments)
+        return recived_comments
+
+    def add_notification(self, name, data):
+        '''给用户实例对象增加通知'''
+        # 如果具有相同名称的通知已存在，则先删除该通知
+        try:
+
+            notic = self.notifications.get(name=name)
+
+        except :
+
+            n = Notification.objects.create(name=name, payload_json=json.dumps(data), user=self)
+
+            return n
+        else:
+            notic.delete()
+            n = Notification.objects.create(name=name, payload_json=json.dumps(data), user=self)
+
+            return n
+
+
 
 
 class FriendShip(models.Model):

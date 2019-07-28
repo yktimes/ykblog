@@ -62,38 +62,60 @@ import axios from 'axios'
 
 export default {
   name: 'Navbar',  //this is the name of the component
-  data () {
+  data() {
     return {
       sharedState: store.state
     }
   },
   methods: {
-    handlerLogout (e) {
+    handlerLogout(e) {
       store.logoutAction()
-      this.$toasted.show('You have been logged out.', { icon: 'fingerprint' })
+      this.$toasted.show('You have been logged out.', {icon: 'fingerprint'})
       this.$router.push('/login')
     }
   },
 
   mounted () {
-    if (this.sharedState.is_authenticated) {
+  // 轮询 /api/users/<int:id>/notifications/ 请求用户的新通知
+  $(function() {
+    //todo since
+    let since = ""
+    let total_notifications_count = 0  // 总通知计数
+    let unread_recived_comments_count = 0  // 收到的新评论通知计数
 
-      const user_id = window.localStorage.getItem('user_id')
-      $(function () {
-        setInterval(function () {
-          const path = `/api/users/${user_id}/`
-          axios.get(path)
-            .then((response) => {
-              // handle success
-              $('#new_message_count').text(response.data.new_messages_count)
-            })
-            .catch((error) => {
-              // handle error
-              console.error(error)
-            })
-        }, 1000000)
-      })
-    }
-  }
+    setInterval(function () {
+
+
+      if (window.localStorage.getItem('madblog-token')) {
+        // 如果用户已登录，才开始请求 API
+        const user_id = window.localStorage.getItem('user_id')
+        const path = `/api/users/${user_id}/notifications/?since=${since}/`
+        axios.get(path)
+          .then((response) => {
+            // handle success
+            for (var i = 0; i < response.data.length; i++) {
+              switch (response.data[i].name) {
+                case 'unread_recived_comments_count':
+                  unread_recived_comments_count = response.data[i].payload
+                  break
+              }
+              since = response.data[i].timestamp
+            }
+
+            total_notifications_count = unread_recived_comments_count
+            // 每一次请求之后，根据 total_notifications_count 的值来显示或隐藏徽标
+            $('#new_notifications_count').text(total_notifications_count)
+            $('#new_notifications_count').css('visibility', total_notifications_count ? 'visible' : 'hidden');
+          })
+          .catch((error) => {
+            // handle error
+            console.error(error)
+          })
+      }
+    }, 10000)
+  })
+}
+
+
 }
 </script>

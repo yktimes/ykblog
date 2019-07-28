@@ -29,3 +29,7 @@ from django.test import TestCase
 # <QuerySet []>
 #
 # }
+
+import datetime
+
+print(datetime.datetime("0"))

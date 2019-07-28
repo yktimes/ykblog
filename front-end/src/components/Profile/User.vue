@@ -69,25 +69,18 @@
             <!-- Tab Nav -->
             <ul class="nav nav-tabs g-mb-20">
               <li class="nav-item">
-                <router-link v-bind:to="{ name: 'UserOverview' }" v-bind:active-class="'active'" class="nav-link" v-bind:class="isUserOverView">Overview <span class="u-label g-font-size-11 g-bg-primary g-rounded-20 g-px-10"><i class="icon-layers g-pos-rel g-top-1 g-mr-8"></i></span></router-link>
+                <router-link v-bind:to="{ name: 'UserOverview' }" v-bind:active-class="'active'" class="nav-link" v-bind:class="isUserOverView">我的信息 <span class="u-label g-font-size-11 g-bg-primary g-rounded-20 g-px-10"><i class="icon-layers g-pos-rel g-top-1 g-mr-8"></i></span></router-link>
               </li>
               <li class="nav-item">
-                <router-link v-bind:to="{ name: 'UserFollowers' }" v-bind:active-class="'active'" class="nav-link">Followers <span class="u-label g-font-size-11 g-bg-deeporange g-rounded-20 g-px-10">{{ user.followers_count }}</span></router-link>
+                <router-link v-bind:to="{ name: 'UserFollowers' }" v-bind:active-class="'active'" class="nav-link">粉丝 <span class="u-label g-font-size-11 g-bg-deeporange g-rounded-20 g-px-10">{{ user.followers_count }}</span></router-link>
 
               </li>
               <li class="nav-item">
-                <router-link v-bind:to="{ name: 'UserFollowing' }" v-bind:active-class="'active'" class="nav-link">Following <span class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">{{ user.followeds_count }}</span></router-link>
+                <router-link v-bind:to="{ name: 'UserFollowing' }" v-bind:active-class="'active'" class="nav-link">关注 <span class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">{{ user.followeds_count }}</span></router-link>
               </li>
-<!--              <li class="nav-item">-->
-<!--                <router-link v-bind:to="{ name: 'UserPostsList' }" v-bind:active-class="'active'" class="nav-link">Posts <span class="u-label g-font-size-11 g-bg-purple g-rounded-20 g-px-10">{{ user.posts_count }}</span></router-link>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--               <router-link v-bind:to="{ name: 'UserFollowedsPostsList' }" v-bind:active-class="'active'" class="nav-link">FollowingPosts <span class="u-label g-font-size-11 g-bg-blue g-rounded-20 g-px-10">{{ user.followeds_posts_count }}</span></router-link>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <router-link v-bind:to="{ name: 'UserCommentsList' }" v-bind:active-class="'active'" class="nav-link">Comments <span class="u-label g-font-size-11 g-bg-deeporange g-rounded-20 g-px-10">{{ user.comments_count }}</span></router-link>-->
+              <li class="nav-item">
 
-                <router-link v-bind:to="{ name: 'UserPosts' }" v-bind:active-class="'active'" class="nav-link" v-bind:class="{'active': $route.name == 'UserFollowingPosts'}">Posts <span class="u-label g-font-size-11 g-bg-purple g-rounded-20 g-px-10">{{ user.posts_count }}</span></router-link>
+                <router-link v-bind:to="{ name: 'UserPosts' }" v-bind:active-class="'active'" class="nav-link" v-bind:class="{'active': $route.name == 'UserFollowingPosts'}">文章 <span class="u-label g-font-size-11 g-bg-purple g-rounded-20 g-px-10">{{ user.posts_count }}</span></router-link>
 
               </li>
             </ul>
@@ -107,7 +100,7 @@
         <!-- Panel Header -->
         <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
           <h3 class="h6 mb-0">
-            <i class="icon-fire g-pos-rel g-top-1 g-mr-5"></i> Publish New Post
+            <i class="icon-fire g-pos-rel g-top-1 g-mr-5"></i> 发表新文章
           </h3>
           <div class="dropdown g-mb-10 g-mb-0--md">
             <span class="d-block g-mr-minus-5 g-pa-5">
@@ -130,7 +123,7 @@
           <textarea v-model="postForm.body" class="form-control" id="postFormBody" rows="5" placeholder=" 内容"></textarea>
           <small class="form-control-feedback" v-show="postForm.bodyError">{{ postForm.bodyError }}</small>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">发表</button>
       </form>
 
     </div>
@@ -220,53 +213,6 @@ export default {
           console.error(error)
         })
     },
-    onDeleteUser (id) {
-      this.$swal({
-        title: "Are you sure ?",
-        text: "Please provide your password.",
-        input: 'password',
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        inputValidator: (value) => {
-          return !value && 'Please provide a valid password.'
-        }
-      }).then((result) => {
-        if (result.value) {
-          const path = '/api/tokens/'
-          // axios 实现Basic Auth需要在config中设置 auth 这个属性即可
-          this.$axios.post(path, {}, {
-
-              'username': this.user.username,
-              'password': result.value
-
-          }).then((response) => {
-              // handle success
-              const path = `/api/users/${id}/`
-              this.$axios.delete(path)
-                .then((response) => {
-                  // handle success
-                  this.$swal('Deleted', 'You are anonymous now, Goodby!', 'success')
-                  store.logoutAction()
-                  this.user = ''
-                  this.$router.push('/')
-                })
-                .catch((error) => {
-                  // handle error
-                  console.log(error.response.data)
-                })
-            })
-            .catch((error) => {
-              // handle error
-              this.$toasted.error('Invalid password, you cannot delete this account.', { icon: 'fingerprint' })
-              console.error('Invalid password, you cannot delete this account.')
-            })
-        } else {
-          this.$swal('Cancelled', 'Your account is safe :)', 'error')
-        }
-      })
-    },
 
      //todo onSubmitSendMessage
 
@@ -355,8 +301,8 @@ export default {
           this.postForm.title = '',
           this.postForm.summary = '',
           this.postForm.body = ''
-          // 必须加个动态参数，不然路由没变化的话，UserPostsList 组件不会刷新重新加载博客列表
-          this.$router.push({ name: 'UserPostsList', query: { id: response.data.id } })
+          // 必须加个动态参数，不然路由没变化的话，UserPosts 组件不会刷新重新加载博客列表
+          this.$router.push({ name: 'UserPosts', query: { id: response.data.id } })
         })
         .catch((error) => {
           // handle error

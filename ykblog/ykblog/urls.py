@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^api/ping/', ping),
     url(r'^api/', include('users.urls'), ),
     url(r'^api/', include('posts.urls'), ),
+    url(r'^api/', include('notification.urls'), ),
 
 ]
 

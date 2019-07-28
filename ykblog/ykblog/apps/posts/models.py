@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from users.models import User
+# from ykblog.apps.users.models import User
 # Create your models here.
 
 class Post(models.Model):
@@ -12,7 +12,7 @@ class Post(models.Model):
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     views =models.IntegerField(default=0)
-    author = models.ForeignKey(User,related_name='posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='posts')
     comments_count = models.IntegerField(default=0)
 
     class Meta:

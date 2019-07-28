@@ -251,7 +251,80 @@ class FollowedsPostsVIew(ListAPIView):
 from django.db.models import Q
 from ykblog.utils.pagination import StandardResultPagination
 
+
 class UserReceivedCommentsVIew(APIView):
+
+    def get(self,request,pk):
+        try:
+            real_user = User.objects.get(id=pk)
+
+            page = int(request.query_params["page"])
+            per_page = int(request.query_params["per_page"])
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
+            if user!=real_user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            else:
+
+                # 创建分页对象,继承
+                pg = StandardResultPagination()
+
+                # 用户发布的所有文章ID集合
+                user_posts_ids=[post.id for post in Post.objects.filter(author=user.pk).all()]
+                print("评论，",user_posts_ids)
+                # 评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
+
+                data = Comment.objects.filter(Q(post__in=user_posts_ids)&(~Q(author=user))).order_by('mark_read','-timestamp')
+
+
+                print("page",page)
+                print("per_page",per_page)
+
+                print("data",data)
+                res = MyCommentSerializer(instance=data, many=True)
+                res = res.data
+                # todo 如果没用要删除
+                # 标记哪些评论是新的
+                last_read_time = user.last_recived_comments_read_time or datetime.datetime(1900, 1, 1)
+                for item in res:
+                    # print(item["timestamp"])
+                    # print(last_read_time)
+                    # print(type(item["timestamp"]))
+                    # print(type(str(last_read_time)))
+                    if item["timestamp"] > str(last_read_time):
+                        item["is_new"] = True
+                        print(111111111111)
+                    print(item)
+
+                # 需要考虑分页的问题，比如新评论有25条，默认分页是每页10条，
+                # # 如果用户请求第一页时就更新 last_recived_comments_read_time，那么后15条就被认为不是新评论了，这是不对的
+                if page*per_page >= user.new_recived_comments():
+                    # 更新 last_recived_comments_read_time 属性值
+                    user.last_recived_comments_read_time = datetime.datetime.utcnow()
+                    # 将新评论通知的计数归零
+                    user.add_notification('unread_recived_comments_count', 0)
+
+                else:
+                    # 用户剩余未查看的新评论数
+                    n = user.new_recived_comments() - page* per_page
+                    # 将新评论通知的计数更新为未读数
+                    user.add_notification('unread_recived_comments_count', n)
+
+
+                user.save()
+
+                ret = pg.paginate_queryset(queryset=res, request=request, view=self)
+
+                s = pg.get_paginated_response(data=ret)
+
+                return s
+
+
+class UserCommentsVIew(APIView):
 
     def get(self,request,pk):
         try:
@@ -277,9 +350,12 @@ class UserReceivedCommentsVIew(APIView):
                 # 评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
 
                 data = Comment.objects.filter(post__in=user_posts_ids,author=user).order_by('mark_read','-timestamp')
+
+
                 print("data",data)
                 res = MyCommentSerializer(instance=data, many=True)
                 res = res.data
+
 
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 

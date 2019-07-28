@@ -79,10 +79,10 @@
     </div>
   
     <!-- Pagination #04 -->
-    <div v-if="comments && count > 1">
+    <div v-if="comments && page_total>1">
       <pagination
         v-bind:cur-page="page"
-        v-bind:per-page="comments.per_page"
+        v-bind:per-page="per_page"
         v-bind:total-pages="page_total">
       </pagination>
     </div>
@@ -134,7 +134,7 @@ export default {
           console.log(this.comments)
         this.count=response.data.count
           console.log(this.count)
-          this.page_total = Math.ceil(this.count/this.per_page)
+          this.page_total = Math.floor(this.count/this.per_page)
         })
         .catch((error) => {
           // handle error

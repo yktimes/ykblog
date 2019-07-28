@@ -82,7 +82,7 @@
 
       <!-- Panel Body -->
 
-       <div v-if="datalist && count > 1" class="card-block g-pa-0" >
+       <div v-if="datalist" class="card-block g-pa-0" >
 
         <post v-for="(post, index) in datalist" v-bind:key="index"
           v-bind:post="post"
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Pagination #04 -->
-    <div v-if="datalist">
+    <div v-if="datalist && count > 1">
       <pagination
         v-bind:cur-page="page"
         v-bind:per-page="per_page"
@@ -176,7 +176,7 @@ export default {
           // handle error
           console.log(error.response.data)
 
-          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
+          // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
     onSubmitAddPost (e) {
@@ -312,7 +312,7 @@ export default {
         .catch((error) => {
           // handle error
           console.log(error)
-          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
+          // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
      onResetUpdatePost () {

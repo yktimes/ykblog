@@ -7,7 +7,7 @@
           <!-- 用户头像 -->
           <div v-if="user" class="text-center g-pos-rel g-mb-30">
             <div class="g-width-100 g-height-100 mx-auto mb-3">
-              <img class="img-fluid rounded-circle" v-bind:src="user._links.avatar" v-bind:alt="user.name || user.username">
+              <img class="img-fluid rounded-circle" v-bind:src="user.avatar" v-bind:alt="user.name || user.username">
             </div>
 
             <span class="d-block g-font-weight-500">{{ user.name || user.username }}</span>
@@ -80,11 +80,11 @@ export default {
   },
   methods: {
     getUser (id) {
-      const path = `/api/users/${id}`
+      const path = `/api/users/${id}/`
       this.$axios.get(path)
         .then((response) => {
           // handle success
-          this.user = response.data
+          this.user = response.data.data
         })
         .catch((error) => {
           // handle error

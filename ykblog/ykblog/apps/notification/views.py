@@ -37,12 +37,17 @@ class notificationView(APIView):
                 return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-            data = NotificationSerializer(notification)
+            data = NotificationSerializer(notification,many=True)
 
             return Response({"data":data.data},status=status.HTTP_200_OK)
 
 
 class UserNotificationView(APIView):
+    """
+    获取用户的新通知
+    """
+
+
     def get(self, request, pk):
 
         real_user = request.user
@@ -52,14 +57,18 @@ class UserNotificationView(APIView):
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_403_FORBIDDEN)
         else:
+            if user!=real_user:
 
+                return Response(status=status.HTTP_403_FORBIDDEN)
             # 只返回上次看到的通知以来发生的新通知
             # 比如用户在 10:00:00 请求一次该API，在 10:00:10 再次请求该API只会返回 10:00:00 之后产生的新通知
             since = request.query_params.get('since', 0.0)
             print(since)
-            notifications = user.notifications.filter(
+            notifications = Notification.objects.filter(user=user).filter(
                 timestamp__gt=since).order_by("timestamp")
-
-            data = NotificationSerializer(notifications)
+            # user.notifications
+            print(notifications.values())
+            # 必须加many
+            data = NotificationSerializer(notifications,many=True)
 
             return Response({"data": data.data}, status=status.HTTP_200_OK)

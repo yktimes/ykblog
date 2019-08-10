@@ -94,3 +94,9 @@ class MyCommentSerializer(serializers.ModelSerializer):
         fields = ('id','body','timestamp','mark_read','disabled','author','post')
 
 
+class LikedCommentSerializer(serializers.ModelSerializer):
+    post = CommentPostSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ('id','body','timestamp','mark_read','disabled','post','liked')

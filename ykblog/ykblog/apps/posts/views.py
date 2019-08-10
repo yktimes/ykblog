@@ -122,7 +122,7 @@ class CommentsView(ListModelMixin, GenericAPIView):
             if parent:
                 try:
                     parent = Comment.objects.get(id=int(parent))
-                    Comment.objects.create(author=request.user, body=body, post=post, parent=parent)
+                    comment = Comment.objects.create(author=request.user, body=body, post=post, parent=parent)
 
 
                     print(parent, "成功")
@@ -133,11 +133,23 @@ class CommentsView(ListModelMixin, GenericAPIView):
                 print("11111111111", post.comments_count)
                 post.comments_count = F("comments_count") + 1
                 post.save()
-                Comment.objects.create(author=request.user, body=body, post=post)
+                comment = Comment.objects.create(author=request.user, body=body, post=post)
+            # 添加评论时:
+            # 1. 如果是一级评论，只需要给文章作者发送新评论通知
+            # 2. 如果不是一级评论，则需要给文章作者和该评论的所有祖先的作者发送新评论通知
+            users = set()
+            users.add(comment.post.author)  # 将文章作者添加进集合中
+            if comment.parent:
+                ancestors_authors = {c.author for c in comment.get_ancestors()}
+                users = users | ancestors_authors
+            # 给各用户发送新评论通知
+            for u in users:
+                u.add_notification('unread_recived_comments_count',
+                                   u.new_recived_comments())
 
-            # 给文章作者发送新评论通知
-            post.author.add_notification('unread_recived_comments_count',
-                                         post.author.new_recived_comments())
+            # # 给文章作者发送新评论通知
+            # post.author.add_notification('unread_recived_comments_count',
+            #                              post.author.new_recived_comments())
 
             return Response(status=status.HTTP_201_CREATED)
 
@@ -164,20 +176,20 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
         print("flag",flag,type(flag))
         print("mark_read",mark_read,type(mark_read))
         # 如果请求用户是该评论用户或着它是该博客主人
-        if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
+        # if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
 
-            try:
-                c = Comment.objects.get(pk=self.kwargs['pk'])
-            except Comment.DoesNotExist:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            else:
-                if mark_read is not None:
-                    c.mark_read=True
-                    c.save()
-                if flag is not None:
-                    c.disabled = flag
-                    c.save()
-                return Response(status=status.HTTP_200_OK)
+        try:
+            c = Comment.objects.get(pk=self.kwargs['pk'])
+        except Comment.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            if mark_read is not None:
+                c.mark_read=True
+                c.save()
+            if flag is not None:
+                c.disabled = flag
+                c.save()
+            return Response(status=status.HTTP_200_OK)
 
     @permission_classes((IsAuthenticated,))
     def delete(self, request, *args, **kwargs):
@@ -185,15 +197,27 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         instance = self.get_object()
 
-        if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
-            instance.delete()
-            # 给文章作者发送新评论通知(需要自动减1)
-            instance.post.author.add_notification('unread_recived_comments_count',
-                                         instance.post.author.new_recived_comments())
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        # if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
+        # 删除评论时:
+        # 1. 如果是一级评论，只需要给文章作者发送新评论通知
+        # 2. 如果不是一级评论，则需要给文章作者和该评论的所有祖先的作者发送新评论通知
+        users = set()
+        users.add(instance.post.author)  # 将文章作者添加进集合中
+        if instance.parent:
+            ancestors_authors = {c.author for c in instance.get_ancestors()}
+            users = users | ancestors_authors
 
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        # 必须先删除该评论，后续给各用户发送通知时，User.new_recived_comments() 才能是更新后的值
+        instance.delete()
+        # 给各用户发送新评论通知
+        for u in users:
+            u.add_notification('unread_recived_comments_count',
+                               u.new_recived_comments())
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # else:
+    #     return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 # / api / posts / 1 / comments /?page = 1 & per_page = 10 /
@@ -293,12 +317,14 @@ class LikeView(APIView):
 
         try:
             comment = Comment.objects.get(pk=pk)
+
         except Comment.DoesNotExist as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
 
             # 取消或添加赞
             comment.switch_like(request.user)
+            comment.author.add_notification('unread_likes_count', comment.author.new_likes())
             # news.update(up_count=F("up_count") + 1)
 
             # return Response({"likes": news.count_likers()})

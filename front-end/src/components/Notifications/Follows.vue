@@ -4,7 +4,7 @@
       <!-- Panel Header -->
       <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
         <h3 class="h6 mb-0">
-          <i class="icon-people g-pos-rel g-top-1 g-mr-5"></i> All Follows <small v-if="followers">(共 {{ count }} 个, {{page_total }} 页)</small>
+          <i class="icon-people g-pos-rel g-top-1 g-mr-5"></i> 粉丝 <small v-if="followers">(共 {{ count }} 个, {{page_total }} 页)</small>
         </h3>
         <div class="dropdown g-mb-10 g-mb-0--md">
           <span class="d-block g-color-primary--hover g-cursor-pointer g-mr-minus-5 g-pa-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -23,7 +23,7 @@
                 <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
                   <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 条顶层评论
                 </router-link>
-            
+
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
       </div>
       <!-- End Panel Body -->
     </div>
-  
+
     <!-- Pagination #04 -->
 
      <div v-if="followers && page_total > 1">

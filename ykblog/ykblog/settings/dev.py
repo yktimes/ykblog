@@ -129,8 +129,8 @@ DATABASES = {
         'HOST': '127.0.0.1',  # 数据库主机
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': '123456',  # 数据库用户密码
-        'NAME': 'ykblogs'  # 数据库名字
+        'PASSWORD': 'mysql',  # 数据库用户密码
+        'NAME': 'ykblog2'  # 数据库名字
     }
 }
 
@@ -195,6 +195,26 @@ LOGGING = {
         },
     }
 }
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console':{
+#             'level':'DEBUG',
+#             'class':'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'propagate': True,
+#             'level':'DEBUG',
+#         },
+#     }
+# }
+
 
 import datetime
 

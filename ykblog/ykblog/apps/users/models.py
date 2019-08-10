@@ -11,7 +11,8 @@ from notification.models import Notification
 from django.db.models import Q
 
 import json
-
+from operator import itemgetter
+from posts.models import Likedship
 class User(AbstractUser):
     """用户模型类"""
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
@@ -22,7 +23,12 @@ class User(AbstractUser):
     about_me = models.CharField(max_length=255,default='')
     avatar=models.CharField(max_length=255,default='')
     # 用户最后一次查看 收到的评论 页面的时间，用来判断哪些收到的评论是新的
-    last_recived_comments_read_time = models.DateTimeField(null=True,blank=True,auto_now_add=True)
+    last_recived_comments_read_time = models.DateTimeField(null=True,blank=True)
+
+    # 用户最后一次查看 用户的粉丝 页面的时间，用来判断哪些粉丝是新的
+    last_follows_read_time = models.DateTimeField(null=True,blank=True)
+    # 用户最后一次查看 收到的点赞 页面的时间，用来判断哪些点赞是新的
+    last_likes_read_time = models.DateTimeField(null=True,blank=True)
 
 
     class Meta:
@@ -33,14 +39,33 @@ class User(AbstractUser):
     def new_recived_comments(self):
         '''用户发布的文章下面收到的新评论计数'''
         last_read_time = self.last_recived_comments_read_time or datetime.datetime(1900, 1, 1)
+        print("last_read_time",last_read_time)
         # 用户发布的所有文章 # 反向关联
         user_posts_ids = [post.id for post in self.posts.all()]
+
         # 用户收到的所有评论，即评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
-        recived_comments = Comment.objects.filter(Q(post__in=user_posts_ids)& Q(author = self)).order_by(
-            "mark_read","-timestamp").filter(timestamp__gt=  last_read_time).count()
-        # 新评论
-        print("sdfsf",recived_comments)
-        return recived_comments
+        recived_comments = Comment.objects.filter(Q(post__in=user_posts_ids)& ~Q(author = self)).filter(timestamp__gt=  last_read_time).count()
+
+        # 用户文章下面的新评论, 即评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是自己(文章的作者)
+        q1 = set(Comment.objects.filter(Q(post__in=user_posts_ids)& ~Q(author = self)))
+
+        # 用户发表的评论被人回复了，找到每个用户评论的所有子孙
+        q2 = set()
+        for c in self.comments.all():
+
+            q2 = q2 | c.get_descendants()
+        q2 = q2 - set(self.comments.all())  # 除去子孙中，用户自己发的(因为是多级评论，用户可能还会在子孙中盖楼)，自己回复的不用通知
+        # 用户收到的总评论集合为 q1 与 q2 的并集
+        recived_comments = q1 | q2
+        #最后，再过滤掉 last_read_time 之前的评论
+
+        l =  len([c for c in recived_comments if c.timestamp > last_read_time])
+
+        return l
+
+
+
+
 
     def add_notification(self, name, data):
         '''给用户实例对象增加通知'''
@@ -59,6 +84,54 @@ class User(AbstractUser):
             n = Notification.objects.create(name=name, payload_json=json.dumps(data), user=self)
 
             return n
+
+    def new_follows(self):
+        '''用户的新粉丝计数'''
+        last_read_time = self.last_follows_read_time or datetime.datetime(1900, 1, 1)
+        print("last_read_time",last_read_time)
+        print("人数")
+        s = self.followedd.filter(date__gt=last_read_time).count()
+            # filter(timestamp__gt=  last_read_time).count()
+        print("用户的新粉丝计数++",s)
+        return s
+
+    def new_likes(self):
+        '''用户收到的新点赞计数'''
+        last_read_time = self.last_likes_read_time or datetime.datetime(1900, 1, 1)
+        # 当前用户发表的所有评论当中，哪些被点赞了
+        from django.db import connection
+
+        cursor = connection.cursor()
+
+        cursor.execute('select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s', [self.pk])
+
+
+        ret = cursor.fetchall()
+        print("新的点赞记录计数",ret)
+        # 新的点赞记录计数
+        new_likes_count = 0
+
+        for c in ret:
+            print(c)
+            timestamp = Likedship.objects.get(user=c[1], comment=c[0]).timestamp
+            print("事件",timestamp)
+            # 判断本条点赞记录是否为新的
+            if timestamp > last_read_time:
+                new_likes_count += 1
+        print("new_likes_count",new_likes_count)
+        return new_likes_count
+
+        # print("ssss",len(ret))
+        #
+        # print( " self.comments.all()",self.comments.all())
+        # origin = self.comments.all().values("liked__comment",'liked')
+        # print(":用户收到的新点赞计数",origin)
+        # comment_ids = [i['liked__comment'] for i in origin if i['liked__comment']]
+        # user_ids = [j['liked'] for j in origin if j['liked'] ]
+        #
+        # print("new_likes",comment_ids)
+        # print("user_ids",user_ids)
+
 
 
 
@@ -138,9 +211,9 @@ class FriendShip(models.Model):
         """
         # followeds 是该用户关注了哪些用户列表
         # followers 是该用户的粉丝列表
-        print(111111111111)
+
         followeders = FriendShip.objects.filter(followed=from_user).all()
-        print("fff", followeders)
+
         user_followed = []
         for followeder in followeders:
             user_followed.append(followeder.follower)

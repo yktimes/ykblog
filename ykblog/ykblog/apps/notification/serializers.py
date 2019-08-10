@@ -18,4 +18,4 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
 
-        fields = ('id', 'username', 'name', "avatar")
+        fields = ('id', 'name','payload_json','timestamp',"author")

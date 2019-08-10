@@ -4,8 +4,13 @@
       <div class="g-mt-2">
 <!--        TODO v-bind:to="{ path: `/user/${member.id}/` } -->
         <router-link v-bind:to="{ path: `/user/${member.id}/` }">
-          <img class="g-width-50 g-height-50 rounded-circle mCS_img_loaded" v-bind:src="member.avatar" v-bind:alt="member.name || member.username">
+        <span v-if="member.is_new" class="d-inline-block g-pos-rel">
+            <span class="u-badge-v2--xs u-badge--top-left g-bg-red g-mt-7 g-ml-7"></span>
+            <img class="g-width-50 g-height-50 rounded-circle mCS_img_loaded" v-bind:src="member.avatar" v-bind:alt="member.name || member.username">
+          </span>
+          <img v-else class="g-width-50 g-height-50 rounded-circle mCS_img_loaded" v-bind:src="member.avatar" v-bind:alt="member.name || member.username">
         </router-link>
+
       </div>
       <div class="align-self-center g-px-10">
 

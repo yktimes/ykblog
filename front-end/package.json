@@ -22,7 +22,7 @@
     "vue-scrollto": "^2.15.0",
     "vue-sweetalert2": "^2.0.5",
     "vue-toasted": "^1.1.27",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^2.11.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

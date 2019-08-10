@@ -136,3 +136,14 @@ class FollowedSerializers(serializers.ModelSerializer):
         model = FriendShip
 
         fields = ('followed',  'date')
+from posts.models import Likedship
+
+from posts.serializers import LikedCommentSerializer,UserPostInfo
+
+class LiedSerializers(serializers.ModelSerializer):
+    user=UserPostInfo()
+    comment = LikedCommentSerializer()
+    class Meta:
+        model = Likedship
+        fields = ('comment', 'user','timestamp')
+

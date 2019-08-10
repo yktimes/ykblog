@@ -29,7 +29,8 @@
             <li class="g-pb-3">
               <router-link v-bind:to="{ name: 'RecivedComments' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
                 <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-finance-206 u-line-icon-pro"></i></span>
-                Comments
+                评论
+                 <span v-if="notifications.unread_recived_comments_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_recived_comments_count }}</span>
               </router-link>
             </li>
             <li class="g-py-3">
@@ -41,13 +42,18 @@
             <li class="g-py-3">
               <router-link v-bind:to="{ name: 'Follows' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
                 <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-finance-067 u-line-icon-pro"></i></span>
-                Follows
+                粉丝
+
+                <span v-if="notifications.unread_follows_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_follows_count }}</span>
+
               </router-link>
             </li>
             <li class="g-py-3">
               <router-link v-bind:to="{ name: 'Likes' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
                 <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-medical-008 u-line-icon-pro"></i></span>
-                Likes
+                喜欢
+                <span v-if="notifications.unread_likes_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_likes_count }}</span>
+
               </router-link>
             </li>
           </ul>
@@ -75,7 +81,13 @@ export default {
   data () {
     return {
       sharedState: store.state,
-      user: ''
+      user: '',
+      notifications: {
+        unread_recived_comments_count: 0,
+        unread_follows_count: 0,
+        unread_likes_count: 0,
+        // unread_followeds_posts_count: 0
+      }
     }
   },
   methods: {
@@ -90,15 +102,55 @@ export default {
           // handle error
           console.error(error)
         })
+    },
+
+      getUserNotifications (id) {
+      let since = 0
+      const path = `/api/users/${id}/notifications/?since=${since}`
+      this.$axios.get(path)
+        .then((response) => {
+          // handle success
+          const len = response.data.data.length
+          for(var i = 0; i < len; i++) {
+            switch (response.data.data[i].name) {
+              case 'unread_recived_comments_count':
+                this.notifications.unread_recived_comments_count = parseInt(response.data.data[i].payload_json)
+                break
+
+              case 'unread_follows_count':
+                this.notifications.unread_follows_count = parseInt(response.data.data[i].payload_json)
+                break
+
+              case 'unread_likes_count':
+                this.notifications.unread_likes_count = parseInt(response.data.data[i].payload_json)
+                break
+
+              // case 'unread_followeds_posts_count':
+              //   this.notifications.unread_followeds_posts_count = response.data[i].payload_json
+              //   break
+            }
+            since = response.data.data[i].timestamp
+          }
+        })
+        .catch((error) => {
+          // handle error
+          console.error(error)
+        })
     }
   },
   created () {
     const user_id = this.sharedState.user_id
     this.getUser(user_id)
+      this.getUserNotifications(user_id)
     // tooltip
     $(document).ready(function(){
-      $('[data-toggle="tooltip"]').tooltip(); 
+      $('[data-toggle="tooltip"]').tooltip();
     })
+       },
+  // 当路由变化后(比如变更查询参数 page 和 per_page)重新加载数据
+  beforeRouteUpdate (to, from, next) {
+    next()
+    this.getUserNotifications(this.sharedState.user_id)
   }
 }
 </script>

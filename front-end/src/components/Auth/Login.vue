@@ -5,21 +5,21 @@
       <div class="col-md-4">
         <form @submit.prevent="onSubmit">
           <div class="form-group" v-bind:class="{'u-has-error-v1': loginForm.usernameError}">
-            <label for="username">Username</label>
+            <label for="username">用户名</label>
             <input type="text" v-model="loginForm.username" class="form-control" id="username" placeholder="">
             <small class="form-control-feedback" v-show="loginForm.usernameError">{{ loginForm.usernameError }}</small>
           </div>
           <div class="form-group" v-bind:class="{'u-has-error-v1': loginForm.passwordError}">
-            <label for="password">Password</label>
+            <label for="password">密码</label>
             <input type="password" v-model="loginForm.password" class="form-control" id="password" placeholder="">
             <small class="form-control-feedback" v-show="loginForm.passwordError">{{ loginForm.passwordError }}</small>
           </div>
-          <button type="submit" class="btn btn-primary">Sign In</button>
+          <button type="submit" class="btn btn-primary">登录</button>
         </form>
       </div>
     </div>
     <br>
-    <p>New User? <router-link to="/register">Click to Register!</router-link></p>
+    <p>New User? <router-link to="/register">去注册!</router-link></p>
     <p>
         Forgot Your Password?
         <a href="#">Click to Reset It</a>
@@ -99,9 +99,9 @@ export default {
           // handle error
           // console.log('failed', error.response);
           if (typeof error.response != 'undefined') {
-            if (error.response.status == 401) {
-              this.loginForm.usernameError = 'Invalid username or password.'
-              this.loginForm.passwordError = 'Invalid username or password.'
+            if (error.response.status == 400) {
+              this.loginForm.usernameError = '用户名或密码错误.'
+              this.loginForm.passwordError = '用户名或密码错误.'
             } else {
               console.log(error.response)
             }

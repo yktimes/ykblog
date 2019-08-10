@@ -12,7 +12,7 @@ class Post(models.Model):
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     views =models.IntegerField(default=0)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='posts',on_delete=models.CASCADE)
     comments_count = models.IntegerField(default=0)
 
     class Meta:
@@ -31,15 +31,16 @@ class Comment(models.Model):
     mark_read = models.BooleanField( default=False)  # 文章作者会收到评论提醒，可以标为已读
     disabled = models.BooleanField( default=False)  # 屏蔽显示
     # 外键，评论作者的 id
-    author =models.ForeignKey(to='users.User', related_name="author",to_field="id")
+    author =models.ForeignKey(to='users.User', related_name="comments",to_field="id",on_delete=models.CASCADE)
 
     # 外键，评论所属文章的 id
-    post=models.ForeignKey(to='Post',related_name='post')
+    post=models.ForeignKey(to='Post',related_name='post',on_delete=models.CASCADE)
     # 自引用的多级评论实现
     parent = models.ForeignKey("self",related_name='child',
                                null=True, blank=True,on_delete=models.CASCADE)  # blank=True 在django admin里面可以不填
 
-    liked = models.ManyToManyField('users.User', related_name='liked_comments', verbose_name='点赞用户')
+    liked = models.ManyToManyField('users.User',  through='Likedship',
+        through_fields=('comment', 'user'), verbose_name='点赞用户')
 
     class Meta:
         db_table = 'posts_comment'
@@ -69,15 +70,29 @@ class Comment(models.Model):
 
         return data
 
+    def get_ancestors(self):
+        '''获取评论的所有祖先'''
+        data = []
+
+        def ancestors(comment):
+            if comment.parent:
+                data.append(comment.parent)
+
+                ancestors(comment.parent)
+
+        ancestors(self)
+        return data
+
     def switch_like(self, user):
         """点赞或取消赞"""
-
-        # 如果用户已经赞过，则取消赞
+        print(11111111111111,self.liked.all())
+        # # 如果用户已经赞过，则取消赞
         if user in self.liked.all():
-            self.liked.remove(user)
+            Likedship.objects.get(user=user,comment=Comment.objects.get(pk=self.pk)).delete()
+            # self.liked.remove(user)
 
         else:
-            self.liked.add(user)
+             Likedship.objects.create(user=user,comment=Comment.objects.get(pk=self.pk))
 
             # 添加赞的时候通知楼主　　# 这个ｋｅｙ可也不写
             # TODO　 动态点赞提醒
@@ -90,3 +105,12 @@ class Comment(models.Model):
     def get_likers(self):
         """获取所有点赞用户"""
         return self.liked.all()
+
+
+class Likedship(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    timestamp  = models.DateTimeField(auto_now_add=True)
+
+

@@ -39,6 +39,10 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/history-messages/$', views.GetUserHistoryMessages.as_view()),
     # url('^users/(?P<pk>\d+)/history-messages/$', views.GetUserListMessagesRecipients.as_view()),
 
+    # 黑名单
+    url('^block/(?P<pk>\d+)/$', views.BlockView.as_view()),
+    url('^unblock/(?P<pk>\d+)/$', views.UnBlockView.as_view()),
+
 
 
     url('^tokens/$', obtain_jwt_token)

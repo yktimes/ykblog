@@ -534,8 +534,13 @@ class GetUserMessagesSenders(APIView):
                 # 发给了谁
                 sender = User.objects.get(id=reids[i])
                 print(sender)
-                # 总共给他发过多少条
 
+
+                # 判断我有没有拉黑他
+                if user.is_blocking(sender):
+                    data['is_blocking'] = True
+
+                # 总共给他发过多少条
                 data['total_count'] = int(total_count[i])
                 # 他最后一次查看收到的私信的时间
 
@@ -697,3 +702,57 @@ class GetUserHistoryMessages(APIView):
             s = pg.get_paginated_response(data=ret)
 
             return s
+
+
+class BlockView(APIView):
+    '''开始拉黑一个用户'''
+    def get(self,request,pk):
+
+        try:
+            real_user = User.objects.get(id=int(pk))
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
+            if user == real_user:
+                # 不能拉黑自己
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            if user.is_blocking(real_user):
+                # 已经拉黑了
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            user.block(real_user)
+
+            return Response({
+                'status': 'success',
+                'message': 'You are now blocking %s.' % (real_user.name if real_user.name else real_user.username)
+            })
+
+
+class UnBlockView(APIView):
+    '''取消拉黑一个用户'''
+    def get(self, request, pk):
+
+        try:
+            real_user = User.objects.get(id=int(pk))
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
+            if user == real_user:
+                # 不能拉黑自己
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            if not user.is_blocking(real_user):
+                # 已经拉黑了
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            user.unblock(real_user)
+
+            return Response({
+                'status': 'success',
+                'message': 'You are not blocking %s.' % (real_user.name if real_user.name else real_user.username)
+            })

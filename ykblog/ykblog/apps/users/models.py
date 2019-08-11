@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from  django.contrib.auth.models import AbstractUser
 import datetime
-
+from django.conf import settings
 # from posts.models import Post
 from posts.models import Comment
 from notification.models import Notification
@@ -15,6 +15,9 @@ from operator import itemgetter
 from posts.models import Likedship
 from Message.models import Message
 
+
+
+
 class User(AbstractUser):
     """用户模型类"""
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
@@ -24,6 +27,10 @@ class User(AbstractUser):
     location = models.CharField(max_length=50,default='')
     about_me = models.CharField(max_length=255,default='')
     avatar=models.CharField(max_length=255,default='')
+
+    harassers  = models.ManyToManyField('users.User', through='Blacklist',
+                                   through_fields=('user', 'block'), verbose_name='黑名单用户')
+
     # 用户最后一次查看 收到的评论 页面的时间，用来判断哪些收到的评论是新的
     last_recived_comments_read_time = models.DateTimeField(null=True,blank=True)
 
@@ -42,6 +49,28 @@ class User(AbstractUser):
         db_table = 'tb_users'
         verbose_name = '用户'
         verbose_name_plural = verbose_name
+
+    def is_blocking(self, user):
+        print('判断当前用户是否已经拉黑了 user 这个用户对象，如果拉黑了，下面表达式左边是1，否则是0')
+        '''判断当前用户是否已经拉黑了 user 这个用户对象，如果拉黑了，下面表达式左边是1，否则是0'''
+
+        print('判断当',user in self.harassers.all())
+        return user in self.harassers.all()
+            #
+            # self.harassers.all().filter(
+            # block = user.id).count() > 0
+
+    def block(self, user):
+        '''当前用户开始拉黑 user 这个用户对象'''
+        if not self.is_blocking(user):
+            Blacklist.objects.create(user=self,block=user)
+            # self.harassers.append(user)
+
+    def unblock(self, user):
+        '''当前用户取消拉黑 user 这个用户对象'''
+        if self.is_blocking(user):
+            Blacklist.objects.get(user=self, block=user).delete()
+            # self.harassers.remove(user)
 
 
     def new_recived_messages(self):
@@ -236,3 +265,16 @@ class FriendShip(models.Model):
         for followeder in followeders:
             user_followed.append(followeder.follower)
         return user_followed  # 得到关注我的人，返回列表
+
+
+class Blacklist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='harasser',on_delete=models.CASCADE)
+
+    # 这个是黑名单
+    block=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='sufferer', on_delete=models.CASCADE)
+    timestamp= models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'blacklist'
+        verbose_name = '黑名单'
+        verbose_name_plural = verbose_name

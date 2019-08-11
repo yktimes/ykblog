@@ -40,9 +40,14 @@ class MessageView(ListModelMixin, GenericAPIView):
             recipient_user = User.objects.get(id=int(recipient_id))
             print(recipient_user, "成功")
         except User.DoexNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'message':'该用户可能在火星上哦'},status=status.HTTP_404_NOT_FOUND)
         else:
             user =request.user
+
+            # 如果你在对方黑名单或者对方在你黑名单
+            if recipient_user.is_blocking(user) or user.is_blocking(recipient_user):
+                return Response({'message':'被人家或自己屏蔽了'},status=status.HTTP_400_BAD_REQUEST)
+
             #　自己不能发私信
             if user.pk==recipient_user.pk:
                 return Response(status=status.HTTP_400_BAD_REQUEST)

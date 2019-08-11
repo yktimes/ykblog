@@ -96,7 +96,7 @@ class Comment(models.Model):
 
             # 添加赞的时候通知楼主　　# 这个ｋｅｙ可也不写
             # TODO　 动态点赞提醒
-            # notification_handler(user,self.Cuser,'L',self,id_value=str(self.pk),key="social_update")
+
 
     def count_likers(self):
         """点赞数"""

@@ -31,6 +31,15 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/recived-likes/$', views.UserReceivedLikesVIew.as_view()),
 
 
+    # 我的资源里的私信列表，
+    url('^users/(?P<pk>\d+)/messages-recipients/$', views.GetUserListMessagesRecipients.as_view()),
+
+    # 未读私信通知
+    url('^users/(?P<pk>\d+)/messages-senders/$', views.GetUserMessagesSenders.as_view()),
+    url('^users/(?P<pk>\d+)/history-messages/$', views.GetUserHistoryMessages.as_view()),
+    # url('^users/(?P<pk>\d+)/history-messages/$', views.GetUserListMessagesRecipients.as_view()),
+
+
 
     url('^tokens/$', obtain_jwt_token)
 

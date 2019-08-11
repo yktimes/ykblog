@@ -5,7 +5,6 @@ import store from './store'
 
 
 // 基础配置
-
 axios.defaults.baseURL = 'http://localhost:8000'
 // axios.defaults.timeout = 5000  // 超时时间（毫秒）
 // axios.defaults.retry = 2  // 重试次数
@@ -31,36 +30,46 @@ axios.interceptors.response.use(function (response) {
   // Do something with response data
   return response
 }, function (error) {
-  // 匹配不同的响应码
-  switch  (error.response.status) {
-    case 401:
-      // 清除 Token 及 已认证 等状态
-      store.logoutAction()
-      // 跳转到登录页
-      if (router.currentRoute.path !== '/login') {
-        Vue.toasted.error('401: 认证已失效，请先登录', { icon: 'fingerprint' })
-        router.replace({
-          path: '/login',
-          query: { redirect: router.currentRoute.path },
-        })
-      }
-      break
 
-    case 403:
-      Vue.toasted.error('403: Forbidden', { icon: 'fingerprint' })
-      router.back()
-      break
+   if (error.response) {
+    // 匹配不同的响应码
+    switch  (error.response.status) {
+      case 401:
+        // 清除 Token 及 已认证 等状态
+        store.logoutAction()
+        // 跳转到登录页
+        if (router.currentRoute.path !== '/login') {
+          Vue.toasted.error('401: 认证已失效，请先登录', { icon: 'fingerprint' })
+          router.replace({
+            path: '/login',
+            query: { redirect: router.currentRoute.path },
+          })
+        }
+        break
 
-    case 404:
-      Vue.toasted.error('404: Not Found', { icon: 'fingerprint' })
-      router.back()
-      break
+      case 403:
+        Vue.toasted.error('403: Forbidden', { icon: 'fingerprint' })
+        router.back()
+        break
 
-    case 500:  // 根本拿不到 500 错误，因为 CORs 不会过来
-      Vue.toasted.error('500: Oops... INTERNAL SERVER ERROR', { icon: 'fingerprint' })
-      router.back()
-      break
+      case 404:
+        Vue.toasted.error('404: Not Found', { icon: 'fingerprint' })
+        router.back()
+        break
+
+      case 500:  // 根本拿不到 500 错误，因为 CORs 不会过来
+        Vue.toasted.error('500: Oops... INTERNAL SERVER ERROR', { icon: 'fingerprint' })
+        router.back()
+        break
+    }
+  } else if (error.request) {
+    console.log(error.request)
+    Vue.toasted.error('The request has not been sent to Flask API，because OPTIONS get error', { icon: 'fingerprint' })
+  } else {
+    console.log('Error: ', error.message)
   }
+  console.log(error.config)
+
   return Promise.reject(error)
 })
 

@@ -24,7 +24,7 @@
                 <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
                   <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 条顶层评论
                 </router-link>
-            
+
           </div>
         </div>
       </div>
@@ -35,9 +35,23 @@
         <div v-bind:id="'c' + comment.id" class="comment-item media g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-20"
           v-for="(comment, index) in comments_list" v-bind:key="index">
 
+           <router-link v-bind:to="{ path: `/user/${comment.author.id}` }">
+            <img class="d-flex g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40 rounded-circle rounded mCS_img_loaded g-mt-3 g-mr-15" v-bind:src="comment.author.avatar" v-bind:alt="comment.author.name || comment.author.username">
+          </router-link>
+
           <div class="media-body">
-            <div class="g-mb-15">
-              <h5 class="h5 g-color-gray-dark-v1 g-font-size-16 mb-0">你评论了文章<router-link v-bind:to="{ name: 'PostDetail', params: { id: comment.post.id } }" class="g-text-underline--none--hover"><span class="h6">《{{ comment.post.title }}》</span></router-link></h5>
+<!--            TOdo !comment.parent_id-->
+             <div v-if="!comment.parent_id" class="g-mb-15">
+              <h5 class="h5 g-color-gray-dark-v1 mb-0"><router-link v-bind:to="{ path: `/user/${comment.author.id}` }" class="comment-author g-text-underline--none--hover">{{ comment.author.name || comment.author.username }}</router-link> <span class="h6"> 评论了文章<router-link v-bind:to="{ name: 'PostDetail', params: { id: comment.post.id } }" class="g-text-underline--none--hover">《{{ comment.post.title }}》</router-link></span></h5>
+              <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
+            </div>
+            <div v-else class="g-mb-15">
+              <h5 class="h5 g-color-gray-dark-v1 mb-0"><router-link v-bind:to="{ path: `/user/${comment.author.id}` }" class="comment-author g-text-underline--none--hover">{{ comment.author.name || comment.author.username }}</router-link> <span class="h6"> 在文章<router-link v-bind:to="{ name: 'PostDetail', params: { id: comment.post.id } }" class="g-text-underline--none--hover">《{{ comment.post.title }}》</router-link>中写了一条新评论</span></h5>
+              <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
+            </div>
+
+
+
               <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
             </div>
 
@@ -73,13 +87,13 @@
             </ul>
           </div>
         </div>
-      
+
       </div>
       <!-- End Panel Body -->
-    </div>
-  
+
+
     <!-- Pagination #04 -->
-    <div v-if="comments && page_total>1">
+    <div v-if="comments">
       <pagination
         v-bind:cur-page="page"
         v-bind:per-page="per_page"

@@ -13,6 +13,8 @@ from django.db.models import Q
 import json
 from operator import itemgetter
 from posts.models import Likedship
+from Message.models import Message
+
 class User(AbstractUser):
     """用户模型类"""
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
@@ -30,11 +32,27 @@ class User(AbstractUser):
     # 用户最后一次查看 收到的点赞 页面的时间，用来判断哪些点赞是新的
     last_likes_read_time = models.DateTimeField(null=True,blank=True)
 
+    # 用户最后一次查看私信的时间
+    last_messages_read_time = models.DateTimeField(null=True,blank=True)
+
+
+
 
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'
         verbose_name_plural = verbose_name
+
+
+    def new_recived_messages(self):
+        '''用户未读的私信计数'''
+        last_read_time = self.last_messages_read_time or datetime.datetime(1900, 1, 1)
+        print("last_read_timelast_read_time",last_read_time)
+        print("用户未读的私信计数",Message.objects.filter(recipient=self.pk).filter(
+            timestamp__gt= last_read_time).count())
+
+        return Message.objects.filter(recipient=self).filter(
+            timestamp__gt= last_read_time).count()
 
     def new_recived_comments(self):
         '''用户发布的文章下面收到的新评论计数'''

@@ -76,14 +76,14 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id','body','timestamp','mark_read','disabled','author','parent','post','liked')
+        fields = ('id','body','timestamp','mark_read','disabled','author','post','liked', 'parent_id')
 
 
 
 class CommentPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id','title',)
+        fields = ('id','title')
 
 class MyCommentSerializer(serializers.ModelSerializer):
     author = UserPostInfo()
@@ -91,7 +91,7 @@ class MyCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id','body','timestamp','mark_read','disabled','author','post')
+        fields = ('id','body','timestamp','mark_read','disabled','author','post','parent_id')
 
 
 class LikedCommentSerializer(serializers.ModelSerializer):
@@ -99,4 +99,4 @@ class LikedCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id','body','timestamp','mark_read','disabled','post','liked')
+        fields = ('id','body','timestamp','mark_read','disabled','post','liked','parent_id')

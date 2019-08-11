@@ -12,7 +12,7 @@ class Notification(models.Model):
     timestamp = models.FloatField(default=time)
     payload_json = models.CharField(max_length=255)
 
-    def __repr__(self):
+    def __str__(self):
         return '<Notification {}>'.format(self.pk)
 
     def get_data(self):

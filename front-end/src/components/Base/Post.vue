@@ -1,7 +1,8 @@
 <template>
   <div v-bind:class="leftBrdColor" class="media g-brd-around g-brd-gray-light-v4 g-brd-left-1 g-pa-20 g-mb-20">
     <router-link v-bind:to="{ path: `/user/${post.author.id}/` }" v-bind:title="post.author.name || post.author.username">
-      <img class="d-flex g-width-50 g-height-50 g-mt-3 g-mr-20" v-bind:src="post.author.avatar" v-bind:alt="post.author.name || post.author.username">
+      <img class="d-flex g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40 rounded-circle rounded mCS_img_loaded g-mt-3 g-mr-15" v-bind:src="post.author.avatar" v-bind:alt="post.author.name || post.author.username">
+
     </router-link>
 
     <div class="media-body">

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
-    'notification.apps.NotificationConfig'
+    'notification.apps.NotificationConfig',
+    'Message.apps.MessageConfig',
 ]
 
 MIDDLEWARE = [

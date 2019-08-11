@@ -106,8 +106,10 @@ class CommentsView(ListModelMixin, GenericAPIView):
 
         parent = request.data.get('parent_id')
         print(body, post)
+        if  len(body.strip())==0:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if not all([body, post]):
+        if not post:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         try:

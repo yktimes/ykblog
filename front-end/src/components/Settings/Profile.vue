@@ -1,20 +1,20 @@
 <template>
   <div>
-    <h1>Public profile</h1>
+    <h1>主页</h1>
     <form @submit.prevent="onSubmit">
       <div class="form-group">
-        <label for="name">Real Name</label>
+        <label for="name">姓名</label>
         <input type="text" v-model="profileForm.name" class="form-control" id="name" placeholder="">
       </div>
       <div class="form-group">
-        <label for="location">Location</label>
+        <label for="location">我的位置</label>
         <input type="text" v-model="profileForm.location" class="form-control" id="location" placeholder="">
       </div>
       <div class="form-group">
-        <label for="about_me">About Me</label>
+        <label for="about_me">关于我</label>
         <textarea v-model="profileForm.about_me" class="form-control" id="about_me" rows="5" placeholder=""></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">保存</button>
     </form>
   </div>
 </template>
@@ -67,7 +67,7 @@ export default {
           console.log(error.response.data)
         })
     },
-    
+
   },
   created () {
     const user_id = this.sharedState.user_id

@@ -12,7 +12,7 @@
             <!-- User Image -->
             <div class="g-mb-20">
 
-           <img v-if="user.avatar" class="img-fluid w-100 g-brd-around g-brd-gray-light-v4 g-pa-2" v-bind:src="user.avatar" v-bind:alt="user.name || user.username">
+<!--           <img v-if="user.avatar" class="img-fluid w-100" v-bind:src="user.avatar" v-bind:alt="user.name || user.username">-->
 
             </div>
             <!-- User Image -->

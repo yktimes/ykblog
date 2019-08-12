@@ -20,25 +20,13 @@
           </li>
         </ul>
 
-        <form v-if="sharedState.is_authenticated" class="form-inline navbar-left mr-auto">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search">
-          <!-- 暂时先禁止提交，后续实现搜索再改回 type="submit" -->
-          <button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>
-        </form>
-
-        <ul v-if="sharedState.is_authenticated" class="nav navbar-nav navbar-right">
+      <ul v-if="sharedState.is_authenticated" class="nav navbar-nav navbar-right">
           <li class="nav-item g-mr-20">
-<!--            todo {{ sharedState.new_messages_count }}-->
-            <router-link v-bind:to="{ path: '/notifications/comments' }" class="nav-link"><i class="icon-education-033 u-line-icon-pro g-color-red g-font-size-16 g-pos-rel g-top-2 g-mr-3"></i> 通知 <span id="new_notifications_count" style="visibility: hidden;" class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">0</span></router-link>
-
-
+            <router-link v-bind:to="{ path: '/notifications/comments' }" class="nav-link"><i class="icon-education-033 u-line-icon-pro g-color-red g-font-size-16 g-pos-rel g-top-2 g-mr-3"></i> Notifications <span id="new_notifications_count" style="visibility: hidden;" class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">0</span></router-link>
           </li>
-
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
               <img v-bind:src="sharedState.user_avatar" class="g-brd-around g-brd-gray-light-v3 g-pa-2 rounded-circle rounded mCS_img_loaded"> {{ sharedState.user_name }}
-
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                <router-link v-bind:to="{ path: `/user/${sharedState.user_id}` }" class="dropdown-item"><i class="icon-star g-pos-rel g-top-1 g-mr-5"></i>我的主页</router-link>

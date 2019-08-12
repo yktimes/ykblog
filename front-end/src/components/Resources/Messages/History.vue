@@ -19,18 +19,6 @@
 
           <div class="dropdown-divider"></div>
 
-           <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 5 }}" class="dropdown-item g-px-10">
-                  <i class="icon-layers g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 5 条顶层评论
-                </router-link>
-                <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 10 }}" class="dropdown-item g-px-10">
-                  <i class="icon-wallet g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 10 条顶层评论
-                </router-link>
-
-                <div class="dropdown-divider"></div>
-
-                <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
-                  <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 条顶层评论
-                </router-link>
 
         </div>
       </div>
@@ -134,8 +122,8 @@
 
           v-bind:cur-page="page"
         v-bind:per-page="per_page"
-        v-bind:total-pages="page_total">
-
+        v-bind:total-pages="page_total"
+        v-bind:from="form">
     </pagination>
   </div>
   <!-- End Pagination #04 -->
@@ -157,7 +145,7 @@
 import store from '../../../store'
 // 导入 vue-markdown 组件解析 markdown 原文为　HTML
 import VueMarkdown from 'vue-markdown'
-import Pagination from '../../Base/Pagination'
+import Pagination from '../../Base/Pagination_message'
 
 export default {
   name: 'History',  //this is the name of the component
@@ -167,8 +155,9 @@ export default {
   },
   data () {
     return {
+         form:"",
          page :1,
-      per_page: 5,
+      per_page: 10,
       count:0,
        page_total:0,
       sharedState: store.state,
@@ -208,7 +197,7 @@ export default {
 
       // const path = `/api/users/${id}/followers/?page=`
 
-
+this.form = this.$route.query.from
       const path = `/api/users/${id}/history-messages/?from=${this.$route.query.from}&page=`+this.page+'&per_page='+this.per_page
 
 // const path = `/api/users/${id}/history-messages/?from=${this.$route.query.from}&page=${this.page}&per_page=${this.per_page}`
@@ -224,7 +213,7 @@ export default {
 
         this.count=response.data.count
 
-          this.page_total = Math.floor(this.count/this.per_page)
+          this.page_total = Math.ceil(this.count/this.per_page)
         })
         .catch((error) => {
           // handle error
@@ -273,6 +262,7 @@ export default {
     },
   },
   created () {
+      this.form = this.$route.query.from
     this.getUser(this.$route.query.from)
     this.getUserHistoryMessages(this.sharedState.user_id)
     // 初始化 bootstrap-markdown 插件
@@ -288,7 +278,7 @@ export default {
   // 当路由变化后(比如变更查询参数 page 和 per_page)重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
-
+this.form = this.$route.query.from
     this.getUser(this.$route.query.from)
     this.getUserHistoryMessages(this.sharedState.user_id)
   }

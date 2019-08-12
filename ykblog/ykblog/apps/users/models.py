@@ -12,7 +12,7 @@ from django.db.models import Q
 
 import json
 from operator import itemgetter
-from posts.models import Likedship
+from posts.models import Likedship,LikedPost
 from Message.models import Message
 
 
@@ -37,18 +37,51 @@ class User(AbstractUser):
     # 用户最后一次查看 用户的粉丝 页面的时间，用来判断哪些粉丝是新的
     last_follows_read_time = models.DateTimeField(null=True,blank=True)
     # 用户最后一次查看 收到的点赞 页面的时间，用来判断哪些点赞是新的
-    last_likes_read_time = models.DateTimeField(null=True,blank=True)
+    last_comments_likes_read_time  = models.DateTimeField(null=True,blank=True)
 
     # 用户最后一次查看私信的时间
     last_messages_read_time = models.DateTimeField(null=True,blank=True)
 
-
+    # 用户最后一次查看 收到的文章被喜欢 页面的时间，用来判断哪些喜欢是新的
+    last_posts_likes_read_time = models.DateTimeField(null=True,blank=True)
 
 
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'
         verbose_name_plural = verbose_name
+
+    def new_posts_likes(self):
+        '''用户收到的文章被喜欢的新计数'''
+
+        last_read_time = self.last_posts_likes_read_time or datetime.datetime(1900, 1, 1)
+        # 当前用户发表的所有评论当中，哪些被点赞了
+        from django.db import connection
+
+        cursor = connection.cursor()
+        print("self.pk",self.pk)
+        cursor.execute(
+            'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s',
+            [self.pk])
+
+        ret = cursor.fetchall()
+        print("新的喜欢文章记录计数", ret)
+        # 新的点赞记录计数
+        new_likes_count = 0
+
+        for c in ret:
+            print(".........",self.pk,c[1],type(self.pk),type(c[1]))
+            if c[1]!=self.pk:
+                print("for c in ret",c)
+                timestamp = LikedPost.objects.get(user=c[1], post=c[0]).timestamp
+
+                # 判断本条点赞记录是否为新的
+                if timestamp > last_read_time:
+                    new_likes_count += 1
+
+        return new_likes_count
+
+
 
     def is_blocking(self, user):
         print('判断当前用户是否已经拉黑了 user 这个用户对象，如果拉黑了，下面表达式左边是1，否则是0')
@@ -142,9 +175,9 @@ class User(AbstractUser):
         print("用户的新粉丝计数++",s)
         return s
 
-    def new_likes(self):
+    def new_comments_likes(self):
         '''用户收到的新点赞计数'''
-        last_read_time = self.last_likes_read_time or datetime.datetime(1900, 1, 1)
+        last_read_time = self.last_comments_likes_read_time  or datetime.datetime(1900, 1, 1)
         # 当前用户发表的所有评论当中，哪些被点赞了
         from django.db import connection
 
@@ -278,3 +311,5 @@ class Blacklist(models.Model):
         db_table = 'blacklist'
         verbose_name = '黑名单'
         verbose_name_plural = verbose_name
+
+

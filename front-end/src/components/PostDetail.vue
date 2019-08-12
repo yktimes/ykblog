@@ -125,6 +125,27 @@
 
           </div>
 
+
+           <div id="like-post" class="row">
+            <div class="col-lg-3">
+              <button v-on:click="onLikeOrUnlikePost(post)" v-bind:class="btnOutlineColor" class="btn btn-block g-rounded-50 g-py-12 g-mb-10">
+                <i class="icon-heart g-pos-rel g-top-1 g-mr-5"></i> 喜欢<span v-if="post.likers && post.likers.length > 0"> | {{ post.likers.length }}</span>
+              </button>
+            </div>
+            <div class="col-lg-9">
+              <ul v-if="post.likers" class="list-inline mb-0">
+                <li class="list-inline-item"
+                  v-for="(liker, index) in post.likers" v-bind:key="index">
+                  <router-link
+                    v-bind:to="{ path: `/user/${liker.id}` }"
+                    v-bind:title="liker.name || liker.username">
+                    <img class="g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40 rounded-circle rounded mCS_img_loaded g-mt-3" v-bind:src="liker.avatar" v-bind:alt="liker.name || liker.username">
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </article>
 
 
@@ -391,7 +412,7 @@ export default {
       sharedState: store.state,
       post: {},
        comments: '',
-
+      liker_id:[],
       editForm: {
         title: '',
         summary: '',
@@ -417,7 +438,19 @@ export default {
       }
     }
   },
-
+  computed: {
+    btnOutlineColor: function () {
+      if (this.sharedState.is_authenticated) {
+        if (this.liker_id && this.liker_id.indexOf(parseInt(this.sharedState.user_id)) != -1) {
+          return 'u-btn-outline-red'
+        } else {
+          return 'u-btn-outline-primary'
+        }
+      } else {
+        return 'u-btn-outline-primary'
+      }
+    }
+  },
 
   methods: {
     getPost (id) {
@@ -425,6 +458,21 @@ export default {
       this.$axios.get(path)
         .then((response) => {
           this.post = response.data
+
+            this.liker_id=[]
+//             this.post.liker.forEach((res)=>{
+// 	this.liker_id.push({
+// 		title: res.id,
+// 		});
+// })
+            for (let i = 0;i<this.post.likers.length;i++){
+
+       this.liker_id.push(this.post.likers[i].id)
+
+
+     }
+  // this.liker_id.splice(index, 1, val);
+            console.log("this.liker_id",this.liker_id)
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -532,7 +580,34 @@ export default {
       })
     },
 
-
+ onLikeOrUnlikePost (post) {
+      // 用户需要先登录
+      if (!this.sharedState.is_authenticated) {
+        this.$toasted.error('您需要先登录才能收藏文章 ...', { icon: 'fingerprint' })
+        this.$router.replace({
+          path: '/login',
+          query: { redirect: this.$route.path + '#like-post' }
+        })
+      }
+      let path = ''
+      if (this.liker_id.indexOf(parseInt(this.sharedState.user_id)) != -1) {
+        // 当前登录用户已收藏过该文章，再次点击则取消收藏
+        path = `/api/posts/${post.id}/unlike/`
+      } else {
+        path = `/api/posts/${post.id}/like/`
+      }
+      this.$axios.get(path)
+        .then((response) => {
+          // handle success
+          this.getPost(this.$route.params.id)
+          this.$toasted.success(response.data.message, { icon: 'fingerprint' })
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error.response.data)
+          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
+        })
+    },
 
 
   getPostComments (id) {

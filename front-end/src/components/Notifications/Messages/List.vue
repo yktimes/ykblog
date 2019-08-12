@@ -128,7 +128,7 @@ export default {
 
         this.count=response.data.count
 
-          this.page_total = Math.floor(this.count/this.per_page)
+          this.page_total = Math.ceil (this.count/this.per_page)
         })
         .catch((error) => {
           // handle error
@@ -179,11 +179,13 @@ export default {
     }
   },
   created () {
+       // const user_id = this.sharedState.user_id || this.$route.params.id
     this.getUserMessagesSenders(this.sharedState.user_id)
   },
   // 当路由变化后(比如变更查询参数 page 和 per_page)重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
+      // const user_id = this.sharedState.user_id|| to.params.id
     this.getUserMessagesSenders(this.sharedState.user_id)
   }
 }

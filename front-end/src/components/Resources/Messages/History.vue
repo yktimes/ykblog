@@ -5,7 +5,7 @@
     <!-- Panel Header -->
     <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
       <h3 class="h6 mb-0">
-        <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> 与 <router-link v-bind:to="{ path: `/user/${user.id}` }" class="g-text-underline--none--hover">{{ user.name || user.username }}</router-link> 的对话 <small v-if="messages">(共 {{ count }} 条, {{page_total }} 页)</small>
+        <i class="icon-bubbles g-pos-rel g-top-1 g-mr-5"></i> 与 <router-link v-bind:to="{ path: `/user/${user.id}` }" class="g-text-underline--none--hover">{{ user.name || user.username }}</router-link> 的对话 <small v-if="messages_list">(共 {{ count }} 条, {{page_total }} 页)</small>
       </h3>
       <div class="dropdown g-mb-10 g-mb-0--md">
         <span class="d-block g-color-primary--hover g-cursor-pointer g-mr-minus-5 g-pa-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -129,7 +129,7 @@
   </div>
 
   <!-- Pagination #04 -->
-  <div v-if="messages">
+  <div v-if="messages_list">
     <pagination
 
           v-bind:cur-page="page"

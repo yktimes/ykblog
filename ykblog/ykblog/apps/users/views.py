@@ -451,7 +451,7 @@ class UserReceivedLikesVIew(APIView):
                 print("rrsd",res)
                 # todo 如果没用要删除
                 # 标记哪些评论是新的
-                last_read_time = user.last_likes_read_time or datetime.datetime(1900, 1,
+                last_read_time = user.last_comments_likes_read_time  or datetime.datetime(1900, 1,
                                                                                            1)
                 for item in res:  # data={}
                     #     for u in UserPostInfo(users,many=True).data:
@@ -462,18 +462,18 @@ class UserReceivedLikesVIew(APIView):
                 print("res",res)
                 # 需要考虑分页的问题，比如新评论有25条，默认分页是每页10条，
                 # # 如果用户请求第一页时就更新 last_recived_comments_read_time，那么后15条就被认为不是新评论了，这是不对的
-                if page * per_page >= user.new_likes():
+                if page * per_page >= user.new_comments_likes():
                     # 更新 last_recived_comments_read_time 属性值
-                    user.last_likes_read_time = datetime.datetime.now()
+                    user.last_comments_likes_read_time  = datetime.datetime.now()
                     # 将新评论通知的计数归零
-                    user.add_notification('unread_likes_count',
+                    user.add_notification('unread_comments_likes_count',
                                           0)
                     #
                 else:  # if data['timestamp'] > last_read_time:
                     # 用户剩余未查看的新评论数
-                    n = user.new_likes() - page * per_page  # data['is_new'] = True
+                    n = user.new_comments_likes() - page * per_page  # data['is_new'] = True
                     # 将新评论通知的计数更新为未读数
-                    user.add_notification('unread_likes_count', n)
+                    user.add_notification('unread_comments_likes_count', n)
 
 
                 user.save()
@@ -727,7 +727,7 @@ class BlockView(APIView):
 
             return Response({
                 'status': 'success',
-                'message': 'You are now blocking %s.' % (real_user.name if real_user.name else real_user.username)
+                'message': '屏蔽 %s.' % (real_user.name if real_user.name else real_user.username)
             })
 
 
@@ -754,5 +754,97 @@ class UnBlockView(APIView):
 
             return Response({
                 'status': 'success',
-                'message': 'You are not blocking %s.' % (real_user.name if real_user.name else real_user.username)
+                'message': '取消屏蔽 %s.' % (real_user.name if real_user.name else real_user.username)
             })
+
+from .serializers import LikedPostSerializers
+class UserReceivedPostsLikesVIew(APIView):
+    '''返回该用户收到的文章喜欢
+    谁喜欢了你的文章
+    '''
+    def get(self, request, pk):
+
+        print("文章喜欢")
+
+        try:
+            real_user = User.objects.get(id=pk)
+
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            user = request.user
+            if user != real_user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            else:
+                records = {'items': []}
+                # 创建分页对象,继承
+                pg = StandardResultPagination()
+
+
+                from django.db import connection
+
+                cursor = connection.cursor()
+
+                cursor.execute(
+                    'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s',
+                    [user.pk])
+
+                ret = cursor.fetchall()
+                print("ret1111111111", ret)
+                from posts.models import LikedPost
+                k = []
+                for r in ret:
+                    k.append(LikedPost.objects.get(post=r[0], user=r[1]))
+
+                res = LikedPostSerializers(k, many=True).data
+                print("rrsd", res)
+                # todo 如果没用要删除
+                # 标记哪些文章是新的
+                last_read_time = user.last_posts_likes_read_time or datetime.datetime(1900, 1,
+                                                                                1)
+
+                # 重组数据，变成: (谁) (什么时间) 喜欢了你的 (哪篇文章)
+                for item in res:  # data={}
+                    #     for u in UserPostInfo(users,many=True).data:
+
+                    if item["timestamp"] > str(last_read_time):  #
+                        item["is_new"] = True
+                # 按 timestamp 排序一个字典列表(倒序，最新关注的人在最前面)
+                res = sorted(res, key=itemgetter('timestamp'), reverse=True)
+                print("res", res)
+
+                user.last_likes_read_time = datetime.datetime.now()
+                user.add_notification('unread_posts_likes_count', 0)
+
+                user.save()
+                ret = pg.paginate_queryset(queryset=res, request=request, view=self)
+
+                s = pg.get_paginated_response(
+                    data=ret)  # 需要                                                                                          考虑分页的问题，比如新评论有25条，默认分页是每页10条，
+
+                return s
+from posts.models import LikedPost
+class UserLikesPostsVIew(ListAPIView):
+
+
+    def get_queryset(self):
+        try:
+            print(888888888888888888888)
+            user = User.objects.get(id=self.kwargs['pk'])
+            print(999999999999999999999)
+
+
+        except User.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            print(1111111111123142344444444444)
+            print('UserLikesPostsVIew',LikedPost.objects.filter(user=user))
+            post_list = [ p.post.pk for p in LikedPost.objects.filter(user=user)]
+            print("pppppppppppp",post_list)
+            return Post.objects.filter(id__in=post_list)
+
+    def get_serializer(self, *args, **kwargs):
+        return PostSerializer(self.get_queryset(), many=True)

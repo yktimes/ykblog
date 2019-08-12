@@ -77,7 +77,6 @@
 <script>
 import store from '../../store'
 import Pagination from '../Base/Pagination'
-
 export default {
   name: 'Follows',  // this is the name of the component
   components: {
@@ -99,12 +98,9 @@ export default {
      if (typeof this.$route.query.page != 'undefined') {
         this.page = this.$route.query.page
       }
-
       if (typeof this.$route.query.per_page != 'undefined') {
         this.per_page = this.$route.query.per_page
       }
-
-
       const path = `/api/users/${id}/followers/?page=`+this.page+'&per_page='+this.per_page
       this.$axios.get(path)
         .then((response) => {

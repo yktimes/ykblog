@@ -122,7 +122,7 @@ export default {
     }
   },
   methods: {
-    getUserRecivedLikes (id) {
+    getUserRecivedCommentsLikes  (id) {
      if (typeof this.$route.query.page != 'undefined') {
         this.page = this.$route.query.page
       }
@@ -130,7 +130,7 @@ export default {
       if (typeof this.$route.query.per_page != 'undefined') {
         this.per_page = this.$route.query.per_page
       }
-const path = `/api/users/${id}/recived-likes/?page=`+this.page+'&per_page='+this.per_page
+const path = `/api/users/${id}/recived-comments-likes/?page=`+this.page+'&per_page='+this.per_page
 
       this.$axios.get(path)
         .then((response) => {
@@ -148,12 +148,12 @@ const path = `/api/users/${id}/recived-likes/?page=`+this.page+'&per_page='+this
     }
   },
   created () {
-    this.getUserRecivedLikes(this.sharedState.user_id)
+    this.getUserRecivedCommentsLikes(this.sharedState.user_id)
   },
   // 当路由变化后(比如变更查询参数 page 和 per_page)重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
-    this.getUserRecivedLikes(this.sharedState.user_id)
+    this.getUserRecivedCommentsLikes(this.sharedState.user_id)
   }
 }
 </script>

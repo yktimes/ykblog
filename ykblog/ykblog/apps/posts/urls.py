@@ -18,4 +18,8 @@ urlpatterns = [
 
     url('^comments/(?P<pk>\d+)/like/$', views.LikeView.as_view()),
 
+    url('^posts/(?P<pk>\d+)/like/$', views.LikePostView.as_view()),
+    url('^posts/(?P<pk>\d+)/unlike/$', views.UnLikePostView.as_view()),
+
+
 ]

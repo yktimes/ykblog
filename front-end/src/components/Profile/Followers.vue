@@ -18,13 +18,13 @@
             <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 10 }}" class="dropdown-item g-px-10">
               <i class="icon-wallet g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 10 个
             </router-link>
-            
+
             <div class="dropdown-divider"></div>
 
             <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
               <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 个
             </router-link>
-            
+
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
       </div>
       <!-- End Panel Body -->
     </div>
-  
+
     <!-- Pagination #04 -->
 
      <div v-if="followers">
@@ -111,7 +111,6 @@ export default {
           this.page_total = Math.ceil(this.count/this.per_page)
           this.followers = response.data.results
 
-          console.log(this.followeds)
         })
         .catch((error) => {
           // handle error
@@ -136,7 +135,7 @@ export default {
       this.$axios.get(path)
         .then((response) => {
           // handle success
-          this.getUserFollowers(this.$route.params.id)
+          this.getUserFollowers(this.$route.params.id|| this.sharedState.user_id)
         })
         .catch((error) => {
           // handle error
@@ -145,15 +144,16 @@ export default {
     }
   },
   created () {
-    const user_id = this.$route.params.id
+    const user_id = this.$route.params.id || this.sharedState.user_id
     this.getUser(user_id)
     this.getUserFollowers(user_id)
   },
   // 进入子路由后重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
-    this.getUser(to.params.id)
-    this.getUserFollowers(to.params.id)
+      const user_id = to.params.id || this.sharedState.user_id
+    this.getUser(user_id)
+    this.getUserFollowers(user_id)
   }
 }
 </script>

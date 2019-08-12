@@ -67,8 +67,9 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
         instance = self.get_object()
 
         instance.views=F("views") + 1
-        instance.save()
 
+        instance.save()
+        # update_fields = ['views']
         return self.retrieve(request, *args, **kwargs)
 
     @permission_classes((IsAuthenticated,))
@@ -326,8 +327,60 @@ class LikeView(APIView):
 
             # 取消或添加赞
             comment.switch_like(request.user)
-            comment.author.add_notification('unread_likes_count', comment.author.new_likes())
+            comment.author.add_notification('unread_comments_likes_count', comment.author.new_comments_likes())
             # news.update(up_count=F("up_count") + 1)
 
             # return Response({"likes": news.count_likers()})
             return Response({'status': 'success'},status=status.HTTP_200_OK)
+
+
+class LikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        """喜欢文章功能"""
+
+        try:
+            post = Post.objects.get(pk=pk)
+
+        except Post.DoesNotExist as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user = request.user
+            post.liked_by(user)
+            # 切记要先提交，先添加喜欢记录到数据库，因为 new_posts_likes() 会查询 posts_likes 关联表
+            post.likers_count = F("likers_count") + 1
+            post.save()
+            # post.save(update_fields=['likers_count'])
+            # post.update(likers_count=F("likers_count") + 1)
+            post.author.add_notification('unread_posts_likes_count',
+                                         post.author.new_posts_likes())
+
+            return Response({
+                'status': 'success',
+                'message': '收藏成功'
+            },status=status.HTTP_200_OK)
+
+class UnLikePostView(APIView):
+    def get(self, request, pk):
+        """取消喜欢文章功能"""
+
+        try:
+            post = Post.objects.get(pk=pk)
+
+        except Post.DoesNotExist as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user = request.user
+            post.unliked_by(user)
+            # 切记要先提交，先添加喜欢记录到数据库，因为 new_posts_likes() 会查询 posts_likes 关联表
+            if post.likers_count>0:
+                post.likers_count = F("likers_count") - 1
+                post.save()
+
+            post.author.add_notification('unread_posts_likes_count',
+                                         post.author.new_posts_likes())
+
+            return Response({
+                'status': 'success',
+                'message': '取消收藏成功'
+            },status=status.HTTP_200_OK)

@@ -15,12 +15,12 @@ class PostSerializer(serializers.ModelSerializer):
     创建博客序列化器
     """
     author = UserPostInfo(read_only=True)
-
+    likers = UserPostInfo(read_only=True,many=True)
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author','views','comments_count')
+        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers','likers_count','timestamp')
 
-        read_only_fields = ('id', 'author','views')
+        read_only_fields = ('id', 'author','views','likers','likers_count','timestamp')
 
 
 class PostAuthorSerializer(serializers.ModelSerializer):
@@ -100,3 +100,15 @@ class LikedCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id','body','timestamp','mark_read','disabled','post','liked','parent_id')
+
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    """
+    喜欢文章
+    """
+    class Meta:
+        model = Post
+        fields = ("id", "title",'likers','likers_count')
+
+        read_only_fields = ('id','likers')

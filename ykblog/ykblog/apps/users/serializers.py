@@ -138,7 +138,7 @@ class FollowedSerializers(serializers.ModelSerializer):
         fields = ('followed',  'date')
 from posts.models import Likedship
 
-from posts.serializers import LikedCommentSerializer,UserPostInfo
+from posts.serializers import LikedCommentSerializer,UserPostInfo,PostLikeSerializer
 
 class LiedSerializers(serializers.ModelSerializer):
     user=UserPostInfo()
@@ -146,4 +146,13 @@ class LiedSerializers(serializers.ModelSerializer):
     class Meta:
         model = Likedship
         fields = ('comment', 'user','timestamp')
+
+
+from posts.models import LikedPost
+class LikedPostSerializers(serializers.ModelSerializer):
+    user=UserPostInfo()
+    post = PostLikeSerializer()
+    class Meta:
+        model = LikedPost
+        fields = ('post', 'user','timestamp')
 

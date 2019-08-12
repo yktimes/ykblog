@@ -28,7 +28,7 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/recived-comments/$', views.UserReceivedCommentsVIew.as_view()),
 
     # 通知列表里面的点赞
-    url('^users/(?P<pk>\d+)/recived-likes/$', views.UserReceivedLikesVIew.as_view()),
+    url('^users/(?P<pk>\d+)/recived-comments-likes/$', views.UserReceivedLikesVIew.as_view()),
 
 
     # 我的资源里的私信列表，
@@ -44,6 +44,8 @@ urlpatterns = [
     url('^unblock/(?P<pk>\d+)/$', views.UnBlockView.as_view()),
 
 
+    url('^users/(?P<pk>\d+)/recived-posts-likes/$', views.UserReceivedPostsLikesVIew.as_view()),
+    url('^users/(?P<pk>\d+)/liked-posts/$', views.UserLikesPostsVIew.as_view()),
 
     url('^tokens/$', obtain_jwt_token)
 

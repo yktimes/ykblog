@@ -30,15 +30,17 @@ import CommentsResource from '@/components/Resources/CommentsResource'
 import MessagesIndexResource from '@/components/Resources/Messages/Index'
 import SentMessagesResource from '@/components/Resources/Messages/List'
 import MessagesHistoryResource from '@/components/Resources/Messages/History'
+import LikedPostsResource from '@/components/Resources/LikedPosts'
 // 用户通知
 import Notifications from '@/components/Notifications/Notifications'
 import RecivedComments from '@/components/Notifications/RecivedComments'
 import Follows from '@/components/Notifications/Follows'
-import Likes from '@/components/Notifications/Likes'
+
+import CommentsLikes from '@/components/Notifications/CommentsLikes'
 import MessagesIndex from '@/components/Notifications/Messages/Index'
 import RecivedMessages from '@/components/Notifications/Messages/List'
 import MessagesHistory from '@/components/Notifications/Messages/History'
-
+import PostsLikes from '@/components/Notifications/PostsLikes'
 // 博客详情页
 import PostDetail from '@/components/PostDetail'
 // 测试与后端连通性
@@ -126,7 +128,6 @@ const router = new Router({
         // UserPostsList will be rendered inside User's <router-view>
         // when /user/:id/posts is matched
        { path: 'posts', name: 'UserPosts', component: Posts },
-
         // UserFollowedsPostsList will be rendered inside User's <router-view>
         // when /user/:id/followeds-posts is matched
          { path: 'following-posts', name: 'UserFollowingPosts', component: FollowingPosts }
@@ -160,6 +161,7 @@ const router = new Router({
         { path: 'posts', name: 'PostsResource', component: PostsResource },
         { path: 'following-posts', name: 'FollowingPostsResource', component: FollowingPostsResource },
        { path: 'comments', name: 'CommentsResource', component: CommentsResource },
+        { path: 'liked-posts', name: 'LikedPostsResource', component: LikedPostsResource },
         {
           path: 'messages',
           component: MessagesIndexResource,
@@ -179,13 +181,13 @@ const router = new Router({
       // 通知
       path: '/notifications',
       component: Notifications,
-      children: [
+   children: [
         { path: '', component: RecivedComments },
         { path: 'comments', name: 'RecivedComments', component: RecivedComments },
+             { path: 'follows', name: 'Follows', component: Follows },
+        { path: 'comments-likes', name: 'CommentsLikes', component: CommentsLikes },
 
-        { path: 'follows', name: 'Follows', component: Follows },
-        { path: 'likes', name: 'Likes', component: Likes },
-         {
+        {
           path: 'messages',
           component: MessagesIndex,
           children: [
@@ -195,6 +197,8 @@ const router = new Router({
             { path: 'history', name: 'MessagesHistory', component: MessagesHistory }
           ]
         },
+        { path: 'posts-likes', name: 'PostsLikes', component: PostsLikes },
+        { path: 'following-posts', name: 'FollowingPosts', component: FollowingPosts }
       ],
       meta: {
         requiresAuth: true

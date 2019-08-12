@@ -56,13 +56,21 @@
               </router-link>
             </li>
             <li class="g-py-3">
-              <router-link v-bind:to="{ name: 'Likes' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
+              <router-link v-bind:to="{ name: 'CommentsLikes' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
                 <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-medical-008 u-line-icon-pro"></i></span>
-                喜欢
-                <span v-if="notifications.unread_likes_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_likes_count }}</span>
+                赞
+                <span v-if="notifications.unread_comments_likes_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_comments_likes_count  }}</span>
 
               </router-link>
             </li>
+
+            <li class="g-py-3">
+             <router-link v-bind:to="{ name: 'PostsLikes' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
+                <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-christmas-056 u-line-icon-pro"></i></span>
+                Posts Likes
+                <span v-if="notifications.unread_posts_likes_count" class="u-label g-font-size-11 g-bg-pink g-rounded-20 g-px-8 g-ml-15">{{ notifications.unread_posts_likes_count }}</span>
+              </router-link>
+             </li>
           </ul>
           <!-- End 菜单列表 -->
         </aside>
@@ -92,9 +100,10 @@ export default {
       notifications: {
         unread_recived_comments_count: 0,
         unread_follows_count: 0,
-        unread_likes_count: 0,
+        unread_comments_likes_count: 0,
         // unread_followeds_posts_count: 0
           unread_messages_count: 0,
+            unread_posts_likes_count: 0,
       }
     }
   },
@@ -129,8 +138,8 @@ export default {
                 this.notifications.unread_follows_count = parseInt(response.data.data[i].payload_json)
                 break
 
-              case 'unread_likes_count':
-                this.notifications.unread_likes_count = parseInt(response.data.data[i].payload_json)
+              case 'unread_comments_likes_count':
+                this.notifications.unread_comments_likes_count = parseInt(response.data.data[i].payload_json)
                 break
 
               // case 'unread_followeds_posts_count':
@@ -138,6 +147,10 @@ export default {
               //   break
                      case 'unread_messages_count':
                 this.notifications.unread_messages_count = parseInt(response.data.data[i].payload_json)
+                break
+
+                case 'unread_posts_likes_count':
+                this.notifications.unread_posts_likes_count = parseInt(response.data.data[i].payload_json)
                 break
             }
             since = response.data.data[i].timestamp
@@ -150,9 +163,9 @@ export default {
     }
   },
   created () {
-    const user_id = this.sharedState.user_id
-    this.getUser(user_id)
-      this.getUserNotifications(user_id)
+    // const user_id = this.sharedState.user_id
+    // this.getUser(this.sharedState.user_id)
+      this.getUserNotifications(this.sharedState.user_id)
     // tooltip
     $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip();

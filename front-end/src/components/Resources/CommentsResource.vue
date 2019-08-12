@@ -31,27 +31,25 @@
       <!-- End Panel Header -->
 
       <!-- Panel Body -->
-      <div v-if="comments_list" class="card-block g-pa-0" >
+
+
+            <div v-if="comments_list" class="card-block g-pa-0" >
+
         <div v-bind:id="'c' + comment.id" class="comment-item media g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-20"
           v-for="(comment, index) in comments_list" v-bind:key="index">
 
-           <router-link v-bind:to="{ path: `/user/${comment.author.id}` }">
+          <router-link v-bind:to="{ path: `/user/${comment.author.id}` }">
             <img class="d-flex g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40 rounded-circle rounded mCS_img_loaded g-mt-3 g-mr-15" v-bind:src="comment.author.avatar" v-bind:alt="comment.author.name || comment.author.username">
           </router-link>
 
           <div class="media-body">
-<!--            TOdo !comment.parent_id-->
-             <div v-if="!comment.parent_id" class="g-mb-15">
+
+            <div v-if="!comment.parent_id" class="g-mb-15">
               <h5 class="h5 g-color-gray-dark-v1 mb-0"><router-link v-bind:to="{ path: `/user/${comment.author.id}` }" class="comment-author g-text-underline--none--hover">{{ comment.author.name || comment.author.username }}</router-link> <span class="h6"> 评论了文章<router-link v-bind:to="{ name: 'PostDetail', params: { id: comment.post.id } }" class="g-text-underline--none--hover">《{{ comment.post.title }}》</router-link></span></h5>
               <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
             </div>
             <div v-else class="g-mb-15">
               <h5 class="h5 g-color-gray-dark-v1 mb-0"><router-link v-bind:to="{ path: `/user/${comment.author.id}` }" class="comment-author g-text-underline--none--hover">{{ comment.author.name || comment.author.username }}</router-link> <span class="h6"> 在文章<router-link v-bind:to="{ name: 'PostDetail', params: { id: comment.post.id } }" class="g-text-underline--none--hover">《{{ comment.post.title }}》</router-link>中写了一条新评论</span></h5>
-              <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
-            </div>
-
-
-
               <span class="g-color-gray-dark-v4 g-font-size-12">{{ $moment(comment.timestamp).format('YYYY年MM月DD日 HH:mm:ss') }}</span>
             </div>
 
@@ -87,6 +85,9 @@
             </ul>
           </div>
         </div>
+
+      </div>
+
 
       </div>
       <!-- End Panel Body -->

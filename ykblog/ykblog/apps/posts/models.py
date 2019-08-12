@@ -13,7 +13,27 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     views =models.IntegerField(default=0)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='posts',on_delete=models.CASCADE)
-    comments_count = models.IntegerField(default=0)
+    comments_count = models.IntegerField(default=0) # 评论数
+    likers_count= models.IntegerField(default=0) # 喜欢数
+    # 博客文章与喜欢/收藏它的人是多对多关系
+    likers = models.ManyToManyField('users.User', through='LikedPost',
+                                   through_fields=('post', 'user'), verbose_name='喜欢文章用户')
+
+    def is_liked_by(self, user):
+        '''判断用户 user 是否已经收藏过该文章'''
+        return user in self.likers.all()
+
+    def liked_by(self, user):
+        '''收藏'''
+        if not self.is_liked_by(user):
+            LikedPost.objects.create(post=self,user=user)
+            # self.likers.append(user)
+
+    def unliked_by(self, user):
+        '''取消收藏'''
+        if self.is_liked_by(user):
+            LikedPost.objects.get(post=self,user=user).delete()
+            # self.likers.remove(user)
 
     class Meta:
         db_table = 'tb_posts'
@@ -41,6 +61,8 @@ class Comment(models.Model):
 
     liked = models.ManyToManyField('users.User',  through='Likedship',
         through_fields=('comment', 'user'), verbose_name='点赞用户')
+
+
 
     class Meta:
         db_table = 'posts_comment'
@@ -112,5 +134,17 @@ class Likedship(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     timestamp  = models.DateTimeField(auto_now_add=True)
+
+
+
+
+# 喜欢文章
+class LikedPost(models.Model):
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 

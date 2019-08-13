@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MySerializer(serializers.Serializer):
-    """图书数据序列化器"""
+    """数据序列化器"""
     id = serializers.IntegerField(label='ID', read_only=True)
     username = serializers.CharField(label='注册名称',max_length=30, required=False)
     name = serializers.CharField(label='名称', max_length=30,required=False)
@@ -65,7 +65,7 @@ class Mysite(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id','username', 'email','name','location','about_me',"date_joined","avatar")
+        fields = ('id','username', 'email','name','location','about_me',"date_joined","avatar",'is_staff')
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """

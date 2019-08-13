@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <form id="addPostForm" v-if="sharedState.is_authenticated" @submit.prevent="onSubmitAddPost" class="g-mb-40">
+    <form id="addPostForm" v-if="sharedState.is_authenticated && sharedState.user_perms=='true'" @submit.prevent="onSubmitAddPost" class="g-mb-40">
       <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
         <input type="text" v-model="postForm.title" class="form-control" id="postFormTitle" placeholder="标题">
         <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>
@@ -106,7 +106,66 @@
     </div>
     <!-- End Pagination #04 -->
 
+
+   <footer class="container g-pt-70 g-pb-50">
+
+
+          <div class="row justify-content-between">
+            <div class="col-lg-3">
+              <a href="/" class="d-inline-block mb-4">
+                  <img src="/static/main/images/logo.png" alt="Logo - LIFE &amp;公子">
+              </a>
+
+              <p class="g-color-gray-dark-v4 g-font-size-13 mb-1">2019. © All Rights Reserved.</p>
+              <p class="g-color-gray-dark-v4 g-font-size-13 mb-10">粤ICP备18040049号</p>
+            </div>
+
+
+            <div class="col-sm-6 col-lg-3">
+
+              <h3 class="h6 g-color-black g-font-weight-600 text-uppercase mb-3 g-ml-5">联系我</h3>
+
+
+              <!-- Social Icons -->
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item g-mr-2">
+                  <span class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-cyan g-bg-cyan-opacity-0_1 g-color-cyan--hover rounded-circle" data-toggle="tooltip" data-placement="top" title="1162073988@qq.com" data-original-title="1162073988@qq.com" >
+                    <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-envelope"></i>
+                    <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-envelope"></i>
+
+                  </span>
+                </li>
+
+                <li class="list-inline-item g-mx-2">
+                  <span class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-green g-bg-green-opacity-0_1 g-color-green--hover rounded-circle" data-toggle="tooltip" data-placement="top" title="ykgoal" >
+                    <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-wechat"></i>
+                    <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-wechat"></i>
+                  </span>
+                </li>
+
+                <li class="list-inline-item g-mx-2">
+                  <span class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-blue g-bg-blue-opacity-0_1 g-color-blue--hover rounded-circle" data-toggle="tooltip" data-placement="top" title="1162073988" >
+                    <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-qq"></i>
+                    <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-qq"></i>
+                  </span>
+                </li>
+
+                <li class="list-inline-item g-mx-2">
+                  <a class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-bluegray g-bg-bluegray-opacity-0_1 g-color-bluegray--hover rounded-circle" href="https://github.com/yktimes" target="_blank">
+                    <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-github"></i>
+                    <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-github"></i>
+                  </a>
+                </li>
+
+              </ul>
+              <!-- End Social Icons -->
+            </div>
+          </div>
+      </footer>
+
   </div>
+
+
 </template>
 
 <script>
@@ -114,9 +173,17 @@ import store from '../store'
 import Post from './Base/Post'
 import Pagination from './Base/Pagination'
 // bootstrap-markdown 编辑器依赖的 JS 文件，初始化编辑器在组件的 created() 方法中，同时它需要 JQuery 支持哦
+
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.js'
 import '../assets/bootstrap-markdown/js/bootstrap-markdown.zh.js'
 import '../assets/bootstrap-markdown/js/marked.js'
+import 'jquery/dist/jquery.min'
+import '../assets/proper/popper.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+// import '../assets/proper/popper.min.js'
+// import '../assets/bootstrap/js/bootstrap.js'
 
 
 export default {

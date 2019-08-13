@@ -14,7 +14,7 @@ axios.defaults.baseURL = 'http://localhost:8000'
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
-  const token = window.localStorage.getItem('madblog-token')
+  const token = window.localStorage.getItem('yk-token')
   if (token) {
     config.headers.Authorization = `JWT ${token}`
   }

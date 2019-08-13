@@ -78,12 +78,13 @@ export default {
           // handle success
         console.log(response.data)
           console.log(response.data.user_name,response.data.user_avatar)
-          window.localStorage.setItem('madblog-token', response.data.token)
+          window.localStorage.setItem('yk-token', response.data.token)
           // TODO token
           window.localStorage.setItem('user_id', response.data.id)
           window.localStorage.setItem('user_name',response.data.user_name)
 
           window.localStorage.setItem('user_avatar',response.data.user_avatar)
+          window.localStorage.setItem('permissions',response.data.permissions)
 
           store.loginAction()
 

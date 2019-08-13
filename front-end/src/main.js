@@ -7,8 +7,13 @@ import router from './router'
 import axios from './http'
 // 导入 moment.js 用来格式化 UTC 时间为本地时间
 import moment from 'moment'
+import 'jquery/dist/jquery.min'
+import 'jquery'
+import 'popper.js/dist/popper.min.js'
+
 // Import Bootstrap css and js files
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap'
 // 字体图标
 import './assets/icon-line/css/simple-line-icons.css'

@@ -7,5 +7,6 @@ def jwt_response_payload_handler(token, user=None, request=None):
         'token': token,
         'id': user.id,
         'user_name': user.username,
-        'user_avatar':user.avatar
+        'user_avatar':user.avatar,
+        'permissions':user.is_staff
     }

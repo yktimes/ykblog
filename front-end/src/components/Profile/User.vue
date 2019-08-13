@@ -73,7 +73,7 @@
     <!-- 当前登录的用户发表新博客文章 -->
     <div class="container">
 
-      <div v-if="sharedState.is_authenticated && $route.params.id == sharedState.user_id" class="card border-0 g-mb-15">
+      <div v-if="sharedState.is_authenticated && sharedState.user_perms=='true' && $route.params.id == sharedState.user_id" class="card border-0 g-mb-15">
         <!-- Panel Header -->
         <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
           <h3 class="h6 mb-0">
@@ -88,7 +88,7 @@
         <!-- End Panel Header -->
       </div>
 
-     <form id="addPostForm" v-if="sharedState.is_authenticated && $route.params.id == sharedState.user_id" @submit.prevent="onSubmitAddPost" class="g-mb-40">
+     <form id="addPostForm" v-if="sharedState.is_authenticated && sharedState.user_perms=='true' && $route.params.id == sharedState.user_id" @submit.prevent="onSubmitAddPost" class="g-mb-40">
         <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
            <input type="text" v-model="postForm.title" class="form-control" id="postFormTitle" placeholder="标题">
           <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>

@@ -213,7 +213,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  const token = window.localStorage.getItem('madblog-token')
+  const token = window.localStorage.getItem('yk-token')
   if (to.matched.some(record => record.meta.requiresAuth) && (!token || token === null)) {
     Vue.toasted.show('Please log in to access this page.', { icon: 'fingerprint' })
     next({

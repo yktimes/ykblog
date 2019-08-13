@@ -18,13 +18,22 @@ from django.contrib import admin
 
 
 from django.shortcuts import HttpResponse
+import xadmin
+xadmin.autodiscover()
+
+from xadmin.plugins import xversion
+xversion.register_models()
+from django.urls import path
 
 def ping(request):
     if request.method=="GET":
         return HttpResponse("ping")
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # url(r'^admin/', admin.site.urls),
+    path(r'xadmin/', xadmin.site.urls),
+
+
     url(r'^api/ping/', ping),
     url(r'^api/', include('users.urls'), ),
     url(r'^api/', include('posts.urls'), ),

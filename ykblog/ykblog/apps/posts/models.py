@@ -107,7 +107,7 @@ class Comment(models.Model):
 
     def switch_like(self, user):
         """点赞或取消赞"""
-        print(11111111111111,self.liked.all())
+
         # # 如果用户已经赞过，则取消赞
         if user in self.liked.all():
             Likedship.objects.get(user=user,comment=Comment.objects.get(pk=self.pk)).delete()

@@ -32,19 +32,18 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
 
     @permission_classes((IsAuthenticated,))
     def post(self, request, *args, **kwargs):
-        # return self.create(request, *args, **kwargs)
-        print(request.user)
+
 
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            print(serializer.data)
+
             title = serializer.data.get('title')
             body = serializer.data.get('body')
             summary = serializer.data.get('summary')
             author = request.user
 
-            print("sssssss", summary)
+
             post = Post.objects.create(title=title, body=body, summary=summary, author=author)
 
             return Response({'status': 'ok', 'id': post.pk, 'title': post.title, })
@@ -77,7 +76,7 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
         # TODO 设置 permission_classes 开启
 
         user = request.user
-        print(user.pk)
+
         if int(request.user.pk) == int(self.get_object().author.pk):
             return self.update(request, *args, **kwargs)
 
@@ -100,13 +99,13 @@ class CommentsView(ListModelMixin, GenericAPIView):
     serializer_class = CreateWallCommentSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+
 
         body = request.data.get('body').strip()
         post = request.data.get('post')
 
         parent = request.data.get('parent_id')
-        print(body, post)
+
         if  len(body.strip())==0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -116,7 +115,7 @@ class CommentsView(ListModelMixin, GenericAPIView):
         try:
 
             post = Post.objects.get(id=int(post))
-            print(post, "成功")
+
         except Post.DoexNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -128,12 +127,12 @@ class CommentsView(ListModelMixin, GenericAPIView):
                     comment = Comment.objects.create(author=request.user, body=body, post=post, parent=parent)
 
 
-                    print(parent, "成功")
+
                 except Comment.DoexNotExist:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
 
             else:
-                print("11111111111", post.comments_count)
+
                 post.comments_count = F("comments_count") + 1
                 post.save()
                 comment = Comment.objects.create(author=request.user, body=body, post=post)
@@ -176,8 +175,7 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         flag = request.data.get('disabled')
         mark_read=request.data.get('mark_read')
-        print("flag",flag,type(flag))
-        print("mark_read",mark_read,type(mark_read))
+
         # 如果请求用户是该评论用户或着它是该博客主人
         # if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
 

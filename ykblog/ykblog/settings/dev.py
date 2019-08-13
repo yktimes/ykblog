@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'notification.apps.NotificationConfig',
     'Message.apps.MessageConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -283,3 +284,4 @@ CORS_ALLOW_HEADERS = (
 
 
 AUTH_USER_MODEL = 'users.User'
+

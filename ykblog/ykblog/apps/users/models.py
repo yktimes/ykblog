@@ -11,13 +11,14 @@ from notification.models import Notification
 from django.db.models import Q
 
 import json
-from operator import itemgetter
 from posts.models import Likedship,LikedPost
 from Message.models import Message
 
 
 
+# from ykblog.utils.tasks import send_messages
 
+# from rq_tasks.tasks import send_messages
 class User(AbstractUser):
     """用户模型类"""
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
@@ -51,6 +52,20 @@ class User(AbstractUser):
         verbose_name = '用户'
         verbose_name_plural = verbose_name
 
+
+
+    def launch_task(self, name, description, *args, **kwargs):
+        '''用户启动一个新的后台任务'''
+
+        print('''用户启动一个新的后台任务''')
+        # 创建一个进程调用发送短信的函数
+        from celery_tasks.message.tasks import send_messages
+
+        celery_job = send_messages.delay(*args,**kwargs)
+        print(celery_job)
+
+
+
     def new_posts_likes(self):
         '''用户收到的文章被喜欢的新计数'''
 
@@ -59,20 +74,20 @@ class User(AbstractUser):
         from django.db import connection
 
         cursor = connection.cursor()
-        print("self.pk",self.pk)
+
         cursor.execute(
             'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s',
             [self.pk])
 
         ret = cursor.fetchall()
-        print("新的喜欢文章记录计数", ret)
+
         # 新的点赞记录计数
         new_likes_count = 0
 
         for c in ret:
-            print(".........",self.pk,c[1],type(self.pk),type(c[1]))
+
             if c[1]!=self.pk:
-                print("for c in ret",c)
+
                 timestamp = LikedPost.objects.get(user=c[1], post=c[0]).timestamp
 
                 # 判断本条点赞记录是否为新的
@@ -84,10 +99,7 @@ class User(AbstractUser):
 
 
     def is_blocking(self, user):
-        print('判断当前用户是否已经拉黑了 user 这个用户对象，如果拉黑了，下面表达式左边是1，否则是0')
-        '''判断当前用户是否已经拉黑了 user 这个用户对象，如果拉黑了，下面表达式左边是1，否则是0'''
 
-        print('判断当',user in self.harassers.all())
         return user in self.harassers.all()
             #
             # self.harassers.all().filter(
@@ -109,9 +121,7 @@ class User(AbstractUser):
     def new_recived_messages(self):
         '''用户未读的私信计数'''
         last_read_time = self.last_messages_read_time or datetime.datetime(1900, 1, 1)
-        print("last_read_timelast_read_time",last_read_time)
-        print("用户未读的私信计数",Message.objects.filter(recipient=self.pk).filter(
-            timestamp__gt= last_read_time).count())
+
 
         return Message.objects.filter(recipient=self).filter(
             timestamp__gt= last_read_time).count()
@@ -119,7 +129,7 @@ class User(AbstractUser):
     def new_recived_comments(self):
         '''用户发布的文章下面收到的新评论计数'''
         last_read_time = self.last_recived_comments_read_time or datetime.datetime(1900, 1, 1)
-        print("last_read_time",last_read_time)
+
         # 用户发布的所有文章 # 反向关联
         user_posts_ids = [post.id for post in self.posts.all()]
 
@@ -168,11 +178,11 @@ class User(AbstractUser):
     def new_follows(self):
         '''用户的新粉丝计数'''
         last_read_time = self.last_follows_read_time or datetime.datetime(1900, 1, 1)
-        print("last_read_time",last_read_time)
-        print("人数")
+
+
         s = self.followedd.filter(date__gt=last_read_time).count()
-            # filter(timestamp__gt=  last_read_time).count()
-        print("用户的新粉丝计数++",s)
+
+
         return s
 
     def new_comments_likes(self):
@@ -187,7 +197,7 @@ class User(AbstractUser):
 
 
         ret = cursor.fetchall()
-        print("新的点赞记录计数",ret)
+
         # 新的点赞记录计数
         new_likes_count = 0
 
@@ -200,19 +210,6 @@ class User(AbstractUser):
                 new_likes_count += 1
         print("new_likes_count",new_likes_count)
         return new_likes_count
-
-        # print("ssss",len(ret))
-        #
-        # print( " self.comments.all()",self.comments.all())
-        # origin = self.comments.all().values("liked__comment",'liked')
-        # print(":用户收到的新点赞计数",origin)
-        # comment_ids = [i['liked__comment'] for i in origin if i['liked__comment']]
-        # user_ids = [j['liked'] for j in origin if j['liked'] ]
-        #
-        # print("new_likes",comment_ids)
-        # print("user_ids",user_ids)
-
-
 
 
 

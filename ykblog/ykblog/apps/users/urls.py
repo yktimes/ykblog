@@ -47,6 +47,11 @@ urlpatterns = [
     url('^users/(?P<pk>\d+)/recived-posts-likes/$', views.UserReceivedPostsLikesVIew.as_view()),
     url('^users/(?P<pk>\d+)/liked-posts/$', views.UserLikesPostsVIew.as_view()),
 
+
+
+
+
+
     url('^tokens/$', obtain_jwt_token)
 
 ]

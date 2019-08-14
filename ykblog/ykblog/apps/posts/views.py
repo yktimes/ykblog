@@ -13,13 +13,25 @@ from rest_framework.mixins import (
 )
 
 from rest_framework.response import Response
-from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSerializer
+from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSerializer,PostIndexSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListAPIView
 from django.db.models import F
 
 from ykblog.utils.pagination import StandardResultPagination
+
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
+
+from drf_haystack.viewsets import HaystackViewSet
+
+class PostSearchViewSet(HaystackViewSet):
+    """
+
+    """
+    index_models = [Post]
+
+    serializer_class = PostIndexSerializer
 
 
 class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
@@ -30,7 +42,7 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    @permission_classes((IsAuthenticated,))
+    @permission_classes((IsAdminUser,))
     def post(self, request, *args, **kwargs):
 
 
@@ -46,15 +58,13 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
 
             post = Post.objects.create(title=title, body=body, summary=summary, author=author)
 
-            return Response({'status': 'ok', 'id': post.pk, 'title': post.title, })
+            return Response({'message': 'ok', 'id': post.pk, 'title': post.title, })
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # return self.create(request, *args, **kwargs)
 
 
-from rest_framework.permissions import IsAuthenticated
 
 
 class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
@@ -68,19 +78,17 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
         instance.views=F("views") + 1
 
         instance.save()
-        # update_fields = ['views']
+
         return self.retrieve(request, *args, **kwargs)
 
-    @permission_classes((IsAuthenticated,))
+    @permission_classes((IsAdminUser,))
     def put(self, request, *args, **kwargs):
-        # TODO 设置 permission_classes 开启
 
-        user = request.user
 
         if int(request.user.pk) == int(self.get_object().author.pk):
             return self.update(request, *args, **kwargs)
 
-    @permission_classes((IsAuthenticated,))
+
     def delete(self, request, *args, **kwargs):
         # 判断要删除的帖子用户是否和请求用户一致
 
@@ -98,6 +106,7 @@ class CommentsView(ListModelMixin, GenericAPIView):
     queryset = Comment.objects.all().select_related('author', 'parent', 'post')
     serializer_class = CreateWallCommentSerializer
 
+    @permission_classes((IsAuthenticated,))
     def post(self, request, *args, **kwargs):
 
 
@@ -149,9 +158,6 @@ class CommentsView(ListModelMixin, GenericAPIView):
                 u.add_notification('unread_recived_comments_count',
                                    u.new_recived_comments())
 
-            # # 给文章作者发送新评论通知
-            # post.author.add_notification('unread_recived_comments_count',
-            #                              post.author.new_recived_comments())
 
             return Response(status=status.HTTP_201_CREATED)
 
@@ -170,14 +176,12 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
     @permission_classes((IsAuthenticated,))
     def put(self, request, *args, **kwargs):
         # TODO 设置 permission_classes 开启
-        instance = self.get_object()
+
 
 
         flag = request.data.get('disabled')
         mark_read=request.data.get('mark_read')
 
-        # 如果请求用户是该评论用户或着它是该博客主人
-        # if int(request.user.pk) == int(instance.author.pk) or int(request.user.pk) == int(instance.post.author.pk):
 
         try:
             c = Comment.objects.get(pk=self.kwargs['pk'])
@@ -217,62 +221,7 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    # else:
-    #     return Response(status=status.HTTP_403_FORBIDDEN)
 
-
-# / api / posts / 1 / comments /?page = 1 & per_page = 10 /
-# class PostCommentView1(APIView):
-#
-#
-#
-#     def get(self,request,pk,*args, **kwargs):
-#
-#
-#
-#         pk = pk
-#         try:
-#             post = Post.objects.get(pk=pk)
-#         except Post.DoesNotExist as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-#
-#         else:
-#             # 获取所有数据
-#             # comment_list=Comment.objects.filter(post=pk).values()
-#             c = Comment.objects.filter(post=pk)
-#             # 创建分页对象
-#             pg = PageNumberPagination()
-#
-#
-#             res = CommentSerializer(instance=c,many=True)
-#             res = res.data
-#
-#
-#
-#             ret = []  # 最终拿到的数据
-#             comment_list_dict = {}  # 构建的中间字典
-#             #for row in comment_list:  # 通过查到的数据中的id作为key，每一行数据作为value生成一个字典
-#             for row in res:  # 通过查到的数据中的id作为key，每一行数据作为value生成一个字典
-#                 row.update({"child": []})  # 构建一个键children对应一个空列表
-#                 comment_list_dict[row["id"]] = row  # 将id作为键，当前行作为值存到该字典中
-#             # print(comment_list_dict)
-#
-#             for item in res:  # 遍历一遍取到的数据列表
-#                 # print("item....",item['parent'])
-#                 parrent_row = item["parent"]  # 拿到当前行对应的父亲的地址
-#                 if not parrent_row:  # 如果父亲是None，则直接进入ret中
-#                     ret.append(item)
-#                 else:  # 否则，将这行append到父亲的children中
-#
-#                     comment_list_dict[parrent_row]["child"].append(item)  # 重点在这一行，用到了上面提到的第一个知识点
-#
-#             ret = pg.paginate_queryset(queryset=ret, request=request, view=self)
-#
-#             # print('222222222',ret)
-#             # ret = pg.get_paginated_response(ret)
-#             s = pg.get_paginated_response(data=ret)
-#
-#             return s
 
 class PostCommentView(APIView):
 
@@ -326,9 +275,7 @@ class LikeView(APIView):
             # 取消或添加赞
             comment.switch_like(request.user)
             comment.author.add_notification('unread_comments_likes_count', comment.author.new_comments_likes())
-            # news.update(up_count=F("up_count") + 1)
 
-            # return Response({"likes": news.count_likers()})
             return Response({'status': 'success'},status=status.HTTP_200_OK)
 
 
@@ -348,8 +295,7 @@ class LikePostView(APIView):
             # 切记要先提交，先添加喜欢记录到数据库，因为 new_posts_likes() 会查询 posts_likes 关联表
             post.likers_count = F("likers_count") + 1
             post.save()
-            # post.save(update_fields=['likers_count'])
-            # post.update(likers_count=F("likers_count") + 1)
+
             post.author.add_notification('unread_posts_likes_count',
                                          post.author.new_posts_likes())
 
@@ -359,6 +305,7 @@ class LikePostView(APIView):
             },status=status.HTTP_200_OK)
 
 class UnLikePostView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         """取消喜欢文章功能"""
 
@@ -375,7 +322,7 @@ class UnLikePostView(APIView):
                 post.likers_count = F("likers_count") - 1
                 post.save()
 
-            post.author.add_notification('unread_posts_likes_count',
+                post.author.add_notification('unread_posts_likes_count',
                                          post.author.new_posts_likes())
 
             return Response({

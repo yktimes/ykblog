@@ -29,16 +29,6 @@
     </div>
     <!-- End Modal: Send Messages -->
 
-  <!-- 用户所有运行中的后台任务的进度 -->
-    <div class="container">
-      <alert
-        v-for="(alert, index) in alerts" :key="index"
-        v-bind:id="alert.id"
-        v-bind:variant="alert.variant"
-        v-bind:message="alert.message">
-      </alert>
-    </div>
-
 
     <!-- 用户信息 -->
     <div v-if="user" class="container">
@@ -79,7 +69,7 @@
 
 
              <button v-if="sharedState.user_perms=='true'  &&  $route.params.id == sharedState.user_id" data-toggle="modal" data-target="#sendMessagesModal" class="btn btn-block u-btn-outline-aqua g-rounded-50 g-py-12 g-mb-10">
-              <i class="icon-bubble g-pos-rel g-top-1 g-mr-5"></i> Send Messages
+              <i class="icon-bubble g-pos-rel g-top-1 g-mr-5"></i> 群发私信
             </button>
 
             <!-- End Actions -->
@@ -153,7 +143,7 @@
 </template>
 
 <script>
-    import Alert from '../Base/Alert'
+
 import store from '../../store'
 // bootstrap-markdown 编辑器依赖的 JS 文件，初始化编辑器在组件的 created() 方法中，同时它需要 JQuery 支持哦
 import '../../assets/bootstrap-markdown/js/bootstrap-markdown.js'
@@ -163,9 +153,6 @@ import '../../assets/bootstrap-markdown/js/marked.js'
 
 export default {
   name: 'User',  //this is the name of the component
-     components: {
-    alert: Alert
-  },
 
   data () {
     return {
@@ -185,7 +172,6 @@ export default {
         body: '',
         bodyError: null
       },
-      alerts: []
     }
   },
   computed: {

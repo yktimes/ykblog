@@ -1,10 +1,9 @@
-from django.shortcuts import render
+
 from rest_framework import status
 from rest_framework.views import APIView
 
 from rest_framework.mixins import (
     ListModelMixin,
-    CreateModelMixin,
     DestroyModelMixin,
     UpdateModelMixin,
     RetrieveModelMixin
@@ -15,7 +14,7 @@ from .models import Message
 from .serializers import CreateMessageSerializer
 from users.models import User
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-# Create your views here.
+
 class MessageView(ListModelMixin, GenericAPIView):
     '''给其它用户发送私信'''
     # queryset和serializer_class是固定写法
@@ -85,7 +84,6 @@ class MessagesViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         instance.delete()
 
-        # todo给私信接收者发送新私信通知(需要自动减1)
         instance.recipient.add_notification('unread_messages_count',
                                            instance.recipient.new_recived_messages())
         return Response(status=status.HTTP_204_NO_CONTENT)

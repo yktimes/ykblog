@@ -15,6 +15,7 @@ class NotificationSerializer(serializers.ModelSerializer):
     """动态序列化器"""
     author = UserNotificationInfo(read_only=True)
 
+
     class Meta:
         model = Notification
 

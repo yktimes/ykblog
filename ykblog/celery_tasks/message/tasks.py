@@ -46,8 +46,8 @@ def send_messages(*args, **kwargs):
         message.recipient = admin
         message.save()
         # 给发送方发送新私信通知
-        sender.add_notification('unread_messages_count', admin.new_recived_messages())
-        sender.save()
+        admin.add_notification('unread_messages_count', admin.new_recived_messages())
+        admin.save()
 
     except Exception:
         logger.error('[群发私信]后台任务出错了', exc_info=sys.exc_info())

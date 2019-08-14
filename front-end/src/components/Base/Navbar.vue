@@ -4,8 +4,15 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 20px;">
       <router-link to="/" class="navbar-brand">
         <img src="../../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-          Design by <a href="" class="g-text-underline--none--hover">YK</a>
+          阿T同学
       </router-link>
+
+        <p class="navbar-nav mr-auto  mt-lg-0"  v-if="sharedState.is_authenticated">
+
+            <router-link v-bind:to="{ path: '/notifications/comments' }" class="nav-link"><i class="icon-education-033 u-line-icon-pro g-color-red g-font-size-16 g-pos-rel g-top-2 g-mr-3"></i> 通知 <span id="new_notifications_count" style="visibility: hidden;" class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">0</span></router-link>
+
+          </p>
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -15,27 +22,21 @@
           <li class="nav-item active">
             <router-link to="/" class="nav-link">Home <span class="sr-only">(current)</span></router-link>
           </li>
-          <li class="nav-item">
-            <router-link to="/ping" class="nav-link">Ping</router-link>
-          </li>
+
         </ul>
 
-        <form v-if="sharedState.is_authenticated" class="form-inline navbar-left mr-auto">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search">
-          <!-- 暂时先禁止提交，后续实现搜索再改回 type="submit" -->
-          <button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>
+           <form v-if="sharedState.is_authenticated" class="form-inline navbar-left mr-auto" @submit.prevent="onSubmitSearch">
+          <input v-model="searchForm.body" id="searchBody" class="form-control mr-sm-2" type="search" placeholder="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
+
+
         <ul v-if="sharedState.is_authenticated" class="nav navbar-nav navbar-right">
-          <li class="nav-item g-mr-20">
-<!--            todo {{ sharedState.new_messages_count }}-->
-            <router-link v-bind:to="{ path: '/notifications/comments' }" class="nav-link"><i class="icon-education-033 u-line-icon-pro g-color-red g-font-size-16 g-pos-rel g-top-2 g-mr-3"></i> 通知 <span id="new_notifications_count" style="visibility: hidden;" class="u-label g-font-size-11 g-bg-aqua g-rounded-20 g-px-10">0</span></router-link>
 
-
-          </li>
              <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img v-bind:src="sharedState.user_avatar" class="g-brd-around g-brd-gray-light-v3 g-pa-2 rounded-circle rounded mCS_img_loaded"> {{ sharedState.user_name }}
+           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img v-bind:src="sharedState.user_avatar" class="g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40  rounded-circle rounded mCS_img_loaded g-mt-3 g-mr-15""> {{ sharedState.user_name }}
             </a>
 
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -59,240 +60,7 @@
     </nav>
 
   </div>
-      <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
-          <nav class="js-mega-menu navbar navbar-expand-lg g-px-0 hs-menu-initialized hs-menu-horizontal">
-            <div class="container g-px-15">
 
-              <!-- Responsive Toggle Button -->
-              <button class="navbar-toggler navbar-toggler-right btn g-line-height-1 g-brd-none g-pa-0 ml-auto" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navBar" data-toggle="collapse" data-target="#navBar">
-                <span class="hamburger hamburger--collapse g-pa-0">
-                  <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
-                  </span>
-                </span>
-              </button>
-              <!-- End Responsive Toggle Button -->
-
-              <!-- Navigation -->
-              <div class="collapse navbar-collapse align-items-center flex-sm-row g-pt-10 g-pt-5--lg" id="navBar">
-                <ul class="navbar-nav g-font-weight-600">
-
-                  <!-- 博客首页 -->
-                  <li class="nav-item g-mr-20--lg g-mr-20--xl">
-                    <a id="nav-link--blogindex" class="nav-link g-color-aqua--hover g-px-0" href="/">
-                      首页
-                    </a>
-                  </li>
-                  <!-- End 博客首页 -->
-
-                    <!-- 博客分类，只支持到三级分类 -->
-
-
-                            <li class="nav-item hs-has-sub-menu g-mx-20--lg g-mx-20--xl" data-animation-in="fadeIn" data-animation-out="fadeOut">
-                                <a id="nav-link--linux" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/linux/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--linux">Linux</a>
-
-                                <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-18 g-mt-8--lg--scrolling animated fadeOut" id="nav-submenu--linux" aria-labelledby="nav-link--linux" style="display: none;">
-
-
-                                            <li class="dropdown-item hs-has-sub-menu ">
-                                              <a id="nav-link--linux--linux-basic" class="nav-link" href="/blog/category/linux-basic/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--linux--linux-basic">运维基础</a>
-
-                                              <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-minus-2" id="nav-submenu--linux--linux-basic" aria-labelledby="nav-link--linux--linux-basic" style="display: none;">
-
-                                                  <li class="dropdown-item">
-                                                      <a class="nav-link" href="/blog/category/linux-boot-and-startup-process/">Linux 引导过程与故障排除</a>
-                                                  </li>
-
-                                              </ul>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/network-security/">网络信息安全</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/common-linux-services/">常用服务</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/simple-it-automation/">自动化运维</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/config-network/">网络配置</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/load-balance/">负载均衡</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item hs-has-sub-menu ">
-                                              <a id="nav-link--linux--log-management" class="nav-link" href="/blog/category/log-management/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--linux--log-management">日志管理系统</a>
-
-                                              <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-minus-2" id="nav-submenu--linux--log-management" aria-labelledby="nav-link--linux--log-management" style="display: none;">
-
-                                                  <li class="dropdown-item">
-                                                      <a class="nav-link" href="/blog/category/elk/">ELK stack</a>
-                                                  </li>
-
-                                              </ul>
-                                            </li>
-
-
-                                </ul>
-                            </li>
-
-
-
-                            <li class="nav-item hs-has-sub-menu g-mx-20--lg g-mx-20--xl" data-animation-in="fadeIn" data-animation-out="fadeOut">
-                                <a id="nav-link--python" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/python/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--python">Python</a>
-
-                                <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-18 g-mt-8--lg--scrolling animated fadeOut" id="nav-submenu--python" aria-labelledby="nav-link--python" style="display: none;">
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/python-basic/">Python 基础入门</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item hs-has-sub-menu ">
-                                              <a id="nav-link--python--python-advance" class="nav-link" href="/blog/category/python-advance/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--python--python-advance">Python 技能进阶</a>
-
-                                              <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-minus-2" id="nav-submenu--python--python-advance" aria-labelledby="nav-link--python--python-advance" style="display: none;">
-
-                                                  <li class="dropdown-item">
-                                                      <a class="nav-link" href="/blog/category/data-structures-and-algorithms-in-python3/">数据结构与算法</a>
-                                                  </li>
-
-                                                  <li class="dropdown-item">
-                                                      <a class="nav-link" href="/blog/category/python3-spider/">Web 爬虫</a>
-                                                  </li>
-
-                                              </ul>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/flask/">Flask</a>
-                                            </li>
-
-
-                                </ul>
-                            </li>
-
-
-
-                            <li class="nav-item hs-has-sub-menu g-mx-20--lg g-mx-20--xl" data-animation-in="fadeIn" data-animation-out="fadeOut">
-                                <a id="nav-link--go" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/go/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--go">Go</a>
-
-                                <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-18 g-mt-8--lg--scrolling animated fadeOut" id="nav-submenu--go" aria-labelledby="nav-link--go" style="display: none;">
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/go-basic/">Go 基础入门</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/go-microservices/">Go 微服务</a>
-                                            </li>
-
-
-                                </ul>
-                            </li>
-
-
-
-                            <li class="nav-item hs-has-sub-menu g-mx-20--lg g-mx-20--xl" data-animation-in="fadeIn" data-animation-out="fadeOut">
-                                <a id="nav-link--frontend" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/frontend/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--frontend">前端</a>
-
-                                <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-18 g-mt-8--lg--scrolling animated fadeOut" id="nav-submenu--frontend" aria-labelledby="nav-link--frontend" style="display: none;">
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/vuejs/">Vue.js</a>
-                                            </li>
-
-
-                                </ul>
-                            </li>
-
-
-
-                            <li class="nav-item hs-has-sub-menu g-mx-20--lg g-mx-20--xl" data-animation-in="fadeIn" data-animation-out="fadeOut">
-                                <a id="nav-link--cloud" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/cloud/" aria-haspopup="true" aria-expanded="false" aria-controls="nav-submenu--cloud">容器云</a>
-
-                                <ul class="hs-sub-menu list-unstyled u-shadow-v11 g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-mt-18 g-mt-8--lg--scrolling animated fadeOut" id="nav-submenu--cloud" aria-labelledby="nav-link--cloud" style="display: none;">
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/docker/">Docker</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/k8s/">Kubernetes</a>
-                                            </li>
-
-
-
-                                            <li class="dropdown-item">
-                                                <a class="nav-link" href="/blog/category/ceph/">Ceph</a>
-                                            </li>
-
-
-                                </ul>
-                            </li>
-
-
-
-                            <li class="nav-item g-mx-20--lg g-mx-20--xl">
-                                <a id="nav-link--miscellaneous" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/miscellaneous/">
-                                    杂记
-                                </a>
-                            </li>
-
-
-
-                            <li class="nav-item g-mx-20--lg g-mx-20--xl">
-                                <a id="nav-link--blog-type" class="nav-link g-color-aqua--hover g-py-7 g-px-0" href="/blog/category/blog-type/">
-                                    博客类型
-                                </a>
-                            </li>
-
-
-                    <!-- End: 博客分类，只支持到三级分类 -->
-
-                  <!-- 关于我 -->
-                  <li class="nav-item g-mx-20--lg g-mx-20--xl">
-                    <a id="nav-link--aboutme" class="nav-link g-color-aqua--hover g-px-0" href="/blog/about/">
-                      About
-                    </a>
-                  </li>
-                  <!-- End 关于我 -->
-
-                </ul>
-              </div>
-              <!-- End Navigation -->
-            </div>
-          </nav>
-        </div>
 
 </section>
 </template>
@@ -305,14 +73,51 @@ export default {
   name: 'Navbar',  //this is the name of the component
   data() {
     return {
-      sharedState: store.state
+      sharedState: store.state,
+        searchForm: {
+        body: ''
+      }
     }
+
   },
   methods: {
     handlerLogout(e) {
       store.logoutAction()
       this.$toasted.show('You have been logged out.', {icon: 'fingerprint'})
       this.$router.push('/login')
+    },
+       onSubmitSearch() {
+      if (!this.searchForm.body) {
+        $('#searchBody').attr('placeholder', 'keyword required.');
+        $('#searchBody').css('background-color', '#fff0f0');
+
+        // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
+        return false
+      } else {
+        $('#searchBody').css('background-color', '');
+      }
+
+      // 提供了搜索关键词后，只需要路由到搜索结果页即可，在 SearchResult.vue 中再请求后端 API
+      let q = this.searchForm.body
+      let page = 1
+      let per_page = 5
+      if (typeof this.$route.query.page != 'undefined') {
+        page = this.$route.query.page
+      }
+
+      if (typeof this.$route.query.per_page != 'undefined') {
+        per_page = this.$route.query.per_page
+      }
+
+      // 路由到搜索结果页
+      this.$router.replace({
+        path: '/search',
+        query: {
+          q: q,
+          page: page,
+          per_page: per_page
+        }
+      })
     }
   },
 mounted () {

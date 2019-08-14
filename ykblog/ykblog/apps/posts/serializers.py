@@ -16,11 +16,12 @@ class PostSerializer(serializers.ModelSerializer):
     """
     author = UserPostInfo(read_only=True)
     likers = UserPostInfo(read_only=True,many=True)
+
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers','likers_count','timestamp')
+        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers','likers_count')
 
-        read_only_fields = ('id', 'author','views','likers','likers_count','timestamp')
+        read_only_fields = ('id', 'author','views','likers','likers_count')
 
 
 class PostAuthorSerializer(serializers.ModelSerializer):
@@ -42,11 +43,10 @@ class PostListSerializer(serializers.ModelSerializer):
     """
     author = UserPostInfo()
 
-    # token = serializers.CharField(label='登录状态token', read_only=True)  # 增加token字段
-    # _linkes = serializers.HyperlinkedIdentityField(read_only=True,view_name='user-retrieve')
+
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author')
+        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers_count','views','comments_count','likers_count')
 
         read_only_fields = ('id',)
 
@@ -73,7 +73,8 @@ class CreateWallCommentSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = UserPostInfo()
     post = PostAuthorSerializer()
-
+    # 设置日期格式化格式
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Comment
         fields = ('id','body','timestamp','mark_read','disabled','author','post','liked', 'parent_id')
@@ -88,7 +89,8 @@ class CommentPostSerializer(serializers.ModelSerializer):
 class MyCommentSerializer(serializers.ModelSerializer):
     author = UserPostInfo()
     post = CommentPostSerializer()
-
+    # 设置日期格式化格式
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Comment
         fields = ('id','body','timestamp','mark_read','disabled','author','post','parent_id')
@@ -96,7 +98,8 @@ class MyCommentSerializer(serializers.ModelSerializer):
 
 class LikedCommentSerializer(serializers.ModelSerializer):
     post = CommentPostSerializer()
-
+    # 设置日期格式化格式
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Comment
         fields = ('id','body','timestamp','mark_read','disabled','post','liked','parent_id')
@@ -112,3 +115,28 @@ class PostLikeSerializer(serializers.ModelSerializer):
         fields = ("id", "title",'likers','likers_count')
 
         read_only_fields = ('id','likers')
+
+
+
+
+
+from drf_haystack.serializers import HaystackSerializer
+from .search_indexes import PostIndex
+class PostSearchSerializer(serializers.ModelSerializer):
+    """
+    文章序列化器
+    """
+
+    class Meta:
+        model = Post
+        fields = ('id','title','summary', 'body')
+
+class PostIndexSerializer(HaystackSerializer):
+    """
+    文章索引结果数据序列化器
+    """
+    object = PostListSerializer(read_only=True)
+
+    class Meta:
+        index_classes = [PostIndex]
+        fields = ('text', object)

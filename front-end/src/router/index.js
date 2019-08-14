@@ -43,6 +43,10 @@ import MessagesHistory from '@/components/Notifications/Messages/History'
 import PostsLikes from '@/components/Notifications/PostsLikes'
 // 博客详情页
 import PostDetail from '@/components/PostDetail'
+
+// 搜索结果页
+import SearchResult from '@/components/SearchResult'
+
 // 测试与后端连通性
 import Ping from '@/components/Ping'
 
@@ -204,6 +208,14 @@ const router = new Router({
         requiresAuth: true
       }
     },
+
+    {
+      // 全文搜索结果页
+      path: '/search',
+      name: 'SearchResult',
+      component: SearchResult
+    },
+
     {
       path: '/ping',
       name: 'Ping',

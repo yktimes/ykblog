@@ -1,28 +1,16 @@
-from django.shortcuts import render
-from .models import Notification
-# Create your views here.
+
 from rest_framework import status
 from rest_framework.views import APIView
 
-from rest_framework.mixins import (
-    ListModelMixin,
-    CreateModelMixin,
-    DestroyModelMixin,
-    UpdateModelMixin,
-    RetrieveModelMixin
-)
-from users.models import User
 from rest_framework.response import Response
 from .serializers import *
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import GenericAPIView, ListAPIView
-from django.db.models import F
 
-from ykblog.utils.pagination import StandardResultPagination
+from rest_framework.permissions import IsAuthenticated
+
 
 class notificationView(APIView):
     '''返回一个用户通知'''
+    permission_classes = [IsAuthenticated]
     def get(self,request,pk):
 
         user = request.user
@@ -46,7 +34,7 @@ class UserNotificationView(APIView):
     """
     获取用户的新通知
     """
-
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
 
@@ -66,7 +54,6 @@ class UserNotificationView(APIView):
 
             notifications = Notification.objects.filter(user=user).filter(
                 timestamp__gt=since).order_by("timestamp")
-            # user.notifications
 
             # 必须加many
             data = NotificationSerializer(notifications,many=True)

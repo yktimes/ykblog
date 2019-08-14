@@ -41,7 +41,6 @@ class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        # return self.create(request, *args, **kwargs)
 
 
 from rest_framework.permissions import IsAuthenticated
@@ -81,7 +80,7 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
                 user.about_me = serializer.data['about_me']
                 user.save()
 
-                return Response({'status': 'ok', 'id': user.pk, 'username': user.username})
+                return Response({'message': 'ok', 'id': user.pk, 'username': user.username})
 
             else:
 
@@ -165,8 +164,7 @@ class FollowerView(ListAPIView):
     # followers 是该用户的粉丝列表
 
     def get_queryset(self):
-        page = int(self.request.query_params["page"])
-        per_page = int(self.request.query_params["per_page"])
+
 
         user = self.request.user
         pk = self.kwargs['pk']
@@ -192,21 +190,12 @@ class FollowerView(ListAPIView):
                         print("新的", )
                         item["is_new"] = True
 
-                # 需要考虑分页的问题，比如新评论有25条，默认分页是每页10条，
-                # # 如果用户请求第一页时就更新 last_recived_comments_read_time，那么后15条就被认为不是新评论了，这是不对的
-                if page * per_page >= user.new_recived_comments():
-                    # 更新 last_recived_comments_read_time 属性值
-                    user.last_follows_read_time = datetime.datetime.now()
-                    # 将新粉丝通知的计数归零
-                    user.add_notification('unread_follows_count', 0)
 
-                else:
-                    # 用户剩余未查看的新粉丝数
-                    n = user.new_recived_comments() - page * per_page
-                    # 将新粉丝通知的计数更新为未读数
-                    user.add_notification('unread_follows_count', n)
-
-                user.save()
+            # 更新 last_recived_comments_read_time 属性值
+            user.last_follows_read_time = datetime.datetime.now()
+            # 将新粉丝通知的计数归零
+            user.add_notification('unread_follows_count', 0)
+            user.save()
 
             return data
         else:
@@ -286,8 +275,6 @@ class UserReceivedCommentsVIew(APIView):
         try:
             real_user = User.objects.get(id=pk)
 
-            page = int(request.query_params["page"])
-            per_page = int(request.query_params["per_page"])
 
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -327,27 +314,18 @@ class UserReceivedCommentsVIew(APIView):
                     if item["timestamp"] > str(last_read_time):
                         item["is_new"] = True
 
-                # 需要考虑分页的问题，比如新评论有25条，默认分页是每页10条，
-                # # 如果用户请求第一页时就更新 last_recived_comments_read_time，那么后15条就被认为不是新评论了，这是不对的
-                if page * per_page >= user.new_recived_comments():
-                    # 更新 last_recived_comments_read_time 属性值
-                    user.last_recived_comments_read_time = datetime.datetime.now()
-                    # 将新评论通知的计数归零
-                    user.add_notification('unread_recived_comments_count', 0)
 
-                else:
-                    # 用户剩余未查看的新评论数
-                    n = user.new_recived_comments() - page * per_page
-                    # 将新评论通知的计数更新为未读数
-                    user.add_notification('unread_recived_comments_count', n)
+                # 更新 last_recived_comments_read_time 属性值
+                user.last_recived_comments_read_time = datetime.datetime.now()
+                # 将新评论通知的计数归零
+                user.add_notification('unread_recived_comments_count', 0)
 
                 user.save()
 
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-                s = pg.get_paginated_response(data=ret)
 
-                return s
+                return pg.get_paginated_response(data=ret)
 
 
 class UserCommentsVIew(APIView):
@@ -373,14 +351,12 @@ class UserCommentsVIew(APIView):
 
                 data = user.comments.all().order_by('-timestamp')
 
-                res = MyCommentSerializer(instance=data, many=True)
-                res = res.data
+                res = MyCommentSerializer(instance=data, many=True).data
 
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-                s = pg.get_paginated_response(data=ret)
 
-                return s
+                return pg.get_paginated_response(data=ret)
 
 
 from operator import itemgetter
@@ -395,8 +371,7 @@ class UserReceivedLikesVIew(APIView):
         try:
             real_user = User.objects.get(id=pk)
 
-            page = int(request.query_params["page"])
-            per_page = int(request.query_params["per_page"])
+
 
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -406,39 +381,18 @@ class UserReceivedLikesVIew(APIView):
                 return Response(status=status.HTTP_403_FORBIDDEN)
 
             else:
-                records = {'items': []}
+
                 # 创建分页对象,继承
                 pg = StandardResultPagination()
 
-                # 用户发布的所有文章ID集合
-                # comments = user.comments.filter(liked=)
-                # from django.db import connection
-                #
-                # cursor = connection.cursor()
-                #
-                # cursor.execute('select * from posts_comment_liked,posts_comment where posts_comment.id=comment_id')
-                #
-                # ret = cursor.fetchall()
-                # for c in ret:
-                #     print(c)
-                # print("ssss",len(ret))
-                # origin = user.comments.all().values("liked__comment",'liked')
-                # # {'id': 1, 'liked__id': 1, 'body': 'asas'}
-                # print(origin)
-                # comment_ids =[i['liked__comment'] for i in origin if i['liked__comment']]
-                # user_ids = [j['liked'] for j in origin if j['liked']]
-                # # timestamps = [t['likedship__timestamp'] for t in origin]
-                # comments = Comment.objects.filter(id__in=comment_ids)
-                #
-                # users = User.objects.filter(id__in=user_ids)
-                # print("comments",comments)
+
 
                 from django.db import connection
 
                 cursor = connection.cursor()
 
                 cursor.execute(
-                    'select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s', [user.pk])
+                    'select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s and posts_likedship.user_id!=posts_comment.author_id', [user.pk])
 
                 ret = cursor.fetchall()
 
@@ -451,37 +405,24 @@ class UserReceivedLikesVIew(APIView):
 
                 # todo 如果没用要删除
                 # 标记哪些评论是新的
-                last_read_time = user.last_comments_likes_read_time  or datetime.datetime(1900, 1,
-                                                                                           1)
+                last_read_time = user.last_comments_likes_read_time  or datetime.datetime(1900, 1,1)
                 for item in res:  # data={}
-                    #     for u in UserPostInfo(users,many=True).data:
+                    print('点赞',item)
                     if item["timestamp"] > str(last_read_time):  #
                         item["is_new"] = True
                 # 按 timestamp 排序一个字典列表(倒序，最新关注的人在最前面)
                 res = sorted(res, key=itemgetter('timestamp'), reverse=True)
 
-                # 需要考虑分页的问题，比如新评论有25条，默认分页是每页10条，
-                # # 如果用户请求第一页时就更新 last_recived_comments_read_time，那么后15条就被认为不是新评论了，这是不对的
-                if page * per_page >= user.new_comments_likes():
-                    # 更新 last_recived_comments_read_time 属性值
-                    user.last_comments_likes_read_time  = datetime.datetime.now()
-                    # 将新评论通知的计数归零
-                    user.add_notification('unread_comments_likes_count',
-                                          0)
-                    #
-                else:  # if data['timestamp'] > last_read_time:
-                    # 用户剩余未查看的新评论数
-                    n = user.new_comments_likes() - page * per_page  # data['is_new'] = True
-                    # 将新评论通知的计数更新为未读数
-                    user.add_notification('unread_comments_likes_count', n)
 
-
+                # 更新 last_recived_comments_read_time 属性值
+                user.last_comments_likes_read_time = datetime.datetime.now()
+                # 将新评论通知的计数归零
+                user.add_notification('unread_comments_likes_count',0)
                 user.save()
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-                s = pg.get_paginated_response(data=ret)  # 需要                                                                                          考虑分页的问题，比如新评论有25条，默认分页是每页10条，
 
-                return s
+                return pg.get_paginated_response(data=ret)  # 需要
 
 from Message.models import Message
 from Message.serializers import CreateMessageSerializer
@@ -497,8 +438,7 @@ class GetUserMessagesSenders(APIView):
 
         try:
             real_user = User.objects.get(id=int(pk))
-            page = int(request.query_params["page"])
-            per_page = int(request.query_params["per_page"])
+
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
@@ -530,6 +470,8 @@ class GetUserMessagesSenders(APIView):
                 # 他最后一次查看收到的私信的时间
                 last_read_time = sender.last_messages_read_time or datetime.datetime(1900, 1, 1)
 
+                print(' # 他最后一次查看收到的私信的时间',last_read_time)
+
                 new_items = []  # 最后一条是新的
                 not_new_items = []  # 最后一条不是新的
                 # item 是发给他的最后一条，如果最后一条不是新的，肯定就没有啦
@@ -545,9 +487,8 @@ class GetUserMessagesSenders(APIView):
                 res.append(data)
 
             ret = pg.paginate_queryset(queryset=res, request=request, view=self)
-            s = pg.get_paginated_response(data=ret)
 
-            return s
+            return  pg.get_paginated_response(data=ret)
 
 
 class GetUserListMessagesRecipients(APIView):
@@ -559,8 +500,7 @@ class GetUserListMessagesRecipients(APIView):
 
         try:
             real_user = User.objects.get(id=int(pk))
-            page = int(request.query_params["page"])
-            per_page = int(request.query_params["per_page"])
+
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
@@ -600,9 +540,8 @@ class GetUserListMessagesRecipients(APIView):
 
             ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-            s = pg.get_paginated_response(data=ret)
 
-            return s
+            return pg.get_paginated_response(data=ret)
 
 class GetUserHistoryMessages(APIView):
     '''返回我与某个用户(由查询参数 from 获取)之间的所有私信记录'''
@@ -610,8 +549,7 @@ class GetUserHistoryMessages(APIView):
 
         try:
             real_user = User.objects.get(id=int(pk))
-            page = int(request.query_params["page"])
-            per_page = int(request.query_params["per_page"])
+
         except User.DoesNotExist as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
@@ -639,18 +577,27 @@ class GetUserHistoryMessages(APIView):
             sent_messages = [item for item in data  if item['sender']['id'] == id]
             # 然后，标记哪些私信是新的
             last_read_time = user.last_messages_read_time or datetime.datetime(1900, 1, 1)
+            print("我读了")
+            print(user.new_recived_messages())
+
+            print(user.new_recived_messages())
             new_count = 0
             for item in recived_messages:
-                if item['timestamp'] > str(last_read_time):
+
+                if item['timestamp'] >str(last_read_time):
+
                     item['is_new'] = True
                     new_count += 1
+
             if new_count > 0:
                 # 更新 last_messages_read_time 属性值为收到的私信列表最后一条(最近的)的时间
+                print('更新 last_messages_read_time 属性值为收到的私信列表最后一条(最近的)的时间',recived_messages[-1]['timestamp'])
                 user.last_messages_read_time = recived_messages[-1]['timestamp']
+                print(type(user.last_messages_read_time),type( recived_messages[-1]['timestamp']))
                 user.save()  # 先提交数据库，这样 user.new_recived_messages() 才会变化
                 # 更新用户的新私信通知的计数
-                user.add_notification('unread_messages_count', user.new_recived_messages())
-                user.save()
+            user.add_notification('unread_messages_count', 0)
+                # user.save()
             # 最后，重新组合 data['items']，因为收到的新私信添加了 is_new 标记
             messages = recived_messages + sent_messages
             messages.sort(key=data.index)  # 保持 messages 列表元素的顺序跟 data['items'] 一样
@@ -734,7 +681,7 @@ class UserReceivedPostsLikesVIew(APIView):
                 return Response(status=status.HTTP_403_FORBIDDEN)
 
             else:
-                records = {'items': []}
+
                 # 创建分页对象,继承
                 pg = StandardResultPagination()
 
@@ -744,7 +691,7 @@ class UserReceivedPostsLikesVIew(APIView):
                 cursor = connection.cursor()
 
                 cursor.execute(
-                    'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s',
+                    'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s and posts_likedpost.user_id!=tb_posts.author_id',
                     [user.pk])
 
                 ret = cursor.fetchall()
@@ -763,7 +710,6 @@ class UserReceivedPostsLikesVIew(APIView):
 
                 # 重组数据，变成: (谁) (什么时间) 喜欢了你的 (哪篇文章)
                 for item in res:  # data={}
-                    #     for u in UserPostInfo(users,many=True).data:
 
                     if item["timestamp"] > str(last_read_time):  #
                         item["is_new"] = True
@@ -771,16 +717,14 @@ class UserReceivedPostsLikesVIew(APIView):
                 res = sorted(res, key=itemgetter('timestamp'), reverse=True)
 
 
-                user.last_likes_read_time = datetime.datetime.now()
+                user.last_posts_likes_read_time  = datetime.datetime.now()
                 user.add_notification('unread_posts_likes_count', 0)
 
                 user.save()
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-                s = pg.get_paginated_response(
-                    data=ret)  # 需要                                                                                          考虑分页的问题，比如新评论有25条，默认分页是每页10条，
+                return pg.get_paginated_response(data=ret)  # 需要
 
-                return s
 from posts.models import LikedPost
 class UserLikesPostsVIew(ListAPIView):
 

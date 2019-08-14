@@ -12,7 +12,7 @@
             </button>
           </div>
           <div class="modal-body">
-          
+
             <!--<form @submit.prevent="onSubmitUpdate" @reset.prevent="onResetUpdate" id="editForm">-->
               <!--<div class="form-group" v-bind:class="{'u-has-error-v1': editForm.titleError}">-->
                 <!--<input type="text" v-model="editForm.title" class="form-control" id="editForm_title" placeholder="标题">-->
@@ -36,7 +36,7 @@
               <button type="reset" class="btn btn-secondary">Cancel</button>
               <button type="submit" class="btn btn-primary">Update</button>
             </form>
-    
+
           </div>
         </div>
       </div>
@@ -57,9 +57,6 @@
 
           <div class="dropdown-menu dropdown-menu-right rounded-0 g-mt-10">
 
-            <router-link v-bind:to="{ name: 'UserFollowingPosts' }" class="dropdown-item g-px-10">
-              <i class="icon-plus g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> Posts of following
-            </router-link>
             <div class="dropdown-divider"></div>
             <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 5 }}" class="dropdown-item g-px-10">
               <i class="icon-layers g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 5 篇
@@ -72,7 +69,7 @@
             <router-link v-bind:to="{ path: $route.path, query: { page: 1, per_page: 20 }}" class="dropdown-item g-px-10">
               <i class="icon-fire g-font-size-12 g-color-gray-dark-v5 g-mr-5"></i> 每页 20 篇
             </router-link>
-            
+
           </div>
         </div>
       </div>
@@ -93,7 +90,7 @@
 
       <!-- End Panel Body -->
     </div>
-  
+
     <!-- Pagination #04 -->
     <div v-if="datalist">
       <pagination
@@ -165,7 +162,7 @@ export default {
         this.per_page = this.$route.query.per_page
       }
       const path = '/api/users/'+id+'/posts/?page='+this.page+'&per_page='+this.per_page
-      
+
 
       this.$axios.get(path)
         .then((response) => {

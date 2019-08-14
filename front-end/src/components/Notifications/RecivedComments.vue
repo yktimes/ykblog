@@ -265,7 +265,7 @@ export default {
         .then((response) => {
           // handle success
           // 前往查看
-          this.$toasted.success('Successed mark this comment to be readed.', { icon: 'fingerprint' })
+          this.$toasted.success('成功标记已读.', { icon: 'fingerprint' })
           this.getUserRecivedComments(this.sharedState.user_id)
         })
         .catch((error) => {

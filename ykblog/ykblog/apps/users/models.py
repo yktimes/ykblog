@@ -76,24 +76,25 @@ class User(AbstractUser):
         cursor = connection.cursor()
 
         cursor.execute(
-            'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s',
+            'select posts_likedpost.post_id,posts_likedpost.user_id from tb_posts,posts_likedpost where tb_posts.id=posts_likedpost.post_id and tb_posts.author_id =%s ',
             [self.pk])
 
         ret = cursor.fetchall()
 
-        # 新的点赞记录计数
+        # 新的文章记录计数
         new_likes_count = 0
-
+        print("# 新的文章记录计数",self.pk)
+        print(last_read_time)
         for c in ret:
-
-            if c[1]!=self.pk:
+            print('cccccccccccccc',c)
+            if int(c[1]) != int(self.pk):
 
                 timestamp = LikedPost.objects.get(user=c[1], post=c[0]).timestamp
-
-                # 判断本条点赞记录是否为新的
+                print('# 判断本条记录是否为新的',timestamp)
+                # 判断本条记录是否为新的
                 if timestamp > last_read_time:
                     new_likes_count += 1
-
+        print(' # 新的文章记录计数',new_likes_count)
         return new_likes_count
 
 
@@ -101,9 +102,7 @@ class User(AbstractUser):
     def is_blocking(self, user):
 
         return user in self.harassers.all()
-            #
-            # self.harassers.all().filter(
-            # block = user.id).count() > 0
+
 
     def block(self, user):
         '''当前用户开始拉黑 user 这个用户对象'''
@@ -180,10 +179,7 @@ class User(AbstractUser):
         last_read_time = self.last_follows_read_time or datetime.datetime(1900, 1, 1)
 
 
-        s = self.followedd.filter(date__gt=last_read_time).count()
-
-
-        return s
+        return self.followedd.filter(date__gt=last_read_time).count()
 
     def new_comments_likes(self):
         '''用户收到的新点赞计数'''
@@ -202,13 +198,14 @@ class User(AbstractUser):
         new_likes_count = 0
 
         for c in ret:
-            print(c)
-            timestamp = Likedship.objects.get(user=c[1], comment=c[0]).timestamp
-            print("事件",timestamp)
-            # 判断本条点赞记录是否为新的
-            if timestamp > last_read_time:
-                new_likes_count += 1
-        print("new_likes_count",new_likes_count)
+            if int(c[1])!=int(self.pk):
+
+                timestamp = Likedship.objects.get(user=c[1], comment=c[0]).timestamp
+
+                # 判断本条点赞记录是否为新的
+                if timestamp > last_read_time:
+                    new_likes_count += 1
+
         return new_likes_count
 
 

@@ -57,7 +57,8 @@ class MySerializer(serializers.Serializer):
     followeds_count = serializers.IntegerField(label='关注', required=False)
     followers_count = serializers.IntegerField(label='粉丝', required=False)
     is_following = serializers.BooleanField(label='是否关注', required=False)
-    date=serializers.DateTimeField(required=False)
+    date=serializers.DateTimeField(required=False,format='%Y-%m-%d %H:%M:%S')
+
 
 class Mysite(serializers.ModelSerializer):
 
@@ -143,6 +144,8 @@ from posts.serializers import LikedCommentSerializer,UserPostInfo,PostLikeSerial
 class LiedSerializers(serializers.ModelSerializer):
     user=UserPostInfo()
     comment = LikedCommentSerializer()
+    # 设置日期格式化格式
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Likedship
         fields = ('comment', 'user','timestamp')
@@ -152,6 +155,8 @@ from posts.models import LikedPost
 class LikedPostSerializers(serializers.ModelSerializer):
     user=UserPostInfo()
     post = PostLikeSerializer()
+    # 设置日期格式化格式
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = LikedPost
         fields = ('post', 'user','timestamp')

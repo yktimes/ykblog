@@ -25,7 +25,7 @@ SECRET_KEY = '=udlg1!95+e08d^ye4t@i4$b+gh6%_9%4f+0(fsh643+ip#r9h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -127,6 +127,12 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR,"static"),
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 
 DATABASES = {
@@ -136,7 +142,7 @@ DATABASES = {
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'mysql',  # 数据库用户密码
-        'NAME': 'ykblog2'  # 数据库名字
+        'NAME': 'blog3'  # 数据库名字
     }
 }
 
@@ -155,7 +161,14 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    }
+    },
+    "likeNum": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "session"
@@ -203,28 +216,9 @@ LOGGING = {
 }
 
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console':{
-#             'level':'DEBUG',
-#             'class':'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'propagate': True,
-#             'level':'DEBUG',
-#         },
-#     }
-# }
 
 
 import datetime
-
-
 
 
 REST_FRAMEWORK = {
@@ -255,9 +249,18 @@ APPEND_SLASH=False
 #跨域增加忽略
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = (
-#     '*'
-# )
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    'http://127.0.0.1:8081',
+    'http://localhost:8080',
+    'http://localhost:8081',
+"http://s1.nsloop.com",
+    "http://s1.nsloop.com:8000",
+    "http://s1.nsloop.com:8001",
+    "http://s1.nsloop.com:8080",
+    "http://s1.nsloop.com:17882"
+
+)
 
 CORS_ALLOW_METHODS = (
     'DELETE',

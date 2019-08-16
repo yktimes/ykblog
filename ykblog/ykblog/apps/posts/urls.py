@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register('search', views.PostSearchViewSet, base_name='posts_search')
 
-
+from django.urls import path
 
 urlpatterns = [
 
@@ -25,7 +25,11 @@ urlpatterns = [
     url('^posts/(?P<pk>\d+)/like/$', views.LikePostView.as_view()),
     url('^posts/(?P<pk>\d+)/unlike/$', views.UnLikePostView.as_view()),
 
+    url('^posts/browseList/$', views.artViewList.as_view()),
+    url('^posts/classList/$', views.CategoryListView.as_view()),
+    url('^category/$', views.CategoryPostView.as_view()),
 
+    path('upload_file/', views.upload_file, name='upload_file'),
 ]
 
 

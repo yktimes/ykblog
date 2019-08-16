@@ -24,10 +24,12 @@ xadmin.autodiscover()
 from xadmin.plugins import xversion
 xversion.register_models()
 from django.urls import path
+from django.conf.urls.static import static
 
 def ping(request):
     if request.method=="GET":
         return HttpResponse("ping")
+from django.conf import settings
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -40,6 +42,6 @@ urlpatterns = [
     url(r'^api/', include('notification.urls'), ),
     url(r'^api/', include('Message.urls'), ),
 
-]
+]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 
 

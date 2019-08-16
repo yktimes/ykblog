@@ -7,6 +7,13 @@ import router from './router'
 import axios from './http'
 // 导入 moment.js 用来格式化 UTC 时间为本地时间
 import moment from 'moment'
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-default/index.css'
+
+Vue.use(ElementUI);
+
 import 'jquery/dist/jquery.min'
 import 'jquery'
 import 'popper.js/dist/popper.min.js'
@@ -26,8 +33,14 @@ import './assets/icon-awesome/css/font-awesome.min.css'  // 编辑器上的按�
 // markdown 样式
 import './assets/markdown-styles/github-markdown.css'
 // 自定义 css 文件
+import '../dist/static/css/app.css'
 import './assets/core.css'
 import './assets/custom.css'
+
+
+
+
+
 
 // register the vue-toasted plugin on vue
 import VueToasted  from 'vue-toasted'

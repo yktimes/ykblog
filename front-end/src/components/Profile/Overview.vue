@@ -32,16 +32,12 @@
             </h4>
 
 
-            <!-- Last seen -->
-            <!--<h4 v-if="user.date_joined" class="h6 g-font-weight-300 g-mb-10">-->
-              <!--<i class="icon-eye g-pos-rel g-top-1 g-color-gray-dark-v5 g-mr-5"></i> 登陆 : {{ $moment(user.date_joined).fromNow() }}-->
-            <!--</h4>-->
-            <!-- End Last seen -->
+
 
             <!-- User Info -->
             <ul class="list-inline g-font-weight-300">
               <li class="list-inline-item g-mr-20">
-                <i class="icon-check g-pos-rel g-top-1 g-color-gray-dark-v5 g-mr-5"></i> Verified User
+                <i class="icon-check g-pos-rel g-top-1 g-color-gray-dark-v5 g-mr-5"></i> 用户信息
               </li>
               <li v-if="user.email" class="list-inline-item g-mr-20">
                 <i class="icon-link g-pos-rel g-top-1 g-color-gray-dark-v5 g-mr-5"></i>  <a class="g-color-main g-color-primary--hover" v-bind:href="'mailto:' + user.email">{{ user.email }}</a>
@@ -57,7 +53,7 @@
 
             <div v-if="user.about_me">
               <div class="u-divider u-divider-db-dashed u-divider-center g-brd-gray-light-v2 g-mt-50 g-mb-30">
-                <i class="u-divider__icon u-divider__icon--indented g-bg-gray-light-v4 g-color-gray-light-v1 rounded-circle">Me</i>
+                <i class="u-divider__icon u-divider__icon--indented g-bg-gray-light-v4 g-color-gray-light-v1 rounded-circle">我</i>
               </div>
              <p class="g-line-height-1_8 g-font-weight-300">{{ user.about_me }}</p>
             </div>

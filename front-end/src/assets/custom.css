@@ -776,7 +776,7 @@ figure {
 }
 
 .g-color-gray-dark-v5 {
-  color: #999 !important;
+  color: #555 !important;
 }
 .g-font-size-12 {
   font-size: 0.85714rem !important;
@@ -846,7 +846,7 @@ figure {
 /* 博客详情页 */
 /* Primary Colors */
 .g-color-primary {
-  color: #72c02c !important;
+  color: #6610f2 !important;
 }
 .g-pb-15 {
   padding-bottom: 1.07143rem !important;
@@ -870,7 +870,7 @@ figure {
   margin-bottom: 0 !important;
 }
 .g-color-gray-dark-v4 {
-  color: #777 !important;
+  color: #6610f2 !important;
 }
 .g-my-15 {
   margin-top: 1.07143rem !important;
@@ -891,7 +891,7 @@ figure {
 
 /* Primary Colors */
 .g-color-primary {
-  color: #72c02c !important;
+  color: #6610f2 !important;
 }
 
 .u-block-hover:hover .g-color-primary--hover, .g-color-primary--hover:hover {

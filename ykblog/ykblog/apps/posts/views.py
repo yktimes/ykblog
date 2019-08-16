@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Post, Comment
+from .models import Post, Comment,Category
 # Create your views here.
 from rest_framework import status
 from rest_framework.views import APIView
@@ -13,7 +13,7 @@ from rest_framework.mixins import (
 )
 
 from rest_framework.response import Response
-from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSerializer,PostIndexSerializer
+from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSerializer,PostIndexSerializer,PostLikeMoreSerializer,PostListSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListAPIView
@@ -40,6 +40,7 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
+        # self.serializer_class = PostListSerializer
         return self.list(request, *args, **kwargs)
 
     @permission_classes((IsAdminUser,))
@@ -54,9 +55,16 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
             body = serializer.data.get('body')
             summary = serializer.data.get('summary')
             author = request.user
+            category = serializer.data.get('category')
+            image = serializer.data.get('image')
 
 
-            post = Post.objects.create(title=title, body=body, summary=summary, author=author)
+            try:
+                c = Category.objects.get(id=category)
+            except Category.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            post = Post.objects.create(title=title, body=body, summary=summary, author=author,category=c,image=image)
 
             return Response({'message': 'ok', 'id': post.pk, 'title': post.title, })
 
@@ -329,3 +337,91 @@ class UnLikePostView(APIView):
                 'status': 'success',
                 'message': '取消收藏成功'
             },status=status.HTTP_200_OK)
+
+from django.conf import settings
+import os
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.http.response import JsonResponse
+@csrf_exempt
+def upload_file(request):
+    file = request.FILES.get('file')
+    name = file.name
+    print(111111111111,type(file),file)
+    # for f in file:
+    #     name = f.name
+    #     print(name,"name")
+    #     print(type(f),f.file)
+    #     print()
+    with open(os.path.join(settings.MEDIA_ROOT, name), 'wb') as fp:
+        print(111111111111111111111111111111)
+        print(fp)
+        for chunk in file.chunks():
+            fp.write(chunk)
+    url = request.build_absolute_uri(settings.MEDIA_URL + name)
+    print(url)
+    return JsonResponse({'url':url})
+
+from django_redis import get_redis_connection
+
+
+import json
+class artViewList(APIView):
+
+    def get(self,request):
+        redis_conn = get_redis_connection('likeNum')
+        key = 'artViewList'
+
+        if redis_conn.get(key) is None:
+            post = Post.objects.all().order_by('-views')[:10]
+            data = json.dumps(PostLikeMoreSerializer(post, many=True).data)
+            redis_conn.setex(key,60*5,data)
+
+            return Response({
+                'data': data,
+                'message': 'success'
+            }, status=status.HTTP_200_OK)
+        else:
+            print("走的缓存，aret")
+            artList = json.loads(redis_conn.get(key))
+            print(artList)
+
+
+            return Response({
+                'data': artList,
+                'message': 'success'
+            },status=status.HTTP_200_OK)
+
+from .models import  Category
+
+class CategoryListView(APIView):
+    """
+    帖子首页展示
+    """
+    # permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+
+        # category_id = self.request.query_params.get("category")
+        # if category_id:
+
+        c = Category.objects.all().values()
+        print(c)
+        return Response({'data':c})
+
+
+class CategoryPostView(ListAPIView):
+
+
+        queryset = Post.objects.all()
+        serializer_class = PostSerializer
+
+
+
+        def filter_queryset(self, queryset):
+            category_id = self.request.query_params.get("classId")
+            if category_id:
+                return Post.objects.filter(category=category_id).select_related("author",'category')
+
+

@@ -3,6 +3,17 @@ from django.conf import settings
 # from ykblog.apps.users.models import User
 # Create your models here.
 
+class Category(models.Model):
+
+
+
+    name = models.CharField(max_length=50,verbose_name='名称')
+
+
+    class Meta:
+        verbose_name=verbose_name_plural = '分类'
+
+
 class Post(models.Model):
 
 
@@ -12,6 +23,9 @@ class Post(models.Model):
     body = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     views =models.IntegerField(default=0)
+    image = models.URLField(verbose_name="文章图片")
+    category=models.ForeignKey(Category,on_delete=models.CASCADE)
+
     author = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='posts',on_delete=models.CASCADE)
     comments_count = models.IntegerField(default=0) # 评论数
     likers_count= models.IntegerField(default=0) # 喜欢数
@@ -40,6 +54,7 @@ class Post(models.Model):
         verbose_name = '博客'
         verbose_name_plural = verbose_name
         ordering = ['-timestamp']
+
 
 
 

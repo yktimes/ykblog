@@ -2,6 +2,10 @@
 export default {
   debug: true,
   state: {
+
+
+     // themeObj: 0,//主题
+
     is_authenticated: window.localStorage.getItem('yk-token') ? true : false,
     // 用户登录后，就算刷新页面也能再次计算出 user_id
     user_id: window.localStorage.getItem('user_id') ? window.localStorage.getItem('user_id') : 0,

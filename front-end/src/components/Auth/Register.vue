@@ -1,26 +1,26 @@
 <template>
   <div class="container">
-    <h1>Register</h1>
+    <h1>注册</h1>
     <div class="row">
       <div class="col-md-4">
         <form @submit.prevent="onSubmit">
           <div class="form-group"  v-bind:class="{'u-has-error-v1': registerForm.usernameError}" >
-            <label for="username">Username</label>
+            <label for="username">用户名</label>
             <input type="text" v-model="registerForm.username" class="form-control" id="username" placeholder="">
             <small class="form-control-feedback" v-show="registerForm.usernameError">{{ registerForm.usernameError }}</small>
           </div>
           <div class="form-group" v-bind:class="{'u-has-error-v1': registerForm.emailError}" >
-            <label for="email">Email address</label>
+            <label for="email">邮箱</label>
             <input type="email" v-model="registerForm.email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="">
             <small v-if="!registerForm.emailError" id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             <small class="form-control-feedback" v-show="registerForm.emailError">{{ registerForm.emailError }}</small>
           </div>
           <div class="form-group" v-bind:class="{'u-has-error-v1': registerForm.passwordError}" >
-            <label for="password">Password</label>
+            <label for="password">密码</label>
             <input type="password" v-model="registerForm.password" class="form-control" id="password" placeholder="">
             <small class="form-control-feedback" v-show="registerForm.passwordError">{{ registerForm.passwordError }}</small>
           </div>
-          <button type="submit" class="btn btn-primary">Register</button>
+          <button type="submit" class="btn btn-primary">注册</button>
         </form>
       </div>
     </div>

@@ -1,6 +1,10 @@
 <template>
 
-  <div class="container">
+  <div class="container " id="detail">
+
+     <el-row  :gutter="30">
+                <el-col :sm="30" :md="30" style="transition:all .5s ease-out;margin-bottom:30px;">
+
     <!-- Modal: Edit Post -->
     <div class="modal fade" id="updatePostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -71,7 +75,7 @@
 
         <article class="g-mb-60 g-pt-15 g-pb-50">
           <header class="g-mb-30">
-            <h1 class="g-color-primary g-mb-15">{{ post.title }}</h1>
+            <h1 class="g-color-primary g-mb-15 g-font-size-18">{{ post.title }}</h1>
 
             <ul class="list-inline d-sm-flex g-color-gray-dark-v4 mb-0">
               <li v-if="post.author && post.author.id == sharedState.user_id" class="list-inline-item">
@@ -197,10 +201,7 @@
             </button>
             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
               <router-link v-bind:to="{ path: '/login', query: { redirect: $route.fullPath } }" class="dropdown-item">站内账号</router-link>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="javascript:;">Github</a>
 
-              <a class="dropdown-item" href="javascript:;">微信</a>
             </div>
           </div>
 
@@ -360,8 +361,8 @@
 
     </div>
 
-
-
+</el-col>
+ </el-row>
 
   </div>
 </template>
@@ -925,6 +926,14 @@ export default {
   },
   mounted () {
     highlightCode()
+       var anchor = document.querySelector("#detail");
+            // console.log(anchor,anchor.offsetTop);
+            var top = anchor.offsetTop-60;
+            document.body.scrollTop = top;
+             // Firefox
+             document.documentElement.scrollTop = top;
+             // Safari
+             window.pageYOffset = top;
   },
   updated () {
     highlightCode()

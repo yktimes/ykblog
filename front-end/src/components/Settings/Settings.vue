@@ -27,27 +27,12 @@
             <li class="g-pb-3">
               <router-link v-bind:to="{ name: 'SettingProfile' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
                 <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-media-112 u-line-icon-pro"></i></span>
-                Profile
+                个人主页
               </router-link>
             </li>
-            <li class="g-py-3">
-              <router-link v-bind:to="{ name: 'SettingAccount' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
-                <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-medical-071 u-line-icon-pro"></i></span>
-                Account
-              </router-link>
-            </li>
-            <li class="g-py-3">
-              <router-link v-bind:to="{ name: 'SettingEmail' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
-                <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-communication-154 u-line-icon-pro"></i></span>
-                Email
-              </router-link>
-            </li>
-            <li class="g-py-3">
-              <router-link v-bind:to="{ name: 'SettingNotification' }" v-bind:active-class="'active g-color-primary--active g-bg-gray-light-v5--active'" class="d-block align-middle u-link-v5 g-color-text g-color-primary--hover g-bg-gray-light-v5--hover rounded g-pa-3">
-                <span class="u-icon-v1 g-color-gray-dark-v5 mr-2"><i class="icon-electronics-031 u-line-icon-pro"></i></span>
-                Notification
-              </router-link>
-            </li>
+
+
+
           </ul>
           <!-- End Profile Settings List -->
         </aside>

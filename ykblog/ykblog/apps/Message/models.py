@@ -20,3 +20,12 @@ class Message(models.Model):
         verbose_name = '私信'
         verbose_name_plural = verbose_name
         # ordering = ['-timestamp']
+
+
+class ShowLikeData(models.Model):
+
+    num = models.IntegerField(default=0)
+    class Meta:
+        db_table = 'sitelike'
+        verbose_name = '站点喜欢'
+        verbose_name_plural = verbose_name

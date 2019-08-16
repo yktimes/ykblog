@@ -56,6 +56,7 @@ Vue.use(Router)
 // - only available in html5 history mode
 // - defaults to no scroll behavior
 // - return false to prevent scroll
+//在点击浏览器的“前进/后退”，或者切换导航的时候触发。
 const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
     // savedPosition is only available for popstate navigations.
@@ -89,11 +90,51 @@ const router = new Router({
   scrollBehavior,  // 不用这个，在需要跳转的改用 vue-scrollto
 
   routes: [
+     {
+			path: '/',
+			component: resolve => require(['../components/Home.vue'], resolve),
+			meta: {
+				auth: true
+			},
+			name: 'Home'
+		}, //首页
+
+    // 	{
+		// 	path: '/Home',
+		// 	component: resolve => require(['../components/Home.vue'], resolve),
+		// 	meta: {
+		// 		auth: true
+		// 	},
+		// 	name: 'Home'
+		// },
+
     {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
+			path: '/Share',
+			component: resolve => require(['../components/pages/Share.vue'], resolve),
+			meta: {
+				auth: true
+			},
+			name: 'Share'
+		}, //分类
+
+    {
+			path: '/Aboutme',
+			component: resolve => require(['../components/pages/Aboutme.vue'], resolve),
+			meta: {
+				auth: true
+			},
+			name: 'Aboutme'
+		}, //关于
+
+    {
+			path: '/Reward',
+			component: resolve => require(['../components/pages/Reward.vue'], resolve),
+			meta: {
+				auth: true
+			},
+			name: 'Reward'
+		}, //赞赏
+
     {
       // 博客文章详情页
       path: '/post/:id',

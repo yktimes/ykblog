@@ -1,8 +1,13 @@
 from rest_framework import serializers
 
-from .models import Post,Comment
+from .models import Post,Comment,Category
 from users.models import User
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("id","name" )
 
 class UserPostInfo(serializers.ModelSerializer):
     class Meta:
@@ -16,12 +21,13 @@ class PostSerializer(serializers.ModelSerializer):
     """
     author = UserPostInfo(read_only=True)
     likers = UserPostInfo(read_only=True,many=True)
+    # category = CategorySerializer()
 
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers','likers_count')
+        fields = ("id", "title", "body",'timestamp', 'summary', 'image','author','views','comments_count','likers','likers_count','category')
 
-        read_only_fields = ('id', 'author','views','likers','likers_count')
+        read_only_fields = ('id', 'author','views','likers','likers_count','timestamp')
 
 
 class PostAuthorSerializer(serializers.ModelSerializer):
@@ -37,18 +43,22 @@ class PostAuthorSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'author')
 
 
+
+
 class PostListSerializer(serializers.ModelSerializer):
     """
 
     """
-    author = UserPostInfo()
+    author = UserPostInfo(read_only=True)
+    likers = UserPostInfo(read_only=True,many=True)
 
+    category=CategorySerializer(read_only=True,)
 
     class Meta:
         model = Post
-        fields = ("id", "title", "body", 'summary', 'author','views','comments_count','likers_count','views','comments_count','likers_count')
+        fields = ("id", "title", "body",'author','timestamp', 'summary','likers','category','views','comments_count','likers_count','views','comments_count','likers_count')
 
-        read_only_fields = ('id',)
+        read_only_fields = ('id','author','views','likers','likers_count','timestamp')
 
 class CreateWallCommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -140,3 +150,14 @@ class PostIndexSerializer(HaystackSerializer):
     class Meta:
         index_classes = [PostIndex]
         fields = ('text', object)
+
+
+class PostLikeMoreSerializer(serializers.ModelSerializer):
+    """
+    围观最多的文章
+    """
+    class Meta:
+        model = Post
+        fields = ("id", "title","views")
+
+

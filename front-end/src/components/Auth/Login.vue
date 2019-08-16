@@ -19,11 +19,8 @@
       </div>
     </div>
     <br>
-    <p>New User? <router-link to="/register">去注册!</router-link></p>
-    <p>
-        Forgot Your Password?
-        <a href="#">Click to Reset It</a>
-    </p>
+    <p>新用户? <router-link to="/register">去注册!</router-link></p>
+
   </div>
 </template>
 
@@ -76,8 +73,7 @@ export default {
         },
       ).then((response) => {
           // handle success
-        console.log(response.data)
-          console.log(response.data.user_name,response.data.user_avatar)
+
           window.localStorage.setItem('yk-token', response.data.token)
           // TODO token
           window.localStorage.setItem('user_id', response.data.id)

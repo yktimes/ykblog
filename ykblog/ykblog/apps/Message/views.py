@@ -108,3 +108,44 @@ class MessagesAllView(APIView):
         user.launch_task('send_messages', '正在群发私信...',
                                    kwargs={'user_id': user.pk, 'body': data.get('body')})
         return Response({'message': '正在运行群发私信后台任务'},status=status.HTTP_200_OK)
+from django_redis import get_redis_connection
+
+class showLikeData(APIView):
+
+    def get(self,request):
+        redis_conn = get_redis_connection('likeNum')
+        key = 'sitelike'
+
+        if redis_conn.get(key) is None:
+            redis_conn.set(key,0)
+
+        else:
+
+
+            like_redis = redis_conn.get(key).decode()
+
+            print("like_redis",like_redis)
+
+
+
+            return Response({'msg':'ok','like_redis':like_redis})
+
+class GetLike(APIView):
+
+    def get(self,request):
+        redis_conn = get_redis_connection('likeNum')
+        key = 'sitelike'
+
+        if redis_conn.get(key) is None:
+            redis_conn.set(key,0)
+
+        else:
+
+
+            like_redis = redis_conn.incr(key)
+
+            print("like_redis",like_redis)
+
+
+
+            return Response({'msg':'ok','like_redis':like_redis})

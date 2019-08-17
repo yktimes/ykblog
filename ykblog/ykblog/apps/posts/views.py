@@ -13,8 +13,8 @@ from rest_framework.mixins import (
 )
 
 from rest_framework.response import Response
-from .serializers import PostSerializer, CreateWallCommentSerializer, CommentSerializer,PostIndexSerializer,PostLikeMoreSerializer,PostListSerializer
-from rest_framework.decorators import api_view, permission_classes
+from .serializers import *
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListAPIView
 from django.db.models import F
@@ -423,5 +423,15 @@ class CategoryPostView(ListAPIView):
             category_id = self.request.query_params.get("classId")
             if category_id:
                 return Post.objects.filter(category=category_id).select_related("author",'category')
+
+from rest_framework.pagination import PageNumberPagination
+
+class StandardPageNumberPagination(PageNumberPagination):
+    page_size = 4
+
+class TimePostView(ListAPIView):
+    queryset = Post.objects.all().order_by('-timestamp')
+    serializer_class = PostTimeSerializer
+    pagination_class = StandardPageNumberPagination
 
 

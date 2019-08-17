@@ -12,7 +12,7 @@
                 托管于 <a href="https://github.com/yktimes" target="_blank">GitHub</a>.
             </p>
             <p>
-                © 2019 <a href="#">yk</a>. 由 <a href="https://cn.vuejs.org/" target="_blank">Vue</a> 强力驱动. Theme By YK. ICP备17071595号-1.
+                © 2019 yk. 由 Django 强力驱动. Theme By YK. ICP备17071595号-1.
             </p>
             <p>
                 <span>Made with</span> <img class="fheart" src="../../../static/img/heart02.png"/>  <span>by yk.</span>

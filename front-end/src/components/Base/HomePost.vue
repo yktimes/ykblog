@@ -33,9 +33,10 @@
             </router-link>
                     </span>
                 </h2>
-<!--                <div class="ui label">-->
-<!--                    <a :href="'#/Share?classId='+item.class_id">{{item.cate_name}}</a>-->
-<!--                </div>-->
+                <div class="ui label" v-if="catclass">
+
+                    <a :href="'/Share?classId='+post.category">{{catclass[post.category-1].name}}</a>
+                </div>
             </header>
             <div class="article-content">
                 <p style="text-indent:2em;">
@@ -69,72 +70,6 @@
      </el-row>
 
 
-<!--  <div v-bind:class="leftBrdColor" class="media g-brd-around g-brd-gray-light-v4 g-brd-left-1 g-pa-20 g-mb-20">-->
-<!--    <router-link v-bind:to="{ path: `/user/${post.author.id}/` }" v-bind:title="post.author.name || post.author.username">-->
-<!--      <img class="d-flex g-brd-around g-brd-gray-light-v3 g-pa-2 g-width-40 g-height-40 rounded-circle rounded mCS_img_loaded g-mt-3 g-mr-15" v-bind:src="post.author.avatar" v-bind:alt="post.author.name || post.author.username">-->
-
-<!--    </router-link>-->
-
-<!--    <div class="media-body">-->
-<!--      <div class="d-sm-flex justify-content-sm-between align-items-sm-center g-mb-15 g-mb-10&#45;&#45;sm">-->
-<!--        <h5 class="h4 g-font-weight-300 g-mr-10 g-mb-5 g-mb-0&#45;&#45;sm">-->
-<!--          <router-link v-bind:to="{ name: 'PostDetail', params: { id: post.id }}" class="g-text-underline&#45;&#45;none&#45;&#45;hover">{{ post.title }}</router-link>-->
-<!--        </h5>-->
-<!--        <div class="text-nowrap g-font-size-12">-->
-<!--          <span>{{ $moment(post.timestamp).fromNow() }}</span> / <router-link v-bind:to="{ path: `/user/${post.author.id}/` }"><span v-if="post.author.name">{{ post.author.name }}</span><span v-else>{{ post.author.username }}</span></router-link>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; vue-markdown 开始解析markdown，它是子组件，通过 props 给它传值即可-->
-<!--      v-highlight 是自定义指令，用 highlight.js 语法高亮 &ndash;&gt;-->
-<!--      <vue-markdown-->
-<!--        :source="post.summary"-->
-<!--        class="markdown-body g-mb-15"-->
-<!--        v-highlight>-->
-<!--      </vue-markdown>-->
-
-<!--      <div class="d-flex justify-content-start">-->
-<!--        <ul class="list-inline mb-0">-->
-<!--          <li class="list-inline-item g-mr-20">-->
-<!--            <a class="g-color-gray-dark-v5 g-text-underline&#45;&#45;none&#45;&#45;hover" href="javascript:;">-->
-<!--              <i class="icon-eye g-pos-rel g-top-1 g-mr-3"></i> {{ post.views }}-->
-<!--            </a>-->
-<!--          </li>-->
-
-<!--           <li class="list-inline-item g-mr-20">-->
-<!--            <router-link v-bind:to="{ path: `/post/${post.id}#like-post` }" class="g-color-gray-dark-v5 g-text-underline&#45;&#45;none&#45;&#45;hover">-->
-<!--              <i class="icon-heart g-pos-rel g-top-1 g-mr-3"></i> {{ post.likers_count }}-->
-<!--            </router-link>-->
-<!--          </li>-->
-
-<!--           <li class="list-inline-item g-mr-20">-->
-<!--&lt;!&ndash;             todo path: `/post/${post.id}#comment-list-wrap`&ndash;&gt;-->
-<!--            <router-link v-bind:to="{ path: `/post/${post.id}#comment-list-wrap` }" class="g-color-gray-dark-v5 g-text-underline&#45;&#45;none&#45;&#45;hover">-->
-<!--              <i class="icon-bubble g-pos-rel g-top-1 g-mr-3"></i> {{ post.comments_count }}-->
-<!--            </router-link>-->
-<!--          </li>-->
-
-<!--        </ul>-->
-
-<!--         <p  style="max-height:300px;overflow:hidden;text-align:center;">-->
-<!--                    <img :src="post.image" alt="" class="maxW">-->
-<!--                </p>-->
-
-<!--        <ul class="list-inline mb-0 ml-auto">-->
-<!--          <li class="list-inline-item g-mr-5">-->
-<!--            <router-link v-bind:to="{ name: 'PostDetail', params: { id: post.id }}" class="btn btn-xs u-btn-outline-primary">阅读全文</router-link>-->
-<!--          </li>-->
-<!--          <li v-if="post.author.id == sharedState.user_id" class="list-inline-item g-mr-5">-->
-<!--            &lt;!&ndash;<button v-on:click="$emit('edit-post')" class="btn btn-xs u-btn-outline-purple" data-toggle="modal" data-target="#updatePostModal">编辑</button>&ndash;&gt;-->
-
-<!--            <button v-on:click="$emit('edit-post')" class="btn btn-xs u-btn-outline-purple" data-toggle="modal" data-target="#editPostModal">编辑</button>-->
-<!--          </li>-->
-<!--          <li v-if="post.author.id == sharedState.user_id" class="list-inline-item">-->
-<!--            <button v-on:click="$emit('delete-post')" class="btn btn-xs u-btn-outline-red">删除</button>-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 
@@ -143,7 +78,10 @@ import store from '../../store'
 // 导入 vue-markdown 组件解析 markdown 原文为　HTML
 import VueMarkdown from 'vue-markdown'
 export default {
-  props: ['post'],
+  props: ['post','catclass'],
+
+
+
   components: {
     VueMarkdown
   },

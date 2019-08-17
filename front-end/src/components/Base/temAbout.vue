@@ -3,28 +3,35 @@
     <div class="tcommonBox">
         <header>
             <h1>
-                <a href="#/DetailShare" target="_blank">
+
                     关于我
-                </a>
+
             </h1>
         </header>
         <section>
-            <p class="">
-                <img :src="'static/img/maoto.png'" alt="" onerror="this.onerror=null;this.src= 'static/img/maoto.png'" class="aboutmeImg">
+           非常喜欢这些文字
+            <p >
+
+                <img src="../../../static/img/me.jpg" alt="" class="aboutmeImg">
             </p>
 
             <p>
-                欢迎来到Mango Ya！我是Aimee，是一个可爱的girl，前端程序媛，喜欢各种有趣的事物，爱好各种动手的小玩意儿
+                欢迎来到阿T同学！我是yk，是一个黑色boy(太阳的小弟)，立志在后端的路上越走越远，喜欢Python，Go，...喜欢看书和压马路
             </p>
             <p>
-                90后小美女😍，前端小萌新，
+                😍后端小萌新
             </p>
             <p>
-                爱美食，爱动手做美食，想长胖的尽管来。
+               他们都说我有多动症😍其实就是闲不住，愿终究为生活所热爱。
             </p>
             <p>
-                博客建于2017年2月9日，2018年1月23日更新到Vue
+                你说你总想着远方，总感觉有些迷茫，匆忙的路程，鞋子都换了几双。没有雨的日子里，静静思索着前方。曾把心装进盒子里，拿起来却没有力量。
+              你总把梦说的很沉重，就像夜空没了月亮，你总要为自己点燃一把火炬，去照亮你未曾到过的地方---yk。
             </p>
+
+          <p>
+             感谢帮助我，陪伴我的人们,一起期待生活，不辜负，不怀疑，不犹豫.
+          </p>
         </section>
     </div>
 </template>

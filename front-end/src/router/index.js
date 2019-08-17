@@ -134,7 +134,14 @@ const router = new Router({
 			},
 			name: 'Reward'
 		}, //赞赏
-
+{
+			path: '/Time',
+			component: resolve => require(['../components/pages/time.vue'], resolve),
+			meta: {
+				auth: true
+			},
+			name: 'Time'
+		}, //关于
     {
       // 博客文章详情页
       path: '/post/:id',

@@ -64,7 +64,7 @@ axios.interceptors.response.use(function (response) {
     }
   } else if (error.request) {
     console.log(error.request)
-    Vue.toasted.error('The request has not been sent to Flask API，because OPTIONS get error', { icon: 'fingerprint' })
+    Vue.toasted.error('The request has not been sent to Django API，because OPTIONS get error', { icon: 'fingerprint' })
   } else {
     console.log('Error: ', error.message)
   }

@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
 
@@ -19,16 +20,15 @@
                 <small class="form-control-feedback" v-show="editPostForm.titleError">{{ editPostForm.titleError }}</small>
               </div>
               <div class="form-group">
-                <input type="text" v-model="editPostForm.summary" class="form-control" id="editPostFormSummary" placeholder="摘要">
-                        <small class="form-control-feedback" v-show="postForm.summaryError">{{ editPostForm.summaryError }}</small>
+        <input type="text" v-model="editPostForm.summary" class="form-control" id="postFormSummary" placeholder="摘要">
+        <small class="form-control-feedback" v-show="editPostForm.summaryError">{{ editPostForm.summaryError }}</small>
 
-              </div>
+      </div>
 
 
-                    <div class="form-group">
+      <div class="form-group">
 
 <el-select v-model="editPostForm.category">
-
 <el-option v-for="(item,index) in classListObj"
 :label="item.name"
   :key="item.name"
@@ -41,27 +41,6 @@
         <small class="form-control-feedback" v-show="editPostForm.categoryError">{{ editPostForm.categoryError }}</small>
 
               </div>
-
-
-              <div class="form-group">
-
-     <el-upload
-  :action="imgUrl"
-
-  ref='upload'
-:on-success="imgSuccess"
-  :limit="1"
-  list-type="picture-card"
-
- >
-  <i class="el-icon-plus"></i>
-</el-upload>
-<el-dialog :visible.sync="dialogVisible">
-  <img width="100%" :src="dialogImageUrl" alt="">
-</el-dialog>
-
-</div>
-
 
               <div class="form-group">
                 <textarea v-model="editPostForm.body" class="form-control" id="editPostFormBody" rows="5" placeholder=" 内容"></textarea>
@@ -76,58 +55,6 @@
       </div>
     </div>
 
-    <form id="addPostForm" v-if="sharedState.is_authenticated && sharedState.user_perms=='true'" @submit.prevent="onSubmitAddPost" class="g-mb-40">
-      <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
-        <input type="text" v-model="postForm.title" class="form-control" id="postFormTitle" placeholder="标题">
-        <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>
-      </div>
-      <div class="form-group">
-        <input type="text" v-model="postForm.summary" class="form-control" id="postFormSummary" placeholder="摘要">
-        <small class="form-control-feedback" v-show="postForm.summaryError">{{ postForm.summaryError }}</small>
-
-      </div>
-
-
-      <div class="form-group">
-
-<el-select v-model="postForm.category">
-<el-option v-for="(item,index) in classListObj"
-:label="item.name"
-  :key="item.name"
-:value="item.id"
-  >
-  </el-option>
-
-  </el-select>
-
-        <small class="form-control-feedback" v-show="postForm.categoryError">{{ postForm.categoryError }}</small>
-
-              </div>
-<div class="form-group">
-
-     <el-upload
-  :action="imgUrl"
-
-  ref='upload'
-:on-success="imgSuccess"
-  :limit="1"
-  list-type="picture-card"
-
- >
-  <i class="el-icon-plus"></i>
-</el-upload>
-<el-dialog :visible.sync="dialogVisible">
-  <img width="100%" :src="dialogImageUrl" alt="">
-</el-dialog>
-
-</div>
-
-      <div class="form-group">
-        <textarea v-model="postForm.body" class="form-control" id="postFormBody" rows="5" placeholder=" 内容"></textarea>
-        <small class="form-control-feedback" v-show="postForm.bodyError">{{ postForm.bodyError }}</small>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
 
     <div class="card border-0 g-mb-15">
       <!-- Panel Header -->
@@ -164,12 +91,11 @@
 
        <div v-if="datalist" class="card-block g-pa-0" >
 
-        <HomePost v-for="(post, index) in datalist" v-bind:key="index"
+        <post v-for="(post, index) in datalist" v-bind:key="index"
           v-bind:post="post"
-            v-bind:catclass="classListObj"
           v-on:edit-post="onEditPost(post)"
           v-on:delete-post="onDeletePost(post)">
-        </HomePost>
+        </post>
 
       </div>
 
@@ -182,8 +108,9 @@
       <pagination
         v-bind:cur-page="page"
         v-bind:per-page="per_page"
-
+        v-bind:classId="classId"
         v-bind:total-pages="page_total">
+        v-bind:classId
       </pagination>
     </div>
     <!-- End Pagination #04 -->
@@ -197,8 +124,8 @@
 
 <script>
 import store from '../../store'
-import HomePost from '../Base/HomePost'
-import Pagination from '../Base/Pagination_home'
+import Post from '../Base/Post'
+import Pagination from '../Base/Pagination_share'
 // bootstrap-markdown 编辑器依赖的 JS 文件，初始化编辑器在组件的 created() 方法中，同时它需要 JQuery 支持哦
 
 import '../../assets/bootstrap-markdown/js/bootstrap-markdown.js'
@@ -211,35 +138,28 @@ import '../../assets/bootstrap-markdown/js/marked.js'
 export default {
   name: "Share", //this is the name of the component
   components: {
-    HomePost,
+    Post,
     Pagination
   },
   data () {
     return {
-        imgUrl:"http://localhost:8000/api/upload_file/",
-        imageSuccessUrl:"",
+        classId:"",
       page :1,
       per_page: 5,
       sharedState: store.state,
       count:0,
       page_total:0,
-          dialogImageUrl: '',
-        dialogVisible: false,
-
       posts: '',
-        classListObj: '', //技术分类
       datalist:[],
+        classListObj:'',
       postForm: {
         title: '',
         summary: '',
         body: '',
-          category:'',
 
         errors: 0,  // 表单是否在前端验证通过，0 表示没有错误，验证通过
         titleError: null,
-        bodyError: null,
-          categoryError:null,
-          summaryError:null,
+        bodyError: null
       },
       editPostForm: {
         title: '',
@@ -254,18 +174,10 @@ export default {
       }
     }
   },
-
-
   methods: {
 
-imgSuccess(response, file, fileList){
-    this.imageSuccessUrl= response.url
 
-    console.log(response.url)
-},
-
-
-       ArtClassData () {
+  ArtClassData () {
 
 
       const path = '/api/posts/classList/'
@@ -282,6 +194,7 @@ imgSuccess(response, file, fileList){
           // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
+
     getPosts () {
 
       if (typeof this.$route.query.page != 'undefined') {
@@ -291,7 +204,11 @@ imgSuccess(response, file, fileList){
       if (typeof this.$route.query.per_page != 'undefined') {
         this.per_page = this.$route.query.per_page
       }
-      const path = '/api/posts/?page='+this.page+'&per_page='+this.per_page
+      this.classId=this.$route.query.classId
+
+
+
+      const path = '/api/category/?classId='+this.classId+'&page='+this.page+'&per_page='+this.per_page
       this.$axios.get(path)
         .then((response) => {
           // handle success
@@ -308,82 +225,12 @@ imgSuccess(response, file, fileList){
           // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
         })
     },
-    onSubmitAddPost (e) {
-      this.postForm.errors = 0  // 重置
+// 好奇怪,不知道为啥要放在前面一些,也就是watch
+routeChange:function(){
+ // this.classId=this.$route.query.classId
+                this.getPosts();
+            },
 
-      if (!this.postForm.title) {
-        this.postForm.errors++
-        this.postForm.titleError = 'Title is required.'
-      } else {
-        this.postForm.titleError = null
-      }
-
-
-       if (!this.postForm.summary) {
-        this.postForm.errors++
-        this.postForm.summaryError = 'Summary is required.'
-      } else {
-        this.postForm.summaryError = null
-      }
-
-         if (!this.postForm.category) {
-        this.postForm.errors++
-        this.postForm.categoryError = 'Category is required.'
-      } else {
-        this.postForm.categoryError = null
-      }
-
-      if(!this.imageSuccessUrl){
-           this.postForm.errors++
-      }
-
-      if (!this.postForm.body) {
-        this.postForm.errors++
-        this.postForm.bodyError = 'Body is required.'
-        // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_page_totalbody 上
-        // $('.md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-
-
-        // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #postFormBody 上
-        $('#addPostForm .md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-
-      } else {
-        this.postForm.bodyError = null
-        // $('.md-editor').closest('.form-group').removeClass('u-has-error-v1')
-        $('#addPostForm .md-editor').closest('.form-group').removeClass('u-has-error-v1')
-      }
-
-      if (this.postForm.errors > 0) {
-        // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
-        return false
-      }
-
-      const path = '/api/posts/'
-      const payload = {
-        title: this.postForm.title,
-        summary: this.postForm.summary,
-        body: this.postForm.body,
-          category:this.postForm.category,
-          image:this.imageSuccessUrl,
-      }
-      this.$axios.post(path, payload)
-        .then((response) => {
-          // handle success
-          this.getPosts()
-
-          this.$toasted.success('Successed add a new post.', { icon: 'fingerprint' })
-          this.postForm.title = '',
-          this.postForm.summary = '',
-          this.postForm.body = ''
-          this.postForm.category = ''
-             this.$refs.upload.clearFiles(); // 清除上传图片
-        })
-        .catch((error) => {
-          // handle error
-          console.log(error.response.data)
-          this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
-        })
-    },
     onEditPost (post) {
       // 不要使用对象引用赋值： this.editForm = post
       // 这样是同一个 post 对象，用户在 editform 中的操作会双向绑定到该 post 上， 你会看到 modal 下面的博客也在变
@@ -397,7 +244,7 @@ imgSuccess(response, file, fileList){
     },
     // onSubmitUpdate () {
     //   this.editForm.errors = 0  // 重置
-     onSubmitUpdatePost () {
+    onSubmitUpdatePost () {
       this.editPostForm.errors = 0  // 重置
       // 每次提交前先移除错误，不然错误就会累加
       // $('.form-control-feedback').remove()
@@ -424,9 +271,7 @@ imgSuccess(response, file, fileList){
            this.editPostForm.titleError = null
       }
 
- if(!this.imageSuccessUrl){
-           this.editPostForm.errors++
-      }
+
 
        if (!this.editPostForm.summary) {
         this.editPostForm.errors++
@@ -471,7 +316,6 @@ imgSuccess(response, file, fileList){
         summary: this.editPostForm.summary,
         body: this.editPostForm.body,
            category:this.editPostForm.category,
-          image:this.imageSuccessUrl,
       }
       this.$axios.put(path, payload)
         .then((response) => {
@@ -482,7 +326,6 @@ imgSuccess(response, file, fileList){
           this.editPostForm.summary = '',
           this.editPostForm.body = ''
           this.editPostForm.category = ''
-            this.$refs.upload.clearFiles(); // 清除上传图片
         })
         .catch((error) => {
           // handle error
@@ -529,7 +372,19 @@ imgSuccess(response, file, fileList){
       })
     }
   },
+
+   // 路由变化了执行
+
+
+     watch: {
+           // 如果路由有变化，会再次执行该方法
+         '$route':'routeChange',
+
+         },
+
+
   created () {
+       this.classId=this.$route.query.classId
       this.ArtClassData()
     this.getPosts()
     // 初始化 bootstrap-markdown 插件
@@ -546,8 +401,11 @@ imgSuccess(response, file, fileList){
   beforeRouteUpdate (to, from, next) {
     // 注意：要先执行 next() 不然 this.$route.query 还是之前的
     next()
-       this.ArtClassData()
+       this.classId=this.$route.query.classId
+  this.ArtClassData()
+
     this.getPosts()
   }
 }
 </script>
+

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Sign In</h1>
+    <h1>登录</h1>
     <div class="row">
       <div class="col-md-4">
         <form @submit.prevent="onSubmit">
@@ -81,16 +81,18 @@ export default {
 
           window.localStorage.setItem('user_avatar',response.data.user_avatar)
           window.localStorage.setItem('permissions',response.data.permissions)
-
-          store.loginAction()
-
           this.$toasted.success(`Welcome ${this.sharedState.user_name}!`, { icon: 'fingerprint' })
 
           if (typeof this.$route.query.redirect == 'undefined') {
+
             this.$router.push('/')
           } else {
             this.$router.push(this.$route.query.redirect)
           }
+
+          store.loginAction()
+
+
         })
        .catch((error) => {
           // handle error

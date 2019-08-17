@@ -4,6 +4,9 @@ from .models import Post,Comment,Category
 from users.models import User
 
 
+
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -13,6 +16,17 @@ class UserPostInfo(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'name', "avatar",'is_staff')
+
+class PostTimeSerializer(serializers.ModelSerializer):
+    """
+    时间轴博客序列化器
+    """
+    author = UserPostInfo(read_only=True)
+    timestamp = serializers.DateTimeField(format='%Y-%m-%d')
+
+    class Meta:
+        model = Post
+        fields = ("id", "title", 'timestamp', 'author',)
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -28,6 +42,9 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "body",'timestamp', 'summary', 'image','author','views','comments_count','likers','likers_count','category')
 
         read_only_fields = ('id', 'author','views','likers','likers_count','timestamp')
+
+
+
 
 
 class PostAuthorSerializer(serializers.ModelSerializer):

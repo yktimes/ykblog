@@ -250,16 +250,7 @@ APPEND_SLASH=False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:8080',
-    'http://127.0.0.1:8081',
-    'http://localhost:8080',
-    'http://localhost:8081',
-"http://s1.nsloop.com",
-    "http://s1.nsloop.com:8000",
-    "http://s1.nsloop.com:8001",
-    "http://s1.nsloop.com:8080",
-    "http://s1.nsloop.com:17882"
-
+""
 )
 
 CORS_ALLOW_METHODS = (

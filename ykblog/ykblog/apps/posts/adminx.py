@@ -1,6 +1,6 @@
 import xadmin
 from xadmin import views
-from .models import Post
+from .models import Post,Category
 
 
 class BaseSetting(object):
@@ -28,3 +28,11 @@ class PostAdmin(object):
 
 
 xadmin.site.register(Post, PostAdmin)
+
+
+class CategoryAdmin(object):
+    list_display = ['id', 'name']
+    list_editable=['name']
+    search_fields = ('name',)
+    list_filter = ['name']
+xadmin.site.register(Category, CategoryAdmin)

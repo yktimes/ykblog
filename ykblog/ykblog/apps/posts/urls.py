@@ -29,6 +29,9 @@ urlpatterns = [
     url('^posts/classList/$', views.CategoryListView.as_view()),
     url('^category/$', views.CategoryPostView.as_view()),
 
+    url('^time/$', views.TimePostView.as_view()),
+
+
     path('upload_file/', views.upload_file, name='upload_file'),
 ]
 

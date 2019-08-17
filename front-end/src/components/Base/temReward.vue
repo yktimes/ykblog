@@ -9,23 +9,24 @@
         </header>
         <section>
             <div class="">
-                <img src="static/img/timg.jpg" alt="" class="maxW" >
+                <img src="../../../static/img/timg.jpg" alt="" class="maxW" >
             </div>
             <h1>@赞赏说明：</h1>
             <p>
-                若无特殊说明,赞赏之款项用于给我补充大脑（*/∇＼*）
+                我要变成太阳,热热的晒着你（*/∇＼*）
             </p>
             <p>如果我给你带来过欢乐，或者对你有所帮助，欢迎赞赏支持:)</p>
-            <p>有任何疑问请在下面留言。</p>
+
             <hr>
             <h1>@赞赏方式：</h1>
-            <el-row   :gutter="40">
+            <el-row   :gutter="30">
                 <el-col  :span="12"   class="donate-item">
                     <div class="donate-tip">
                         <img src="../../../static/img/weixinzhifu.png" :onerror="1">
                         <span>微信扫一扫，向我赞赏</span>
                     </div>
                 </el-col>
+
                 <el-col :span="12"  class="donate-item">
                     <div class="donate-tip">
                         <img src="../../../static/img/zhifubaozhifu.jpg" :onerror="1">

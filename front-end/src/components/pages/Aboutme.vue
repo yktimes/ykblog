@@ -4,23 +4,22 @@
 
         <div class="container">
             <el-row  :gutter="30">
-                <el-col :sm="24" :md="16" style="transition:all .5s ease-out;margin-bottom:30px;">
+                <el-col :sm="30" :md="30" style="transition:all .5s ease-out;margin-bottom:30px;">
                     <wbc-about></wbc-about>
 
                 </el-col>
 
             </el-row>
         </div>
-<!--        <wbc-footer></wbc-footer>-->
+        <wbc-footer></wbc-footer>
     </div>
 </template>
 
 <script>
-// import header from '../components/header.vue'
-// import footer from '../components/footer.vue'
-// import temRightlist from '../components/temRightlist.vue'
+
+import footer from '../../components/Base/footer.vue'
 import temAbout from '../Base/temAbout.vue'
-// import temMessage from '../components/temMessage.vue'
+
     export default {
         name: 'Aboutme',
         data() { //选项 / 数据
@@ -32,11 +31,9 @@ import temAbout from '../Base/temAbout.vue'
 
         },
         components: { //定义组件
-            // 'wbc-nav':header,
-            // 'wbc-message':temMessage,
+
             'wbc-about':temAbout,
-            // 'wbc-rightlist':temRightlist,
-            // 'wbc-footer':footer
+            'wbc-footer':footer
         },
         created() { //生命周期函数
 

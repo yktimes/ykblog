@@ -16,10 +16,11 @@
 						<el-menu-item index="/Reward"><i class="fa fa-wa fa-cny"></i> 赞赏</el-menu-item>
 						<el-menu-item v-if="sharedState.is_authenticated" index="/notifications/comments">
 
-             <router-link v-bind:to="{ path: '/notifications/comments' }" ><i class="icon-education-033 u-line-icon-pro g-color-red g-font-size-16 g-pos-rel "></i> 通知 <span id="new_notifications_count" style="visibility: hidden;" class="u-label  g-bg-aqua g-rounded-20 ">0</span></router-link>
+             <router-link v-bind:to="{ path: '/notifications/comments' }" ><i class="el-icon-chat-dot-square"></i>通知 <span id="new_notifications_count" style="visibility: hidden;" class="u-label  g-bg-aqua g-rounded-20 ">0</span></router-link>
             </el-menu-item>
 
 						<el-menu-item index="/Aboutme"><i class="fa fa-wa fa-vcard"></i> 关于</el-menu-item>
+						<el-menu-item index="/Time"><i class="fa fa-wa el-icon-time"></i> 时间轴</el-menu-item>
 
 						<div index="" class="pcsearchbox">
 
@@ -30,7 +31,7 @@
 
                 <form v-if="sharedState.is_authenticated" @submit.prevent="onSubmitSearch">
 
-								<el-input placeholder="搜索" id="searchBody"  icon="search" v-model="searchForm.body" >
+								<el-input placeholder="搜索" id="searchBody"  suffix-icon="search" v-model="searchForm.body" >
 								</el-input>
 
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -88,6 +89,8 @@
 								<el-menu-item index="/Reward"><i class="fa fa-wa fa-cny"></i> 赞赏</el-menu-item>
 
 								<el-menu-item index="/Aboutme"><i class="fa fa-wa fa-vcard"></i> 关于</el-menu-item>
+                						<el-menu-item index="/Time"><i class="fa fa-wa el-icon-time"></i> 时间轴</el-menu-item>
+
 
 								<el-menu-item v-if="!sharedState.is_authenticated">
                 <router-link to="/login"> 登录</router-link>
@@ -132,7 +135,7 @@
 
 &nbsp;&nbsp;
 
-							<el-input style="width: 200px "  placeholder="" icon="search" v-model="searchForm.body" @keyup.enter.native="submit" >
+							<el-input style="width: 200px "  placeholder="" suffix-icon="search" v-model="searchForm.body" @keyup.enter.native="submit" >
 
 							</el-input>  &nbsp;<i class="el-icon-search pcsearchicon" style="font-style:normal"><button class="btn" style="width: 0;height: 0" type="submit"></button></i>
 
@@ -152,11 +155,11 @@
 		</div>
 		<div class="h-information">
 			<a href="/Aboutme">
-                    <img src="../../../static/img/tou.png" alt="">
+                    <img src="../../../static/img/tou.jpg" alt="">
                 </a>
 			<h2 class="h-description">
                     <a href="/Aboutme">
-                        {{"Write the Code. Change the World."}}
+                        {{"别停下,哪怕前进了一点点."}}
                     </a>
                 </h2>
 		</div>
@@ -169,14 +172,7 @@
 
   import store from '../../store'
 import axios from 'axios'
-// import {
-// 	// ArtClassData,
-// 	// LoginOut,
-// 	// navMenList,
-// 	// changeTheme,
-// 	// AboutMeData
-// }
-// from '../utils/server.js'
+
 
 export default {
 	data() { //选项 / 数据
@@ -200,9 +196,7 @@ export default {
 			projectList: '' //项目列表
 		}
 	},
-	watch: {
 
-	},
 	methods: { //事件处理器
 
 	     ArtClassData () {
@@ -317,21 +311,7 @@ export default {
 		routeChange: function() {
 			var that = this;
 			that.pMenu = true
-			// this.activeIndex = this.$route.path == '/' ? '/Home' : this.$route.path;
-			// if (localStorage.getItem('userInfo')) { //存储用户信息
-			// 	that.haslogin = true;
-			// 	that.userInfo = JSON.parse(localStorage.getItem('userInfo'));
-			// 	// console.log(that.userInfo);
-			// } else {
-			// 	that.haslogin = false;
-			// }
-      //
-			// if ((this.$route.name == "Share" || this.$route.name == "Home") && this.$store.state.keywords) {
-			// 	this.input = this.$store.state.keywords;
-			// } else {
-			// 	this.input = '';
-			// 	this.$store.state.keywords = '';
-			// }
+
 		}
 	},
 	components: { //定义组件
@@ -345,42 +325,8 @@ export default {
 
 	    this.ArtClassData()
 
-		//判断当前页面是否被隐藏
-		var that = this;
-		var hiddenProperty = 'hidden' in document ? 'hidden' :
-			'webkitHidden' in document ? 'webkitHidden' :
-			'mozHidden' in document ? 'mozHidden' :
-			null;
-		var visibilityChangeEvent = hiddenProperty.replace(/hidden/i, 'visibilitychange');
-		var onVisibilityChange = function() {
-			if (document[hiddenProperty]) { //被隐藏
-				document.title = '藏好啦(つд⊂)';
-			} else {
-				document.title = '被发现啦(*´∇｀*)'; //当前窗口打开
-				if (that.$route.path != '/DetailShare') {
-					if (localStorage.getItem('userInfo')) {
-						that.haslogin = true;
-					} else {
-						that.haslogin = false;
-					}
-				}
-			}
-		}
-		document.addEventListener(visibilityChangeEvent, onVisibilityChange);
-		// console.log();
 		this.routeChange();
 		//设置主题
-		changeTheme(function(msg) {
-			// console.log(msg);
-			// that.$store.state.themeObj = msg;
-
-			// console.log('主题',that.$store.state.themeObj );
-		});
-		关于我的信息
-		AboutMeData(function(msg) {
-			// console.log('关于我',msg);
-			// that.$store.state.aboutmeObj = msg
-		})
 	},
 	mounted() { //页面元素加载完成
 

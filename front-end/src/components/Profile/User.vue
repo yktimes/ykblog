@@ -105,40 +105,7 @@
       </div>
     </div>
 
-    <!-- 当前登录的用户发表新博客文章 -->
-    <div class="container">
 
-      <div v-if="sharedState.is_authenticated && sharedState.user_perms=='true' && $route.params.id == sharedState.user_id" class="card border-0 g-mb-15">
-        <!-- Panel Header -->
-        <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
-          <h3 class="h6 mb-0">
-            <i class="icon-fire g-pos-rel g-top-1 g-mr-5"></i> 发表新文章
-          </h3>
-          <div class="dropdown g-mb-10 g-mb-0--md">
-            <span class="d-block g-mr-minus-5 g-pa-5">
-              <i class="icon-options-vertical g-pos-rel g-top-1"></i>
-            </span>
-          </div>
-        </div>
-        <!-- End Panel Header -->
-      </div>
-
-     <form id="addPostForm" v-if="sharedState.is_authenticated && sharedState.user_perms=='true' && $route.params.id == sharedState.user_id" @submit.prevent="onSubmitAddPost" class="g-mb-40">
-        <div class="form-group" v-bind:class="{'u-has-error-v1': postForm.titleError}">
-           <input type="text" v-model="postForm.title" class="form-control" id="postFormTitle" placeholder="标题">
-          <small class="form-control-feedback" v-show="postForm.titleError">{{ postForm.titleError }}</small>
-        </div>
-        <div class="form-group">
-           <input type="text" v-model="postForm.summary" class="form-control" id="postFormSummary" placeholder="摘要">
-        </div>
-        <div class="form-group">
-          <textarea v-model="postForm.body" class="form-control" id="postFormBody" rows="5" placeholder=" 内容"></textarea>
-          <small class="form-control-feedback" v-show="postForm.bodyError">{{ postForm.bodyError }}</small>
-        </div>
-        <button type="submit" class="btn btn-primary">发表</button>
-      </form>
-
-    </div>
   </section>
 </template>
 
@@ -228,149 +195,21 @@ export default {
     },
 
 
-    onSubmitAddPost (e) {
-      this.postForm.errors = 0  // 重置
 
-      if (!this.postForm.title) {
-        this.postForm.errors++
-        this.postForm.titleError = 'Title is required.'
-      } else {
-        this.postForm.titleError = null
-      }
-
-      if (!this.postForm.body) {
-        this.postForm.errors++
-        this.postForm.bodyError = 'Body is required.'
-        // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_body 上
-        $('.md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-      } else {
-        this.postForm.bodyError = null
-        $('.md-editor').closest('.form-group').removeClass('u-has-error-v1')
-      }
-
-      if (this.postForm.errors > 0) {
-        // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
-        return false
-      }
-
-      const path = '/api/posts/'
-      const payload = {
-        title: this.postForm.title,
-        summary: this.postForm.summary,
-        body: this.postForm.body
-      }
-      this.$axios.post(path, payload)
-        .then((response) => {
-          // handle success
-          this.$toasted.success('Successed add a new post.', { icon: 'fingerprint' })
-          this.postForm.title = '',
-          this.postForm.summary = '',
-          this.postForm.body = ''
-          // 必须加个动态参数，不然路由没变化的话，UserPosts 组件不会刷新重新加载博客列表
-          this.$router.push({ name: 'UserPosts', query: { id: response.data.id } })
-        })
-        .catch((error) => {
-          // handle error
-          console.log(error.response.data)
-        })
-    },
-
-       onSubmitSendMessages () {  // 群发私信
-      this.sendMessagesForm.bodyError = null  // 重置
-      // 每次提交前先移除错误，不然错误就会累加
-      $('#sendMessagesForm .form-control-feedback').remove()
-      $('#sendMessagesForm .form-group.u-has-error-v1').removeClass('u-has-error-v1')
-
-      if (!this.sendMessagesForm.body) {
-        this.sendMessagesForm.bodyError = 'Body is required.'
-        // boostrap4 modal依赖jQuery，不兼容 vue.js 的双向绑定。所以要手动添加警示样式和错误提示
-        // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_body 上
-        $('#sendMessagesForm .md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-        $('#sendMessagesForm .md-editor').after('<small class="form-control-feedback">' + this.sendMessagesForm.bodyError + '</small>')
-      } else {
-        this.sendMessagesForm.bodyError = null
-      }
-
-      if (this.sendMessagesForm.bodyError) {
-        // 表单验证没通过时，不继续往下执行，即不会通过 axios 调用后端API
-        return false
-      }
-
-      const path = `/api/send-messages/`
-      const payload = {
-        body: this.sendMessagesForm.body
-      }
-      this.$axios.post(path, payload)
-        .then((response) => {
-          // 重新加载，看看没有有后台任务Alert
-          // this.get_user_tasks_in_progress(this.$route.params.id)
-          // 先隐藏 Modal
-          $('#sendMessagesModal').modal('hide')
-
-          // handle success
-          this.$toasted.success(response.data.message, { icon: 'fingerprint' })
-          this.sendMessagesForm.body = ''
-        })
-        .catch((error) => {
-          // 每次提交前先移除错误，不然错误就会累加
-          $('#sendMessagesForm .form-control-feedback').remove()
-          $('#sendMessagesForm .form-group.u-has-error-v1').removeClass('u-has-error-v1')
-          // handle error
-          if (error.response.data.message instanceof Array) {
-            for (var field in error.response.data.message) {
-              if (field == 'body') {
-                this.sendMessagesForm.bodyError = error.response.data.message[field]
-                // boostrap4 modal依赖jQuery，不兼容 vue.js 的双向绑定。所以要手动添加警示样式和错误提示
-                // 给 bootstrap-markdown 编辑器内容添加警示样式，而不是添加到 #post_body 上
-                $('#sendMessagesForm .md-editor').closest('.form-group').addClass('u-has-error-v1')  // Bootstrap 4
-                $('#sendMessagesForm .md-editor').after('<small class="form-control-feedback">' + this.sendMessagesForm.bodyError + '</small>')
-              } else {
-                this.$toasted.error(error.response.data.message[field], { icon: 'fingerprint' })
-              }
-            }
-          } else {
-            this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
-          }
-        })
-    },
-    onResetSendMessages () {
-      // 先移除错误
-      $('#sendMessagesForm .form-control-feedback').remove()
-      $('#sendMessagesForm .form-group.u-has-error-v1').removeClass('u-has-error-v1')
-      // 再隐藏 Modal
-      $('#sendMessagesModal').modal('hide')
-      this.$toasted.info('Cancelled, not send messages.', { icon: 'fingerprint' })
-    },
 
   },
   created () {
     const user_id = this.$route.params.id
     this.getUser(user_id)
 
-    // 初始化 bootstrap-markdown 插件
-    $(document).ready(function() {
-      $("#postFormBody,#sendMessageFormBody").markdown({
-        autofocus:false,
-        savable:false,
-        iconlibrary: 'fa',  // 使用Font Awesome图标
-        language: 'zh'
-      })
-    })
+
   },
   // 当 id 变化后重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
     this.getUser(to.params.id)
 
-    // 初始化 bootstrap-markdown 插件
-    $(document).ready(function() {
-      $("#postFormBody,#sendMessageFormBody").markdown({
-        autofocus:false,
-        savable:false,
-        iconlibrary: 'fa',  // 使用Font Awesome图标
-        language: 'zh'
-      })
-    })
+
   }
 }
 </script>

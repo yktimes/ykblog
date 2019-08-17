@@ -24,7 +24,48 @@
               </div>
               <div class="form-group">
                 <input type="text" v-model="editForm.summary" class="form-control" id="editform_summary" placeholder="摘要">
+                                        <small class="form-control-feedback" v-show="editForm.summaryError">{{ editForm.summaryError }}</small>
+
               </div>
+
+                       <div class="form-group">
+
+<el-select v-model="editForm.category">
+
+<el-option v-for="(item,index) in classListObj"
+:label="item.name"
+  :key="item.name"
+:value="item.id"
+  >
+  </el-option>
+
+  </el-select>
+
+        <small class="form-control-feedback" v-show="editForm.categoryError">{{ editForm.categoryError }}</small>
+
+              </div>
+
+
+              <div class="form-group">
+
+     <el-upload
+  :action="imgUrl"
+
+  ref='upload'
+:on-success="imgSuccess"
+  :limit="1"
+  list-type="picture-card"
+
+ >
+  <i class="el-icon-plus"></i>
+</el-upload>
+<el-dialog :visible.sync="dialogVisible">
+  <img width="100%" :src="dialogImageUrl" alt="">
+</el-dialog>
+
+</div>
+
+
               <div class="form-group">
                 <textarea v-model="editForm.body" class="form-control" id="editPostFormBody" rows="5" placeholder=" 内容"></textarea>
                 <small class="form-control-feedback" v-show="editForm.bodyError">{{ editForm.bodyError }}</small>
@@ -109,7 +150,10 @@
           </header>
 
 
+<!--<div class="el-image__placeholder">-->
 
+<!--    <el-image :src="post.image"></el-image>-->
+<!--  </div>-->
 
           <div id="postBody" class="g-font-size-16 g-line-height-1_8 g-mb-30">
 
@@ -406,6 +450,12 @@ export default {
   },
   data() {
     return {
+          imgUrl:"http://localhost:8000/api/upload_file/",
+        imageSuccessUrl:"",
+          dialogImageUrl: '',
+        dialogVisible: false,
+         classListObj: '', //技术分类 classListObj: '', //技术分类
+
       page :1,
       per_page: 5,
       count:0,
@@ -417,10 +467,14 @@ export default {
       editForm: {
         title: '',
         summary: '',
+           category:'',
+
         body: '',
         errors: 0,  // 表单是否在前端验证通过，0 表示没有错误，验证通过
         titleError: null,
-        bodyError: null
+        bodyError: null,
+          categoryError:null,
+          summaryError:null,
       },
       showToc: true,
 
@@ -454,6 +508,32 @@ export default {
   },
 
   methods: {
+
+      imgSuccess(response, file, fileList){
+    this.imageSuccessUrl= response.url
+
+    console.log(response.url)
+},
+
+
+       ArtClassData () {
+
+
+      const path = '/api/posts/classList/'
+      this.$axios.get(path)
+        .then((response) => {
+          // handle success
+            this.classListObj = response.data.data
+
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error.response.data)
+
+          // this.$toasted.error(error.response.data.message, { icon: 'fingerprint' })
+        })
+    },
+
     getPost (id) {
       const path = `/api/posts/${id}/`
       this.$axios.get(path)
@@ -502,6 +582,25 @@ export default {
         this.editForm.titleError = null
       }
 
+
+       if (!this.editForm.summary) {
+        this.editForm.errors++
+        this.editForm.summaryError = 'Summary is required.'
+      } else {
+        this.editForm.summaryError = null
+      }
+
+         if (!this.editForm.category) {
+        this.editForm.errors++
+        this.editForm.categoryError = 'Category is required.'
+      } else {
+        this.editForm.categoryError = null
+      }
+
+      if(!this.imageSuccessUrl){
+           this.editForm.errors++
+      }
+
       if (!this.editForm.body) {
         this.editForm.errors++
         this.editForm.bodyError = 'Body is required.'
@@ -525,7 +624,9 @@ export default {
       const payload = {
         title: this.editForm.title,
         summary: this.editForm.summary,
-        body: this.editForm.body
+        body: this.editForm.body,
+          category:this.editForm.category,
+          image:this.imageSuccessUrl,
       }
       this.$axios.put(path, payload)
         .then((response) => {
@@ -534,7 +635,9 @@ export default {
           this.$toasted.success('Successed update the post.', { icon: 'fingerprint' })
           this.editForm.title = '',
           this.editForm.summary = '',
-          this.editForm.body = ''
+          this.editForm.body = '',
+               this.editForm.category = ''
+             this.$refs.upload.clearFiles(); // 清除上传图片
         })
         .catch((error) => {
           // handle error
@@ -876,6 +979,7 @@ export default {
   },
   created () {
     const post_id = this.$route.params.id
+      this.ArtClassData()
     this.getPost(post_id)
     this.getPostComments(post_id)
     // 初始化 bootstrap-markdown 编辑器
@@ -917,6 +1021,7 @@ export default {
  // 当路由变化后重新加载数据
   beforeRouteUpdate (to, from, next) {
     next()
+      this.ArtClassData()
     this.getPost(to.params.id)
     this.getPostComments(to.params.id)
 

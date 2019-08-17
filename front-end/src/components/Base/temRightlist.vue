@@ -7,7 +7,7 @@
 
             </div>
             <div class="r1-body">
-                <p>我是你隔壁同学...</p>
+                <p>我是你隔壁班同学...</p>
                 <div class="catch-me" >
                     <div class="">
                         <el-tooltip  class="item"  content="Github" placement="top" >
@@ -39,7 +39,8 @@
             <h2 class="ui label">
                 大家都排队来看这些
             </h2>
-            <ul v-if="browseList">
+
+            <ul v-if="browseList.length>0">
                 <li v-for="(item,index) in browseList" :key="'browseList'+index">
                     <a :href="'/post/'+item.id" target="_blank">{{item.title}}</a> —— {{item.views}} 次围观
                 </li>
@@ -107,7 +108,7 @@
         })
     },
 
-                       getBrowseList () {
+     getBrowseList () {
       const path = '/api/posts/browseList/'
       this.$axios.get(path)
         .then((res) => {
@@ -117,7 +118,8 @@
         })
         .catch((error) => {
           // eslint-disable-next-line
-          console.error(error)
+            this.browseList=[]
+
         })
     },
 

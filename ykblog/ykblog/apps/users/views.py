@@ -235,7 +235,7 @@ class MyDynamicVIew(ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(author_id=self.kwargs["pk"])
+        return Post.objects.select_related("author").filter(author_id=self.kwargs["pk"])
 
 
 class FollowedsPostsVIew(ListAPIView):
@@ -245,7 +245,7 @@ class FollowedsPostsVIew(ListAPIView):
     def get_queryset(self):
         user_list = FriendShip.user_followed(self.kwargs['pk'])
 
-        return Post.objects.filter(author__in=user_list)
+        return Post.objects.select_related("author").filter(author__in=user_list)
 
 
 class UserReceivedCommentsVIew(APIView):
@@ -271,7 +271,7 @@ class UserReceivedCommentsVIew(APIView):
                 pg = StandardResultPagination()
 
                 # 用户发布的所有文章ID集合
-                user_posts_ids = [post.id for post in Post.objects.filter(author=user.pk).all()]
+                user_posts_ids = [post.id for post in Post.objects.select_related("author").filter(author=user.pk).all()]
 
                 # 评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
 
@@ -284,7 +284,7 @@ class UserReceivedCommentsVIew(APIView):
                     descendants = descendants | c.get_descendants()
                 descendants = descendants - set(user.comments.all())  # 除去自己在底下回复的
                 descendants_ids = [c.id for c in descendants]
-                q2 = Comment.objects.filter(id__in=descendants_ids)
+                q2 = Comment.objects.select_related('post', 'author').filter(id__in=descendants_ids)
                 data = q1.union(q2).order_by('mark_read', '-timestamp')
 
                 res = MyCommentSerializer(instance=data, many=True)
@@ -485,7 +485,7 @@ class GetUserListMessagesRecipients(APIView):
 
             res = []
             for i in range(len(reids)):
-                data = CreateMessageSerializer(instance=Message.objects.filter(recipient=reids[i]).last()).data
+                data = CreateMessageSerializer(instance=Message.objects.select_related("recipient").filter(recipient=reids[i]).last()).data
 
                 # 发给了谁
                 recipient = User.objects.get(id=reids[i])

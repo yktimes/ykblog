@@ -9,10 +9,10 @@
                 博客已萌萌哒运行<span v-html='longTime'>{{longTime}}</span><span class="timeJump">(●'◡'●)ﾉ♥</span>
             </p>
             <p>
-                托管于 <a href="https://github.com/yktimes" target="_blank">GitHub</a>.
+                托管于 <a href="https://github.com/yktimes/ykblog" target="_blank">GitHub</a>.
             </p>
             <p>
-                © 2019 yk. 由 Django 强力驱动. Theme By YK. ICP备17071595号-1.
+                © 2019 yk. 由 Django 强力驱动. Theme By YK. 陇ICP备17004101号-1.
             </p>
             <p>
                 <span>Made with</span> <img class="fheart" src="../../../static/img/heart02.png"/>  <span>by yk.</span>

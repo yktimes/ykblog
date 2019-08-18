@@ -352,7 +352,7 @@ class artViewList(APIView):
         key = 'artViewList'
 
         if redis_conn.get(key) is None:
-            post = Post.objects.all().order_by('-views')[:10]
+            post = Post.objects.all().select_realted("author").order_by('-views')[:10]
             data = json.dumps(PostLikeMoreSerializer(post, many=True).data)
             redis_conn.setex(key, 60 * 5, data)
 

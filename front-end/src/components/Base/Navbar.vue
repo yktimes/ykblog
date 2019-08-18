@@ -202,7 +202,7 @@
 				pMenu: true, //手机端菜单打开
 				// path:'',//当前打开页面的路径
 				input: '', //input输入内容
-				headBg: 'url(static/img/headbg02.jpg)', //头部背景图
+				headBg: 'url(../../../static/img/headbg02.jpg)', //头部背景图
 				headTou: '', //头像
 				projectList: '' //项目列表
 			}
@@ -644,6 +644,7 @@
 		background-position: center 50%;
 		background-repeat: no-repeat;
 		margin-bottom: 90px;
+    background-image: url("../../../static/img/headbg02.jpg");
 	}
 
 	.h-information {

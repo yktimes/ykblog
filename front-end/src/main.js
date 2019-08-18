@@ -33,7 +33,7 @@ import './assets/icon-awesome/css/font-awesome.min.css'  // 编辑器上的按�
 // markdown 样式
 import './assets/markdown-styles/github-markdown.css'
 // 自定义 css 文件
-import '../dist/static/css/app.css'
+import './assets/app.css'
 import './assets/core.css'
 import './assets/custom.css'
 

@@ -3,7 +3,7 @@
     <div class="rightlistBox">
         <section >
             <div class="r1-head">
-                <img src="../../../static/img/headtou02.jpg" alt="">
+                <img src="../../../static/img/A.jpg" alt="">
 
             </div>
             <div class="r1-body">

@@ -411,7 +411,7 @@ class TimePostView(APIView):
             data[strTime] = []
 
         for k, v in data.items():
-            v.extend([[p.id, p.title, p.author.pk, p.author.username] for p in postsAll if
+            v.extend([[p.id, p.title, p.author.pk, p.author.username,p.timestamp.strftime('%H:%M:%S')] for p in postsAll if
                       p.timestamp.strftime('%Y-%m-%d') == k])
 
         res.update(data)

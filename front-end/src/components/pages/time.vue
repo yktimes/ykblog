@@ -14,6 +14,7 @@
       size="large">
       <el-card v-for="(v,k) in value" v-bind:key="k">
 
+
          <el-button type="success" plain>
               <router-link v-bind:to="{ name: 'PostDetail', params: { id: v[0] }}" >
           {{v[3] }}  发布了 {{v[1]}}
@@ -21,8 +22,10 @@
 
          </el-button>
 
-
-
+          <div >
+            <i class="el-icon-timer"></i>
+             {{v[4]}}
+          </div>
 
       </el-card>
     </el-timeline-item>

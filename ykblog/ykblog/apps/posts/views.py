@@ -11,7 +11,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     RetrieveModelMixin
 )
-
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from .serializers import *
 from rest_framework.decorators import permission_classes
@@ -24,6 +24,12 @@ from ykblog.utils.pagination import StandardResultPagination
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from drf_haystack.viewsets import HaystackViewSet
+
+from django.db.models import Count
+from django.conf import settings
+import os
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 
 class PostSearchViewSet(HaystackViewSet):
     """
@@ -338,22 +344,13 @@ class UnLikePostView(APIView):
                 'message': '取消收藏成功'
             },status=status.HTTP_200_OK)
 
-from django.conf import settings
-import os
-from django.views.decorators.csrf import csrf_exempt
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.http.response import JsonResponse
+
 @csrf_exempt
 def upload_file(request):
     file = request.FILES.get('file')
     name = file.name
     print(111111111111,type(file),file)
-    # for f in file:
-    #     name = f.name
-    #     print(name,"name")
-    #     print(type(f),f.file)
-    #     print()
+
     with open(os.path.join(settings.MEDIA_ROOT, name), 'wb') as fp:
         print(111111111111111111111111111111)
         print(fp)
@@ -424,14 +421,37 @@ class CategoryPostView(ListAPIView):
             if category_id:
                 return Post.objects.filter(category=category_id).select_related("author",'category')
 
-from rest_framework.pagination import PageNumberPagination
+
 
 class StandardPageNumberPagination(PageNumberPagination):
     page_size = 4
 
-class TimePostView(ListAPIView):
-    queryset = Post.objects.all().order_by('-timestamp')
-    serializer_class = PostTimeSerializer
+
+class TimePostView(APIView):
+
     pagination_class = StandardPageNumberPagination
+
+
+    def get(self,request):
+
+
+        postsAll = Post.objects.annotate(num_comment=Count('id')).order_by('-timestamp')
+        res={}
+        data={}
+        print(postsAll)
+        for i in postsAll:
+            strTime = i.timestamp.strftime('%Y-%m-%d')
+            data[strTime]=[]
+            print(strTime)
+            print(i.pk,i.timestamp,i.title)
+
+        for k,v in data.items():
+            print(k,v)
+            v.extend([[p.id,p.title,p.author.pk,p.author.username] for p in postsAll if p.timestamp.strftime('%Y-%m-%d')==k])
+
+
+
+        res.update(data)
+        return Response({'data':res})
 
 

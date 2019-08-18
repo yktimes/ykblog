@@ -19,8 +19,8 @@ class GlobalSettings(object):
 xadmin.site.register(views.CommAdminView, GlobalSettings)
 
 class PostAdmin(object):
-    list_display = ['id', 'title','author', 'timestamp', 'views','comments_count','likers_count']
-    list_editable=['title']
+    list_display = ['id', 'title','author', 'timestamp', 'views','comments_count','likers_count','image']
+    list_editable=['title','image']
     show_detail_fields = ['title']
     list_filter=['timestamp']
     readonly_fields = ['timestamp', 'views','comments_count','likers_count']

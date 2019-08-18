@@ -1,18 +1,15 @@
 from django.db import models
 from django.conf import settings
-# from ykblog.apps.users.models import User
-# Create your models here.
 
 class Category(models.Model):
 
-
-
     name = models.CharField(max_length=50,verbose_name='名称')
-
 
     class Meta:
         verbose_name=verbose_name_plural = '分类'
 
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
 
@@ -131,8 +128,7 @@ class Comment(models.Model):
         else:
              Likedship.objects.create(user=user,comment=Comment.objects.get(pk=self.pk))
 
-            # 添加赞的时候通知楼主　　# 这个ｋｅｙ可也不写
-            # TODO　 动态点赞提醒
+
 
 
     def count_likers(self):

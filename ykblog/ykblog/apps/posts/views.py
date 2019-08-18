@@ -1,9 +1,11 @@
-from django.shortcuts import render
-from .models import Post, Comment,Category
-# Create your views here.
+import json
+import os
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
+from django_redis import get_redis_connection
 from rest_framework import status
 from rest_framework.views import APIView
-
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
@@ -11,25 +13,19 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     RetrieveModelMixin
 )
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from .serializers import *
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListAPIView
+from drf_haystack.viewsets import HaystackViewSet
+from django.db.models import Count
+from django.conf import settings
 from django.db.models import F
 
 from ykblog.utils.pagination import StandardResultPagination
+from .serializers import *
 
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
-
-from drf_haystack.viewsets import HaystackViewSet
-
-from django.db.models import Count
-from django.conf import settings
-import os
-from django.views.decorators.csrf import csrf_exempt
-from django.http.response import JsonResponse
 
 class PostSearchViewSet(HaystackViewSet):
     """
@@ -52,7 +48,6 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
     @permission_classes((IsAdminUser,))
     def post(self, request, *args, **kwargs):
 
-
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
@@ -64,21 +59,17 @@ class PostViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
             category = serializer.data.get('category')
             image = serializer.data.get('image')
 
-
             try:
                 c = Category.objects.get(id=category)
             except Category.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            post = Post.objects.create(title=title, body=body, summary=summary, author=author,category=c,image=image)
+            post = Post.objects.create(title=title, body=body, summary=summary, author=author, category=c, image=image)
 
             return Response({'message': 'ok', 'id': post.pk, 'title': post.title, })
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
@@ -89,7 +80,7 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
 
         instance = self.get_object()
 
-        instance.views=F("views") + 1
+        instance.views = F("views") + 1
 
         instance.save()
 
@@ -98,10 +89,8 @@ class PostViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
     @permission_classes((IsAdminUser,))
     def put(self, request, *args, **kwargs):
 
-
         if int(request.user.pk) == int(self.get_object().author.pk):
             return self.update(request, *args, **kwargs)
-
 
     def delete(self, request, *args, **kwargs):
         # 判断要删除的帖子用户是否和请求用户一致
@@ -123,13 +112,12 @@ class CommentsView(ListModelMixin, GenericAPIView):
     @permission_classes((IsAuthenticated,))
     def post(self, request, *args, **kwargs):
 
-
         body = request.data.get('body').strip()
         post = request.data.get('post')
 
         parent = request.data.get('parent_id')
 
-        if  len(body.strip())==0:
+        if len(body.strip()) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if not post:
@@ -172,7 +160,6 @@ class CommentsView(ListModelMixin, GenericAPIView):
                 u.add_notification('unread_recived_comments_count',
                                    u.new_recived_comments())
 
-
             return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
@@ -191,11 +178,8 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
     def put(self, request, *args, **kwargs):
         # TODO 设置 permission_classes 开启
 
-
-
         flag = request.data.get('disabled')
-        mark_read=request.data.get('mark_read')
-
+        mark_read = request.data.get('mark_read')
 
         try:
             c = Comment.objects.get(pk=self.kwargs['pk'])
@@ -203,7 +187,7 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             if mark_read is not None:
-                c.mark_read=True
+                c.mark_read = True
                 c.save()
             if flag is not None:
                 c.disabled = flag
@@ -234,7 +218,6 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
                                u.new_recived_comments())
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 class PostCommentView(APIView):
@@ -272,11 +255,12 @@ class PostCommentView(APIView):
 
             return s
 
+
 class LikeView(APIView):
     """点赞"""
     permission_classes = [IsAuthenticated]
 
-    def get(self, request,pk):
+    def get(self, request, pk):
         """点赞功能"""
 
         try:
@@ -290,11 +274,12 @@ class LikeView(APIView):
             comment.switch_like(request.user)
             comment.author.add_notification('unread_comments_likes_count', comment.author.new_comments_likes())
 
-            return Response({'status': 'success'},status=status.HTTP_200_OK)
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
 
 
 class LikePostView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         """喜欢文章功能"""
 
@@ -316,10 +301,12 @@ class LikePostView(APIView):
             return Response({
                 'status': 'success',
                 'message': '收藏成功'
-            },status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
+
 
 class UnLikePostView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         """取消喜欢文章功能"""
 
@@ -332,95 +319,78 @@ class UnLikePostView(APIView):
             user = request.user
             post.unliked_by(user)
             # 切记要先提交，先添加喜欢记录到数据库，因为 new_posts_likes() 会查询 posts_likes 关联表
-            if post.likers_count>0:
+            if post.likers_count > 0:
                 post.likers_count = F("likers_count") - 1
                 post.save()
 
                 post.author.add_notification('unread_posts_likes_count',
-                                         post.author.new_posts_likes())
+                                             post.author.new_posts_likes())
 
             return Response({
                 'status': 'success',
                 'message': '取消收藏成功'
-            },status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
 def upload_file(request):
     file = request.FILES.get('file')
     name = file.name
-    print(111111111111,type(file),file)
 
     with open(os.path.join(settings.MEDIA_ROOT, name), 'wb') as fp:
-        print(111111111111111111111111111111)
-        print(fp)
         for chunk in file.chunks():
             fp.write(chunk)
     url = request.build_absolute_uri(settings.MEDIA_URL + name)
-    print(url)
-    return JsonResponse({'url':url})
 
-from django_redis import get_redis_connection
+    return JsonResponse({'url': url})
 
 
-import json
 class artViewList(APIView):
 
-    def get(self,request):
+    def get(self, request):
         redis_conn = get_redis_connection('likeNum')
         key = 'artViewList'
 
         if redis_conn.get(key) is None:
             post = Post.objects.all().order_by('-views')[:10]
             data = json.dumps(PostLikeMoreSerializer(post, many=True).data)
-            redis_conn.setex(key,60*5,data)
+            redis_conn.setex(key, 60 * 5, data)
 
             return Response({
                 'data': data,
                 'message': 'success'
             }, status=status.HTTP_200_OK)
         else:
-            print("走的缓存，aret")
-            artList = json.loads(redis_conn.get(key))
-            print(artList)
 
+            artList = json.loads(redis_conn.get(key))
 
             return Response({
                 'data': artList,
                 'message': 'success'
-            },status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
 
-from .models import  Category
 
 class CategoryListView(APIView):
     """
     帖子首页展示
     """
+
     # permission_classes = [IsAuthenticated]
 
-    def get(self,request):
-
-        # category_id = self.request.query_params.get("category")
-        # if category_id:
-
+    def get(self, request):
         c = Category.objects.all().values()
-        print(c)
-        return Response({'data':c})
+
+        return Response({'data': c})
 
 
 class CategoryPostView(ListAPIView):
+    queryset = Post.objects.all().select_related("author", 'category')
+    serializer_class = PostSerializer
 
-
-        queryset = Post.objects.all()
-        serializer_class = PostSerializer
-
-
-
-        def filter_queryset(self, queryset):
-            category_id = self.request.query_params.get("classId")
-            if category_id:
-                return Post.objects.filter(category=category_id).select_related("author",'category')
-
+    def filter_queryset(self, queryset):
+        category_id = self.request.query_params.get("classId")
+        if category_id:
+            return Post.objects.filter(category=category_id).select_related("author", 'category')
 
 
 class StandardPageNumberPagination(PageNumberPagination):
@@ -428,30 +398,21 @@ class StandardPageNumberPagination(PageNumberPagination):
 
 
 class TimePostView(APIView):
-
     pagination_class = StandardPageNumberPagination
 
+    def get(self, request):
 
-    def get(self,request):
+        postsAll = Post.objects.select_related('author').annotate(num_comment=Count('id')).order_by('-timestamp')
+        res = {}
+        data = {}
 
-
-        postsAll = Post.objects.annotate(num_comment=Count('id')).order_by('-timestamp')
-        res={}
-        data={}
-        print(postsAll)
         for i in postsAll:
             strTime = i.timestamp.strftime('%Y-%m-%d')
-            data[strTime]=[]
-            print(strTime)
-            print(i.pk,i.timestamp,i.title)
+            data[strTime] = []
 
-        for k,v in data.items():
-            print(k,v)
-            v.extend([[p.id,p.title,p.author.pk,p.author.username] for p in postsAll if p.timestamp.strftime('%Y-%m-%d')==k])
-
-
+        for k, v in data.items():
+            v.extend([[p.id, p.title, p.author.pk, p.author.username] for p in postsAll if
+                      p.timestamp.strftime('%Y-%m-%d') == k])
 
         res.update(data)
-        return Response({'data':res})
-
-
+        return Response({'data': res})

@@ -1,5 +1,4 @@
 import xadmin
-# Register your models here.
 
 from .models import User
 from xadmin.plugins import auth

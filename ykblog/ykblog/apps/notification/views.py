@@ -1,11 +1,11 @@
 
 from rest_framework import status
 from rest_framework.views import APIView
-
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
 from .serializers import *
 
-from rest_framework.permissions import IsAuthenticated
 
 
 class notificationView(APIView):
@@ -52,10 +52,9 @@ class UserNotificationView(APIView):
             # 比如用户在 10:00:00 请求一次该API，在 10:00:10 再次请求该API只会返回 10:00:00 之后产生的新通知
             since = request.query_params.get('since', 0.0)
 
-            notifications = Notification.objects.filter(user=user).filter(
+            notifications = Notification.objects.select_related('user').filter(user=user).filter(
                 timestamp__gt=since).order_by("timestamp")
 
-            # 必须加many
             data = NotificationSerializer(notifications,many=True)
 
             return Response({"data": data.data}, status=status.HTTP_200_OK)

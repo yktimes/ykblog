@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-
 from users.models import User
 from .models import  Message
 
@@ -22,5 +21,4 @@ class CreateMessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ("id", "body", "timestamp", 'sender', 'recipient')
 
-        # read_only_fields = ('id')
 

@@ -1,10 +1,10 @@
-from .serializers import *
+import datetime
+from operator import itemgetter
 
-from .models import User, FriendShip
-
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.views import APIView
-
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
@@ -13,16 +13,20 @@ from rest_framework.mixins import (
     RetrieveModelMixin
 )
 from rest_framework.generics import GenericAPIView, ListAPIView
-
 from rest_framework.response import Response
-from posts.serializers import PostSerializer, MyCommentSerializer, LikedCommentSerializer, UserPostInfo
 
+from posts.serializers import PostSerializer, MyCommentSerializer
 from posts.models import Post, Comment
-from .serializers import LiedSerializers
+from .serializers import *
+from posts.models import LikedPost
+from .serializers import LikedPostSerializers
+from Message.models import Message
+from Message.serializers import CreateMessageSerializer
+from ykblog.utils.pagination import StandardResultPagination
 
 
 class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
-    # queryset和serializer_class是固定写法
+    """创建用户"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -43,9 +47,6 @@ class UserViewSet(ListModelMixin, CreateModelMixin, GenericAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-from rest_framework.permissions import IsAuthenticated
-
-
 class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
@@ -53,7 +54,7 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
-        # is_following={}
+
         self.serializer_class = Mysite
         user = request.user
 
@@ -65,7 +66,6 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
 
     def put(self, request, *args, **kwargs):
         # TODO 设置 permission_classes 开启
-
 
         # users/(?P<pk>\d+)/  self.kwargs["pk"] 得到URLpk
         user = request.user
@@ -90,7 +90,7 @@ class UserViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, G
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, *args, **kwargs):
-        # TODO 危险 需要判断
+        # 需要判断
 
         if int(request.user.pk) == int(self.kwargs["pk"]):
             return self.destroy(request, *args, **kwargs)
@@ -106,13 +106,9 @@ class UnFollowView(APIView):
 
     def get(self, request, pk):
 
-
-
         to_user = int(self.kwargs["pk"])
 
         user = request.user
-
-
 
         try:
 
@@ -135,7 +131,6 @@ class FollowView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-
 
         to_user = int(self.kwargs["pk"])
 
@@ -165,7 +160,6 @@ class FollowerView(ListAPIView):
 
     def get_queryset(self):
 
-
         user = self.request.user
         pk = self.kwargs['pk']
         followers = FriendShip.user_follower(pk)
@@ -173,7 +167,6 @@ class FollowerView(ListAPIView):
             id = [i.pk for i in followers]
             data = User.objects.filter(id__in=id).values("id", "username", "name", "email", "avatar")
 
-            print(data)
             # 为每个 follower 添加 其他属性
             for item in data:
                 item['is_following'] = FriendShip.is_following(pk, item['id'], )
@@ -187,9 +180,7 @@ class FollowerView(ListAPIView):
                 for item in data:
 
                     if item["date"] > last_read_time:
-                        print("新的", )
                         item["is_new"] = True
-
 
             # 更新 last_recived_comments_read_time 属性值
             user.last_follows_read_time = datetime.datetime.now()
@@ -203,9 +194,6 @@ class FollowerView(ListAPIView):
 
     def get_serializer(self, *args, **kwargs):
         return MySerializer(self.get_queryset(), many=True)
-
-
-import datetime
 
 
 class FollowedView(ListAPIView):
@@ -225,7 +213,6 @@ class FollowedView(ListAPIView):
             id = [i.pk for i in followeds]
             data = User.objects.filter(id__in=id).values("id", "username", "name", "email", "avatar")
 
-            print("FollowedView")
             # 为每个 follower 添加 其他属性
             for item in data:
                 item['is_following'] = FriendShip.is_following(pk, item['id'])
@@ -239,7 +226,7 @@ class FollowedView(ListAPIView):
             return followeds
 
     def get_serializer(self, *args, **kwargs):
-        print(self.get_queryset())
+
         return MySerializer(self.get_queryset(), many=True)
 
 
@@ -248,7 +235,6 @@ class MyDynamicVIew(ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        print(self.kwargs["pk"])
         return Post.objects.filter(author_id=self.kwargs["pk"])
 
 
@@ -260,10 +246,6 @@ class FollowedsPostsVIew(ListAPIView):
         user_list = FriendShip.user_followed(self.kwargs['pk'])
 
         return Post.objects.filter(author__in=user_list)
-
-
-from django.db.models import Q
-from ykblog.utils.pagination import StandardResultPagination
 
 
 class UserReceivedCommentsVIew(APIView):
@@ -293,11 +275,12 @@ class UserReceivedCommentsVIew(APIView):
 
                 # 评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
 
-                q1 = Comment.objects.filter(Q(post__in=user_posts_ids) & (~Q(author=user)))
+                q1 = Comment.objects.select_related('post', 'author').filter(
+                    Q(post__in=user_posts_ids) & (~Q(author=user)))
 
                 descendants = set()
 
-                for c in user.comments.all():
+                for c in user.comments.all().select_related('post', 'author'):
                     descendants = descendants | c.get_descendants()
                 descendants = descendants - set(user.comments.all())  # 除去自己在底下回复的
                 descendants_ids = [c.id for c in descendants]
@@ -314,7 +297,6 @@ class UserReceivedCommentsVIew(APIView):
                     if item["timestamp"] > str(last_read_time):
                         item["is_new"] = True
 
-
                 # 更新 last_recived_comments_read_time 属性值
                 user.last_recived_comments_read_time = datetime.datetime.now()
                 # 将新评论通知的计数归零
@@ -323,7 +305,6 @@ class UserReceivedCommentsVIew(APIView):
                 user.save()
 
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
-
 
                 return pg.get_paginated_response(data=ret)
 
@@ -349,24 +330,17 @@ class UserCommentsVIew(APIView):
                 # 创建分页对象,继承
                 pg = StandardResultPagination()
 
-                data = user.comments.all().order_by('-timestamp')
+                data = user.comments.all().select_related('post', 'author').order_by('-timestamp')
 
                 res = MyCommentSerializer(instance=data, many=True).data
 
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-
                 return pg.get_paginated_response(data=ret)
-
-
-from operator import itemgetter
-from posts.models import Likedship
 
 
 class UserReceivedLikesVIew(APIView):
     def get(self, request, pk):
-
-        print("点赞")
 
         try:
             real_user = User.objects.get(id=pk)
@@ -385,14 +359,13 @@ class UserReceivedLikesVIew(APIView):
                 # 创建分页对象,继承
                 pg = StandardResultPagination()
 
-
-
                 from django.db import connection
 
                 cursor = connection.cursor()
 
                 cursor.execute(
-                    'select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s and posts_likedship.user_id!=posts_comment.author_id', [user.pk])
+                    'select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s and posts_likedship.user_id!=posts_comment.author_id',
+                    [user.pk])
 
                 ret = cursor.fetchall()
 
@@ -403,29 +376,24 @@ class UserReceivedLikesVIew(APIView):
 
                 res = LiedSerializers(k, many=True).data
 
-                # todo 如果没用要删除
                 # 标记哪些评论是新的
-                last_read_time = user.last_comments_likes_read_time  or datetime.datetime(1900, 1,1)
+                last_read_time = user.last_comments_likes_read_time or datetime.datetime(1900, 1, 1)
                 for item in res:  # data={}
-                    print('点赞',item)
+
                     if item["timestamp"] > str(last_read_time):  #
                         item["is_new"] = True
                 # 按 timestamp 排序一个字典列表(倒序，最新关注的人在最前面)
                 res = sorted(res, key=itemgetter('timestamp'), reverse=True)
 
-
                 # 更新 last_recived_comments_read_time 属性值
                 user.last_comments_likes_read_time = datetime.datetime.now()
                 # 将新评论通知的计数归零
-                user.add_notification('unread_comments_likes_count',0)
+                user.add_notification('unread_comments_likes_count', 0)
                 user.save()
                 ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-
                 return pg.get_paginated_response(data=ret)  # 需要
 
-from Message.models import Message
-from Message.serializers import CreateMessageSerializer
 
 class GetUserMessagesSenders(APIView):
     """
@@ -448,14 +416,16 @@ class GetUserMessagesSenders(APIView):
             # 创建分页对象,继承
             pg = StandardResultPagination()
             from django.db.models import Count
-            origin_data = user.messages_received.all().values("sender").annotate(total_count=Count("id"))
+            origin_data = user.messages_received.all().select_related('sender').values("sender").annotate(
+                total_count=Count("id"))
 
             reids = [id['sender'] for id in origin_data]
             total_count = [id['total_count'] for id in origin_data]
 
             res = []
             for i in range(len(reids)):
-                data = CreateMessageSerializer(instance=Message.objects.filter(sender=reids[i]).last()).data
+                data = CreateMessageSerializer(
+                    instance=Message.objects.select_related('sender').filter(sender=reids[i]).last()).data
 
                 # 发给了谁
                 sender = User.objects.get(id=reids[i])
@@ -470,15 +440,13 @@ class GetUserMessagesSenders(APIView):
                 # 他最后一次查看收到的私信的时间
                 last_read_time = sender.last_messages_read_time or datetime.datetime(1900, 1, 1)
 
-                print(' # 他最后一次查看收到的私信的时间',last_read_time)
-
                 new_items = []  # 最后一条是新的
                 not_new_items = []  # 最后一条不是新的
                 # item 是发给他的最后一条，如果最后一条不是新的，肯定就没有啦
                 if data['timestamp'] > str(last_read_time):
                     data['is_new'] = True
                     # 继续获取发给这个用户的私信有几条是新的
-                    data['new_count'] = Message.objects.filter(sender=reids[i]).filter(
+                    data['new_count'] = Message.objects.select_related('sender').filter(sender=reids[i]).filter(
                         timestamp__gt=last_read_time).count()
                     new_items.append(data)
                 else:
@@ -488,15 +456,14 @@ class GetUserMessagesSenders(APIView):
 
             ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-            return  pg.get_paginated_response(data=ret)
+            return pg.get_paginated_response(data=ret)
 
 
 class GetUserListMessagesRecipients(APIView):
     '''我给哪些用户发过私信，按用户分组，返回我给各用户最后一次发送的私信
     即: 我给 (谁) 最后一次 发了 (什么私信)'''
 
-    def get(self,request,pk):
-
+    def get(self, request, pk):
 
         try:
             real_user = User.objects.get(id=int(pk))
@@ -509,20 +476,19 @@ class GetUserListMessagesRecipients(APIView):
                 return Response(status=status.HTTP_403_FORBIDDEN)
             # 创建分页对象,继承
             pg = StandardResultPagination()
-            from django.db.models import  Count
-            origin_data = user.messages_sent.all().values("recipient").annotate(total_count=Count("id"))
+            from django.db.models import Count
+            origin_data = user.messages_sent.all().select_related('recipient').values("recipient").annotate(
+                total_count=Count("id"))
 
             reids = [id['recipient'] for id in origin_data]
             total_count = [id['total_count'] for id in origin_data]
 
-
-
-            res=[]
+            res = []
             for i in range(len(reids)):
                 data = CreateMessageSerializer(instance=Message.objects.filter(recipient=reids[i]).last()).data
 
                 # 发给了谁
-                recipient = User.objects.get(id =reids[i])
+                recipient = User.objects.get(id=reids[i])
 
                 # 总共给他发过多少条
                 data['total_count'] = int(total_count[i])
@@ -534,18 +500,19 @@ class GetUserListMessagesRecipients(APIView):
                 if data['timestamp'] > str(last_read_time):
                     data['is_new'] = True
                     # 继续获取发给这个用户的私信有几条是新的
-                    data['new_count'] = Message.objects.filter(recipient=reids[i]).filter(
+                    data['new_count'] = Message.objects.select_related('recipient').filter(recipient=reids[i]).filter(
                         timestamp__gt=last_read_time).count()
                 res.append(data)
 
             ret = pg.paginate_queryset(queryset=res, request=request, view=self)
 
-
             return pg.get_paginated_response(data=ret)
+
 
 class GetUserHistoryMessages(APIView):
     '''返回我与某个用户(由查询参数 from 获取)之间的所有私信记录'''
-    def get(self,request,pk):
+
+    def get(self, request, pk):
 
         try:
             real_user = User.objects.get(id=int(pk))
@@ -564,40 +531,40 @@ class GetUserHistoryMessages(APIView):
                 return Response(status=status.HTTP_403_FORBIDDEN)
 
             # 对方发给我的
-            q1 = Message.objects.filter(sender= from_id, recipient = pk).select_related('sender','recipient')
+            q1 = Message.objects.select_related('sender', 'recipient').filter(sender=from_id,
+                                                                              recipient=pk).select_related('sender',
+                                                                                                           'recipient')
             # 我发给对方的
-            q2 = Message.objects.filter(sender= pk, recipient= from_id).select_related('sender','recipient')
+            q2 = Message.objects.select_related('sender', 'recipient').filter(sender=pk,
+                                                                              recipient=from_id).select_related(
+                'sender', 'recipient')
 
             # 按时间正序排列构成完整的对话时间线
             history_messages = q1.union(q2).order_by('timestamp')
-            data = CreateMessageSerializer(history_messages,many=True).data
+            data = CreateMessageSerializer(history_messages, many=True).data
             # 现在这一页的 data['items'] 包含对方发给我和我发给对方的
             # 需要创建一个新列表，只包含对方发给我的，用来查看哪些私信是新的
             recived_messages = [item for item in data if item['sender']['id'] != id]
-            sent_messages = [item for item in data  if item['sender']['id'] == id]
+            sent_messages = [item for item in data if item['sender']['id'] == id]
             # 然后，标记哪些私信是新的
             last_read_time = user.last_messages_read_time or datetime.datetime(1900, 1, 1)
-            print("我读了")
-            print(user.new_recived_messages())
 
-            print(user.new_recived_messages())
             new_count = 0
             for item in recived_messages:
 
-                if item['timestamp'] >str(last_read_time):
-
+                if item['timestamp'] > str(last_read_time):
                     item['is_new'] = True
                     new_count += 1
 
             if new_count > 0:
                 # 更新 last_messages_read_time 属性值为收到的私信列表最后一条(最近的)的时间
-                print('更新 last_messages_read_time 属性值为收到的私信列表最后一条(最近的)的时间',recived_messages[-1]['timestamp'])
+
                 user.last_messages_read_time = recived_messages[-1]['timestamp']
-                print(type(user.last_messages_read_time),type( recived_messages[-1]['timestamp']))
+            
                 user.save()  # 先提交数据库，这样 user.new_recived_messages() 才会变化
                 # 更新用户的新私信通知的计数
             user.add_notification('unread_messages_count', 0)
-                # user.save()
+            # user.save()
             # 最后，重新组合 data['items']，因为收到的新私信添加了 is_new 标记
             messages = recived_messages + sent_messages
             messages.sort(key=data.index)  # 保持 messages 列表元素的顺序跟 data['items'] 一样
@@ -611,7 +578,8 @@ class GetUserHistoryMessages(APIView):
 
 class BlockView(APIView):
     '''开始拉黑一个用户'''
-    def get(self,request,pk):
+
+    def get(self, request, pk):
 
         try:
             real_user = User.objects.get(id=int(pk))
@@ -638,6 +606,7 @@ class BlockView(APIView):
 
 class UnBlockView(APIView):
     '''取消拉黑一个用户'''
+
     def get(self, request, pk):
 
         try:
@@ -662,11 +631,12 @@ class UnBlockView(APIView):
                 'message': '取消屏蔽 %s.' % (real_user.name if real_user.name else real_user.username)
             })
 
-from .serializers import LikedPostSerializers
+
 class UserReceivedPostsLikesVIew(APIView):
     '''返回该用户收到的文章喜欢
     谁喜欢了你的文章
     '''
+
     def get(self, request, pk):
 
         try:
@@ -684,7 +654,6 @@ class UserReceivedPostsLikesVIew(APIView):
 
                 # 创建分页对象,继承
                 pg = StandardResultPagination()
-
 
                 from django.db import connection
 
@@ -706,7 +675,7 @@ class UserReceivedPostsLikesVIew(APIView):
                 # todo 如果没用要删除
                 # 标记哪些文章是新的
                 last_read_time = user.last_posts_likes_read_time or datetime.datetime(1900, 1,
-                                                                                1)
+                                                                                      1)
 
                 # 重组数据，变成: (谁) (什么时间) 喜欢了你的 (哪篇文章)
                 for item in res:  # data={}
@@ -716,8 +685,7 @@ class UserReceivedPostsLikesVIew(APIView):
                 # 按 timestamp 排序一个字典列表(倒序，最新关注的人在最前面)
                 res = sorted(res, key=itemgetter('timestamp'), reverse=True)
 
-
-                user.last_posts_likes_read_time  = datetime.datetime.now()
+                user.last_posts_likes_read_time = datetime.datetime.now()
                 user.add_notification('unread_posts_likes_count', 0)
 
                 user.save()
@@ -725,9 +693,8 @@ class UserReceivedPostsLikesVIew(APIView):
 
                 return pg.get_paginated_response(data=ret)  # 需要
 
-from posts.models import LikedPost
-class UserLikesPostsVIew(ListAPIView):
 
+class UserLikesPostsVIew(ListAPIView):
 
     def get_queryset(self):
         try:
@@ -740,9 +707,9 @@ class UserLikesPostsVIew(ListAPIView):
 
         else:
 
-            post_list = [ p.post.pk for p in LikedPost.objects.filter(user=user)]
+            post_list = [p.post.pk for p in LikedPost.objects.select_related('post', 'user').filter(user=user)]
 
-            return Post.objects.filter(id__in=post_list)
+            return Post.objects.select_related('author').filter(id__in=post_list)
 
     def get_serializer(self, *args, **kwargs):
         return PostSerializer(self.get_queryset(), many=True)

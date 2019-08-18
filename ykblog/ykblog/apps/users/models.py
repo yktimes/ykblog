@@ -1,70 +1,55 @@
-from django.db import models
-
-# Create your models here.
-from  django.contrib.auth.models import AbstractUser
 import datetime
-from django.conf import settings
-# from posts.models import Post
-from posts.models import Comment
-from notification.models import Notification
+import json
 
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 from django.db.models import Q
 
-import json
-from posts.models import Likedship,LikedPost
+from posts.models import Comment
+from notification.models import Notification
+from posts.models import Likedship, LikedPost
 from Message.models import Message
 
 
-
-# from ykblog.utils.tasks import send_messages
-
-# from rq_tasks.tasks import send_messages
 class User(AbstractUser):
     """用户模型类"""
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
 
+    name = models.CharField(max_length=30, default='')
+    location = models.CharField(max_length=50, default='')
+    about_me = models.CharField(max_length=255, default='')
+    avatar = models.CharField(max_length=255, default='')
 
-    name = models.CharField(max_length=30,default='')
-    location = models.CharField(max_length=50,default='')
-    about_me = models.CharField(max_length=255,default='')
-    avatar=models.CharField(max_length=255,default='')
-
-    harassers  = models.ManyToManyField('users.User', through='Blacklist',
-                                   through_fields=('user', 'block'), verbose_name='黑名单用户')
+    harassers = models.ManyToManyField('users.User', through='Blacklist',
+                                       through_fields=('user', 'block'), verbose_name='黑名单用户')
 
     # 用户最后一次查看 收到的评论 页面的时间，用来判断哪些收到的评论是新的
-    last_recived_comments_read_time = models.DateTimeField(null=True,blank=True)
+    last_recived_comments_read_time = models.DateTimeField(null=True, blank=True)
 
     # 用户最后一次查看 用户的粉丝 页面的时间，用来判断哪些粉丝是新的
-    last_follows_read_time = models.DateTimeField(null=True,blank=True)
+    last_follows_read_time = models.DateTimeField(null=True, blank=True)
     # 用户最后一次查看 收到的点赞 页面的时间，用来判断哪些点赞是新的
-    last_comments_likes_read_time  = models.DateTimeField(null=True,blank=True)
+    last_comments_likes_read_time = models.DateTimeField(null=True, blank=True)
 
     # 用户最后一次查看私信的时间
-    last_messages_read_time = models.DateTimeField(null=True,blank=True)
+    last_messages_read_time = models.DateTimeField(null=True, blank=True)
 
     # 用户最后一次查看 收到的文章被喜欢 页面的时间，用来判断哪些喜欢是新的
-    last_posts_likes_read_time = models.DateTimeField(null=True,blank=True)
-
+    last_posts_likes_read_time = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = 'tb_users'
         verbose_name = '用户'
         verbose_name_plural = verbose_name
 
-
-
     def launch_task(self, name, description, *args, **kwargs):
         '''用户启动一个新的后台任务'''
 
-        print('''用户启动一个新的后台任务''')
         # 创建一个进程调用发送短信的函数
         from celery_tasks.message.tasks import send_messages
 
-        celery_job = send_messages.delay(*args,**kwargs)
-        print(celery_job)
-
-
+        celery_job = send_messages.delay(*args, **kwargs)
 
     def new_posts_likes(self):
         '''用户收到的文章被喜欢的新计数'''
@@ -83,31 +68,27 @@ class User(AbstractUser):
 
         # 新的文章记录计数
         new_likes_count = 0
-        print("# 新的文章记录计数",self.pk)
-        print(last_read_time)
+
         for c in ret:
-            print('cccccccccccccc',c)
+
             if int(c[1]) != int(self.pk):
 
                 timestamp = LikedPost.objects.get(user=c[1], post=c[0]).timestamp
-                print('# 判断本条记录是否为新的',timestamp)
+
                 # 判断本条记录是否为新的
                 if timestamp > last_read_time:
                     new_likes_count += 1
-        print(' # 新的文章记录计数',new_likes_count)
+
         return new_likes_count
-
-
 
     def is_blocking(self, user):
 
         return user in self.harassers.all()
 
-
     def block(self, user):
         '''当前用户开始拉黑 user 这个用户对象'''
         if not self.is_blocking(user):
-            Blacklist.objects.create(user=self,block=user)
+            Blacklist.objects.create(user=self, block=user)
             # self.harassers.append(user)
 
     def unblock(self, user):
@@ -116,14 +97,12 @@ class User(AbstractUser):
             Blacklist.objects.get(user=self, block=user).delete()
             # self.harassers.remove(user)
 
-
     def new_recived_messages(self):
         '''用户未读的私信计数'''
         last_read_time = self.last_messages_read_time or datetime.datetime(1900, 1, 1)
 
-
-        return Message.objects.filter(recipient=self).filter(
-            timestamp__gt= last_read_time).count()
+        return Message.objects.select_related('recipient').filter(recipient=self).filter(
+            timestamp__gt=last_read_time).count()
 
     def new_recived_comments(self):
         '''用户发布的文章下面收到的新评论计数'''
@@ -133,28 +112,24 @@ class User(AbstractUser):
         user_posts_ids = [post.id for post in self.posts.all()]
 
         # 用户收到的所有评论，即评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是当前用户（即文章的作者）
-        recived_comments = Comment.objects.filter(Q(post__in=user_posts_ids)& ~Q(author = self)).filter(timestamp__gt=  last_read_time).count()
+        recived_comments = Comment.objects.select_related('post','author').filter(Q(post__in=user_posts_ids) & ~Q(author=self)).filter(
+            timestamp__gt=last_read_time).count()
 
         # 用户文章下面的新评论, 即评论的 post_id 在 user_posts_ids 集合中，且评论的 author 不是自己(文章的作者)
-        q1 = set(Comment.objects.filter(Q(post__in=user_posts_ids)& ~Q(author = self)))
+        q1 = set(Comment.objects.select_related('post','author').filter(Q(post__in=user_posts_ids) & ~Q(author=self)))
 
         # 用户发表的评论被人回复了，找到每个用户评论的所有子孙
         q2 = set()
         for c in self.comments.all():
-
             q2 = q2 | c.get_descendants()
         q2 = q2 - set(self.comments.all())  # 除去子孙中，用户自己发的(因为是多级评论，用户可能还会在子孙中盖楼)，自己回复的不用通知
         # 用户收到的总评论集合为 q1 与 q2 的并集
         recived_comments = q1 | q2
-        #最后，再过滤掉 last_read_time 之前的评论
+        # 最后，再过滤掉 last_read_time 之前的评论
 
-        l =  len([c for c in recived_comments if c.timestamp > last_read_time])
+        l = len([c for c in recived_comments if c.timestamp > last_read_time])
 
         return l
-
-
-
-
 
     def add_notification(self, name, data):
         '''给用户实例对象增加通知'''
@@ -163,7 +138,7 @@ class User(AbstractUser):
 
             notic = self.notifications.get(name=name)
 
-        except :
+        except:
 
             n = Notification.objects.create(name=name, payload_json=json.dumps(data), user=self)
 
@@ -178,19 +153,19 @@ class User(AbstractUser):
         '''用户的新粉丝计数'''
         last_read_time = self.last_follows_read_time or datetime.datetime(1900, 1, 1)
 
-
         return self.followedd.filter(date__gt=last_read_time).count()
 
     def new_comments_likes(self):
         '''用户收到的新点赞计数'''
-        last_read_time = self.last_comments_likes_read_time  or datetime.datetime(1900, 1, 1)
+        last_read_time = self.last_comments_likes_read_time or datetime.datetime(1900, 1, 1)
         # 当前用户发表的所有评论当中，哪些被点赞了
         from django.db import connection
 
         cursor = connection.cursor()
 
-        cursor.execute('select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s', [self.pk])
-
+        cursor.execute(
+            'select posts_likedship.comment_id,posts_likedship.user_id from posts_comment,posts_likedship where posts_comment.id=posts_likedship.comment_id and posts_comment.author_id =%s',
+            [self.pk])
 
         ret = cursor.fetchall()
 
@@ -198,7 +173,7 @@ class User(AbstractUser):
         new_likes_count = 0
 
         for c in ret:
-            if int(c[1])!=int(self.pk):
+            if int(c[1]) != int(self.pk):
 
                 timestamp = Likedship.objects.get(user=c[1], comment=c[0]).timestamp
 
@@ -207,7 +182,6 @@ class User(AbstractUser):
                     new_likes_count += 1
 
         return new_likes_count
-
 
 
 class FriendShip(models.Model):
@@ -219,33 +193,19 @@ class FriendShip(models.Model):
 
     follower = models.ForeignKey(User, related_name='followerd', on_delete=models.CASCADE)  # 被别人关注
 
-    followed = models.ForeignKey(User, related_name='followedd',on_delete=models.CASCADE)  # 关注别人
-
+    followed = models.ForeignKey(User, related_name='followedd', on_delete=models.CASCADE)  # 关注别人
 
     date = models.DateTimeField(auto_now_add=True)
-
-
 
     class Meta:
         ordering = ('-date',)
 
-
     def __str__(self):
         return f'{self.follower} follow {self.followed}'
 
-    # @property
-    # def followed_posts(self):
-    #     '''获取当前用户的关注者的所有文章列表'''
-    #     followed = Post.objects.filter(author=self.followed)
-    #     # 包含当前用户自己的文章列表
-    #     # own = Post.query.filter_by(user_id=self.id)
-    #     # return followed.union(own).order_by(Post.timestamp.desc())
-    #     return followed
-
-
     @staticmethod
-    def is_following(from_user,to_user):
-        return  FriendShip.objects.filter(follower=from_user, followed=to_user).count()>0
+    def is_following(from_user, to_user):
+        return FriendShip.objects.select_related('follower','followed').filter(follower=from_user, followed=to_user).count() > 0
 
     @staticmethod
     def follow(from_user, to_user):
@@ -254,8 +214,8 @@ class FriendShip(models.Model):
 
     @staticmethod
     def unfollow(from_user, to_user):
-        f = FriendShip.objects.filter(follower=from_user, followed=to_user).all()
-        print(f)
+        f = FriendShip.objects.select_related('follower','followed').filter(follower=from_user, followed=to_user).all()
+
         if f:
             f.delete()  # 取关
 
@@ -269,7 +229,7 @@ class FriendShip(models.Model):
         # followeds 是该用户关注了哪些用户列表
 
         # followers 是该用户的粉丝列表
-        followeders = FriendShip.objects.filter(follower=from_user).all()
+        followeders = FriendShip.objects.select_related('follower').filter(follower=from_user).all()
 
         user_followed = []
         for followeder in followeders:
@@ -286,7 +246,7 @@ class FriendShip(models.Model):
         # followeds 是该用户关注了哪些用户列表
         # followers 是该用户的粉丝列表
 
-        followeders = FriendShip.objects.filter(followed=from_user).all()
+        followeders = FriendShip.objects.select_related('followed').filter(followed=from_user).all()
 
         user_followed = []
         for followeder in followeders:
@@ -295,15 +255,13 @@ class FriendShip(models.Model):
 
 
 class Blacklist(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='harasser',on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='harasser', on_delete=models.CASCADE)
 
     # 这个是黑名单
-    block=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='sufferer', on_delete=models.CASCADE)
-    timestamp= models.DateTimeField(auto_now_add=True)
+    block = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sufferer', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'blacklist'
         verbose_name = '黑名单'
         verbose_name_plural = verbose_name
-
-

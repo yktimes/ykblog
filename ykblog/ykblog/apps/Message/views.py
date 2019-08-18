@@ -1,7 +1,6 @@
-
 from rest_framework import status
 from rest_framework.views import APIView
-
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.mixins import (
     ListModelMixin,
     DestroyModelMixin,
@@ -10,10 +9,11 @@ from rest_framework.mixins import (
 )
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
+from django_redis import get_redis_connection
+
 from .models import Message
 from .serializers import CreateMessageSerializer
 from users.models import User
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 class MessageView(ListModelMixin, GenericAPIView):
     '''给其它用户发送私信'''
@@ -37,7 +37,7 @@ class MessageView(ListModelMixin, GenericAPIView):
         try:
 
             recipient_user = User.objects.get(id=int(recipient_id))
-            print(recipient_user, "成功")
+
         except User.DoexNotExist:
             return Response({'message':'该用户可能在火星上哦'},status=status.HTTP_404_NOT_FOUND)
         else:
@@ -108,7 +108,6 @@ class MessagesAllView(APIView):
         user.launch_task('send_messages', '正在群发私信...',
                                    kwargs={'user_id': user.pk, 'body': data.get('body')})
         return Response({'message': '正在运行群发私信后台任务'},status=status.HTTP_200_OK)
-from django_redis import get_redis_connection
 
 class showLikeData(APIView):
 
@@ -123,10 +122,6 @@ class showLikeData(APIView):
 
 
             like_redis = redis_conn.get(key).decode()
-
-            print("like_redis",like_redis)
-
-
 
             return Response({'msg':'ok','like_redis':like_redis})
 
@@ -143,8 +138,6 @@ class GetLike(APIView):
 
 
             like_redis = redis_conn.incr(key)
-
-            print("like_redis",like_redis)
 
 
 

@@ -1,12 +1,11 @@
-
 from django.conf.urls import url
-from . import views
+from django.urls import path
 from rest_framework.routers import DefaultRouter
+
+from . import views
 
 router = DefaultRouter()
 router.register('search', views.PostSearchViewSet, base_name='posts_search')
-
-from django.urls import path
 
 urlpatterns = [
 

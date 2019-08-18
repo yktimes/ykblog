@@ -1,8 +1,8 @@
 
 from django.conf.urls import url
-from . import views
 from rest_framework_jwt.views import obtain_jwt_token
 
+from . import views
 
 
 
@@ -46,10 +46,6 @@ urlpatterns = [
     # 喜欢的文章
     url('^users/(?P<pk>\d+)/recived-posts-likes/$', views.UserReceivedPostsLikesVIew.as_view()),
     url('^users/(?P<pk>\d+)/liked-posts/$', views.UserLikesPostsVIew.as_view()),
-
-
-
-
 
 
     url('^tokens/$', obtain_jwt_token)

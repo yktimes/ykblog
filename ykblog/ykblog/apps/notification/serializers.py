@@ -1,8 +1,6 @@
-
 from rest_framework import serializers
 
 from .models import Notification
-
 from users.models import User
 
 

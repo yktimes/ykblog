@@ -42,7 +42,7 @@
 
             <ul v-if="browseList">
                 <li v-for="(item,index) in browseList" :key="'browseList'+index">
-                    <a :href="'/post/'+item.id" target="_blank">{{item.title}}</a> —— {{item.views}} 次围观
+                  <router-link v-bind:to="{ path: `/post/${item.id}` }"> {{item.title}}</router-link> —— {{item.views}} 次围观
                 </li>
             </ul>
         </section>

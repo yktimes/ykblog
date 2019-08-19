@@ -35,12 +35,12 @@
         </section>
         <section></section>
 
-        <section class="rs4">
+        <section class="rs4" v-if="showCard">
             <h2 class="ui label">
                 大家都排队来看这些
             </h2>
 
-            <ul v-if="browseList.length>0">
+            <ul v-if="browseList">
                 <li v-for="(item,index) in browseList" :key="'browseList'+index">
                     <a :href="'/post/'+item.id" target="_blank">{{item.title}}</a> —— {{item.views}} 次围观
                 </li>
@@ -58,10 +58,11 @@
             return {
                 fixDo:false,
                 loveme:false,
-                gotoTop:false,//返回顶部
+
                 going:false,//是否正在执行上滑动作
                 browseList:[],//浏览量最多
-                artCommentList:'',//评论量最多
+                showCard:false,
+
                 likeNum:0,//do you like me 点击量
                 initLikeNum:0,//初始化喜欢数量
                 catchMeObj:{//抓住我 个人信息
@@ -112,7 +113,7 @@
       const path = '/api/posts/browseList/'
       this.$axios.get(path)
         .then((res) => {
-
+            this.showCard = true;
           this.browseList=res.data.data
 
         })
@@ -146,6 +147,14 @@
             this.getBrowseList()
 
 
+        },
+
+
+        beforeRouteUpdate (to, from, next) {
+            // 注意：要先执行 next() 不然 this.$route.query 还是之前的
+            next()
+            this.getshowLikeData()
+            this.getBrowseList()
         }
     }
 </script>

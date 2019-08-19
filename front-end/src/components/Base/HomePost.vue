@@ -34,8 +34,9 @@
                     </span>
                 </h2>
                 <div class="ui label" v-if="catclass">
-
-                    <a :href="'/Share?classId='+post.category">{{catclass[post.category-1].name}}</a>
+<router-link v-bind:to="{ path: `/Share/?classId=${post.category}` }">  {{catclass[post.category-1].name}} </router-link>
+<!--                  <a :href="'/Share?classId='+post.category">{{catclass[post.category-1].name}}</a>-->
+<!--                    <a :href="'/Share?classId='+post.category">{{catclass[post.category-1].name}}</a>-->
                 </div>
             </header>
             <div class="article-content">

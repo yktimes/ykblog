@@ -344,7 +344,6 @@ def upload_file(request):
 
     return JsonResponse({'url': url})
 
-
 class artViewList(APIView):
 
     def get(self, request):
@@ -352,9 +351,9 @@ class artViewList(APIView):
         key = 'artViewList'
 
         if redis_conn.get(key) is None:
-            post = Post.objects.all().select_related("author").order_by('-views')[:10]
-            data = json.dumps(PostLikeMoreSerializer(post, many=True).data)
-            redis_conn.setex(key, 60 * 5, data)
+            post = Post.objects.all().select_related("author").order_by('-views')[:5]
+            data = PostLikeMoreSerializer(post, many=True).data
+            redis_conn.setex(key, 60 * 5, json.dumps(data))
 
             return Response({
                 'data': data,
@@ -394,7 +393,7 @@ class CategoryPostView(ListAPIView):
 
 
 class StandardPageNumberPagination(PageNumberPagination):
-    page_size = 4
+    page_size = 5
 
 
 class TimePostView(APIView):

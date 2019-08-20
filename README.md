@@ -74,7 +74,7 @@ cd 到 ykblog/docs 执行
 ## 5 创建超级用户
 >因为设置了权限，非管理员无法写博客
 
-```python3 mange.py createsuperuser```
+```python3 manage.py createsuperuser```
 
 创建成功后接着下一步。
 

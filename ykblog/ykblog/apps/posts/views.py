@@ -127,7 +127,7 @@ class CommentsView(ListModelMixin, GenericAPIView):
 
             post = Post.objects.get(id=int(post))
 
-        except Post.DoexNotExist:
+        except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -139,7 +139,7 @@ class CommentsView(ListModelMixin, GenericAPIView):
 
 
 
-                except Comment.DoexNotExist:
+                except Comment.DoesNotExist:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
 
             else:
@@ -212,6 +212,9 @@ class CommentsViewSetView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixi
 
         # 必须先删除该评论，后续给各用户发送通知时，User.new_recived_comments() 才能是更新后的值
         instance.delete()
+        if instance.post.comments_count > 0:
+            instance.post.comments_count = F("comments_count") - 1
+            instance.post.save()
         # 给各用户发送新评论通知
         for u in users:
             u.add_notification('unread_recived_comments_count',

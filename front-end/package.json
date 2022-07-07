@@ -15,7 +15,7 @@
     "element-ui": "^2.11.1",
     "highlight.js": "^9.15.8",
     "jquery": "^3.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "popper.js": "^1.15.0",
     "vue": "^2.6.10",
     "vue-markdown": "^2.2.4",
